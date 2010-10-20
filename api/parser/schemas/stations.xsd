@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <!--
+    TYPES
+  -->
+  
+  <!-- Location type -->
+  <xsd:simpleType name="locationType">
+    <xsd:restriction base="xsd:token">
+      <xsd:pattern value="[\d.]+ [\d.]+"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  <!-- Timestamp type -->
+  <xsd:simpleType name="timestampType">
+    <xsd:restriction base="xsd:token">
+      <xsd:pattern value="\d{6}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  
+  
+  <!--
+    ELEMENTS
+  -->
+  
+  <!-- Stations -->
+  <xsd:element name="stations">
+    <xsd:complexType>
+      <xsd:sequence maxOccurs="unbounded">
+        <xsd:element ref="station"/>
+      </xsd:sequence>
+      <xsd:attribute name="timestamp" type="timestampType" />
+    </xsd:complexType>
+  </xsd:element>
+  
+  <!-- Station -->
+  <xsd:element name="station">
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:string">
+          <xsd:attribute name="location" type="locationType" use="optional" />
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
+
