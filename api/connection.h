@@ -22,7 +22,7 @@ namespace iRail
     class Connection : public QObject
     {
     Q_OBJECT
-    Q_PROPERTY(Transfer transfer READ getTransfer CONSTANT)
+    Q_PROPERTY(Transfer transfer READ transfer CONSTANT)
     // TODO: howto handle optional properties (location)?
     // TODO: howto handle lists?
     public:
@@ -53,8 +53,8 @@ namespace iRail
         ~Connection();
 
         // Basic I/O
-        Transfer getTransfer() const;
-        QList<Transfer> getTransfers() const;
+        Transfer transfer() const;
+        QList<Transfer> transfers() const;
         void setTransfers(const QList<Transfer>& iTransfers);
 
         // Debugging

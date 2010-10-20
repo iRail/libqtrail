@@ -5,6 +5,7 @@
 // Includes
 #include "asyncapi.h"
 #include <QByteArray>
+#include <QApplication>
 
 // Namespaces
 using namespace iRail;
@@ -139,11 +140,13 @@ void AsyncAPI::network_request(QNetworkRequest iRequest, QObject* iObject, const
 {
     if (mNetworkReply == 0)
     {
-        emit action("performing network request");
+        emit action("Performing network request");
+        // TODO: this is a quite blocking request, we shouldn't wait for it!
+        QApplication::processEvents();  // Temporary fix
         mNetworkReply = mNetworkAccessManager.get(iRequest);        
         // TODO: networkreply can be 0, when no connection could be established
 
-        emit action("downloading and decoding network reply");
+        emit action("Downloading and decoding network reply");
         connect(mNetworkReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(network_progress(qint64,qint64)));
         connect(mNetworkReply, SIGNAL(finished()), iObject, iSlot);
     }

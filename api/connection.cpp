@@ -30,12 +30,12 @@ Connection::~Connection()
 //
 
 
-Connection::Transfer Connection::getTransfer() const
+Connection::Transfer Connection::transfer() const
 {
     return mTransfer;
 }
 
-QList<Connection::Transfer> Connection::getTransfers() const
+QList<Connection::Transfer> Connection::transfers() const
 {
     return mTransfers;
 }
@@ -53,9 +53,9 @@ void Connection::setTransfers(const QList<Connection::Transfer>& iTransfers)
 
 QDebug operator<<(QDebug dbg, const Connection &iConnection)
 {
-    dbg << "Connection('" << iConnection.getTransfer().departure.station << "', platform " << iConnection.getTransfer().departure.platform << " → ";
-    for (int i = 0; i < iConnection.getTransfers().size(); i++)
-        dbg << "Connection('" << iConnection.getTransfers().at(i).arrival.station << "', platform " << iConnection.getTransfers().at(i).arrival.platform << " to " << iConnection.getTransfers().at(i).departure.platform << " → ";
-    dbg << iConnection.getTransfer().arrival.station << "', platform " << iConnection.getTransfer().arrival.platform << ")";
+    dbg << "Connection('" << iConnection.transfer().departure.station << "', platform " << iConnection.transfer().departure.platform << " → ";
+    for (int i = 0; i < iConnection.transfers().size(); i++)
+        dbg << "Connection('" << iConnection.transfers().at(i).arrival.station << "', platform " << iConnection.transfers().at(i).arrival.platform << " to " << iConnection.transfers().at(i).departure.platform << " → ";
+    dbg << iConnection.transfer().arrival.station << "', platform " << iConnection.transfer().arrival.platform << ")";
     return dbg.maybeSpace();
 }
