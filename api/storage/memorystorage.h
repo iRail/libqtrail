@@ -21,11 +21,11 @@ namespace iRail
         MemoryStorage();
 
         // Getters
-        const QList<StationPointer>& stations_get() const throw(StorageException);
+        QList<StationPointer>* stations() const;
 
         // Setters
     public slots:
-        void stations_set(const QList<StationPointer>& iStations) throw(StorageException);
+        void setStations(const QList<StationPointer>& iStations);
 
         // Cache data
     private:

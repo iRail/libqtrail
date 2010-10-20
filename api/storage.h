@@ -9,7 +9,6 @@
 // Includes
 #include "station.h"
 #include <QList>
-#include "api/exception/storageexception.h"
 
 namespace iRail
 {
@@ -17,17 +16,14 @@ namespace iRail
     {
     Q_OBJECT
     public:
-        // Basic IO
-        virtual void load() throw(StorageException) {}
-        virtual void save() throw(StorageException) {}
-
         // Getters
         // TODO: the cache _should_ be data agnostic...
-        virtual const QList<StationPointer>& stations_get() const throw(StorageException) = 0;
+        virtual QList<StationPointer>* stations() const = 0;
 
         // Setters
+        // TODO: document that setters take ownership by taking a copy
     public slots:
-        virtual void stations_set(const QList<StationPointer>& iStations) throw(StorageException) = 0;
+        virtual void setStations(const QList<StationPointer>& iStations) = 0;
     };
 }
 

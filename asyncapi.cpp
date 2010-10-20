@@ -18,28 +18,22 @@ AsyncAPI::AsyncAPI(const QString& iClientID, const QString& iClientVersion) : mC
 {
     mUserAgent.append("BETrains-Qt/" + mClientVersion + " (" + mClientID + " edition)");
     mNetworkReply = 0;
-    mStorage = 0;
-}
-
-void AsyncAPI::setStorage(Storage* iStorage)
-{
-    // Save the cache object for later usage
-    mStorage = iStorage;
-
-    // Connect caching signals
-    connect(this, SIGNAL(stations_reply(QList<StationPointer>)), mStorage, SLOT(stations_set(QList<StationPointer>)));
 }
 
 
 //
-// Cache request methods
+// Error handling
 //
 
-QList<StationPointer> AsyncAPI::stations_cache() throw(StorageException)
+
+bool AsyncAPI::hasError() const
 {
-    if (!mStorage)
-        throw StorageException("no storage defined");
-    return QList<StationPointer>(mStorage->stations_get());
+    return mHasError;
+}
+
+Exception AsyncAPI::error() const
+{
+    return mError;
 }
 
 
@@ -47,18 +41,24 @@ QList<StationPointer> AsyncAPI::stations_cache() throw(StorageException)
 // Request slots
 //
 
-void AsyncAPI::stations_request()
+void AsyncAPI::requestStations()
 {
+    // Reset
+    mHasError = false;
+
     // Construct URL
     QUrl tURL = createBaseURL();
     tURL.setPath("stations/");
 
     // Create a request
-    network_request(getRequest(tURL), this, SLOT(stations_process()));
+    network_request(getRequest(tURL), this, SLOT(processStations()));
 }
 
-void AsyncAPI::connections_request(ConnectionRequestPointer iConnectionRequest)
+void AsyncAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
 {
+    // Reset
+    mHasError = false;
+
     // Construct URL
     QUrl tURL = createBaseURL();
     tURL.setPath("connections/");
@@ -78,7 +78,7 @@ void AsyncAPI::connections_request(ConnectionRequestPointer iConnectionRequest)
     }
 
     // Create a request
-    network_request(getRequest(tURL), this, SLOT(connections_process()));
+    network_request(getRequest(tURL), this, SLOT(processConnections()));
 }
 
 
@@ -86,7 +86,7 @@ void AsyncAPI::connections_request(ConnectionRequestPointer iConnectionRequest)
 // Processing methods
 //
 
-void AsyncAPI::stations_process()
+void AsyncAPI::processStations()
 {
     // Parse the data
     try
@@ -96,12 +96,12 @@ void AsyncAPI::stations_process()
         resetXmlInputSource(tXmlInputSource, iReply);
 #endif // BETRAINS_VALIDATINGXML
         QList<StationPointer> oStations = mParser.parseStations(mNetworkReply);
-        emit stations_reply(oStations);
+        emit replyStations(oStations);
     }
     catch (Exception& iException)
     {
-        // TODO: emit the exception?
-        emit error(iException.toString());
+        mError = iException;
+        mHasError = true;
     }
 
     // Clean up
@@ -109,7 +109,7 @@ void AsyncAPI::stations_process()
 }
 
 
-void AsyncAPI::connections_process()
+void AsyncAPI::processConnections()
 {
     // Parse the data
     try
@@ -119,12 +119,12 @@ void AsyncAPI::connections_process()
         resetXmlInputSource(tXmlInputSource, iReply);
 #endif // BETRAINS_VALIDATINGXML
         QList<ConnectionPointer> oStations = mParser.parseConnections(mNetworkReply);
-        emit connections_reply(oStations);
+        emit replyConnections(oStations);
     }
     catch (Exception& iException)
     {
-        // TODO: emit the exception?
-        emit error(iException.toString());
+        mError = iException;
+        mHasError = true;
     }
 
     // Clean up
@@ -139,14 +139,18 @@ void AsyncAPI::network_request(QNetworkRequest iRequest, QObject* iObject, const
 {
     if (mNetworkReply == 0)
     {
+        emit action("performing network request");
+        mNetworkReply = mNetworkAccessManager.get(iRequest);        
         // TODO: networkreply can be 0, when no connection could be established
-        mNetworkReply = mNetworkAccessManager.get(iRequest);
+
+        emit action("downloading and decoding network reply");
         connect(mNetworkReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(network_progress(qint64,qint64)));
         connect(mNetworkReply, SIGNAL(finished()), iObject, iSlot);
     }
     else
     {
-        emit error("Concurrent network request are not possible.");
+        mError = Exception("concurrent network requests are currently impossible");
+        mHasError = true;
     }
 }
 

@@ -3,8 +3,8 @@
 //
 
 // Include guard
-#ifndef STORAGEEXCEPTION_H
-#define STORAGEEXCEPTION_H
+#ifndef INTERRUPTEDEXCEPTION_H
+#define INTERRUPTEDEXCEPTION_H
 
 // Includes
 #include <QString>
@@ -12,26 +12,26 @@
 
 /*
  TODO
-    - Print cache contents
+    - Save progress upon halt
  */
 
 namespace iRail
 {
-    class StorageException : public Exception
+    class InterruptedException : public Exception
     {
     public:
         // Construction and destruction
-        StorageException(const QString& iMessage) : Exception(iMessage)
+        InterruptedException() : Exception()
         {
         }
 
         // Auxiliary
         virtual const QString toString() const throw()
         {
-            return "storage exception | " + what();
+            return "interrupted exception";
         }
     };
 
 }
 
-#endif // STORAGEEXCEPTION_H
+#endif // INTERRUPTEDEXCEPTION_H

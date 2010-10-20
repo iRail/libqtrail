@@ -23,11 +23,9 @@ MemoryStorage::MemoryStorage()
 // Getters
 //
 
-const QList<StationPointer>& MemoryStorage::stations_get() const throw(StorageException)
+QList<StationPointer>* MemoryStorage::stations() const
 {
-    if (mStations == 0)
-        throw StorageException("stations not in cache");
-    return *mStations;
+    return mStations;
 }
 
 
@@ -35,7 +33,7 @@ const QList<StationPointer>& MemoryStorage::stations_get() const throw(StorageEx
 // Setters
 //
 
-void MemoryStorage::stations_set(const QList<StationPointer>& iStations) throw(StorageException)
+void MemoryStorage::setStations(const QList<StationPointer>& iStations)
 {
     mStations = new QList<StationPointer>(iStations);
 }

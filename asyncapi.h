@@ -19,10 +19,8 @@
 #include "api/station.h"
 #include "api/parser.h"
 #include "api/exception/networkexception.h"
-#include "api/exception/storageexception.h"
 #include "api/connectionrequest.h"
 #include "api/connection.h"
-#include "api/storage.h"
 
 namespace iRail
 {
@@ -31,22 +29,22 @@ namespace iRail
     Q_OBJECT
         // Construction and destruction
     public:
+        // TODO: make the API Singleton, with some global init for resources etc
         AsyncAPI(const QString& iClientID, const QString& iClientVersion);
-        void setStorage(Storage* iStorage);
 
-        // Cach request methods
-    public:
-        QList<StationPointer> stations_cache() throw(StorageException);
+        // Error handling
+        bool hasError() const;
+        Exception error() const;
 
         // Request slots
     public slots:
-        void stations_request();
-        void connections_request(ConnectionRequestPointer iConnectionRequest);
+        void requestStations();
+        void requestConnections(ConnectionRequestPointer iConnectionRequest);
 
         // Processing methods
     private slots:
-        void stations_process();
-        void connections_process();
+        void processStations();
+        void processConnections();
 
         // Network routines
     private slots:
@@ -56,24 +54,23 @@ namespace iRail
 
         // Reply signals
     signals:
-        void stations_reply(QList<StationPointer> iStations);
-        void connections_reply(QList<ConnectionPointer> iConnections);
+        void replyStations(QList<StationPointer> iStations);
+        void replyConnections(QList<ConnectionPointer> iConnections);
 
-        // Messages
+        // Progress indicator signals
     signals:
-        void warning(const QString& iMessage);
-        void error(const QString& iMessage);
-        void fatal(const QString& iMessage);
-        void progress(int progress);
+        void progress(int current); // Value between 0 and 100
+        void action(QString action);
 
         // Member data
     private:
         QString mClientID, mClientVersion;
         QByteArray mUserAgent;
-        Storage* mStorage;
         Parser mParser;
         QNetworkAccessManager mNetworkAccessManager;
         QNetworkReply* mNetworkReply;
+        Exception mError;
+        bool mHasError;
 
         // Auxiliary
     private:
