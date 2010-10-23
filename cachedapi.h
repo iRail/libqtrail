@@ -23,6 +23,7 @@ namespace iRail
         // Request slots
     public slots:
         void requestStations();
+        void requestConnections(ConnectionRequestPointer iConnectionRequest);
 
         // Caching slots
     private slots:

@@ -39,6 +39,13 @@ void CachedAPI::requestStations()
 
 }
 
+void CachedAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
+{
+    // Request a new list
+    emit progress_start();
+    AsyncAPI::requestConnections(iConnectionRequest);
+}
+
 
 //
 // Caching slots

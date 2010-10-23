@@ -38,8 +38,8 @@ namespace iRail
 
         // Request slots
     public slots:
-        void requestStations();
-        void requestConnections(ConnectionRequestPointer iConnectionRequest);
+        virtual void requestStations();
+        virtual void requestConnections(ConnectionRequestPointer iConnectionRequest);
 
         // Processing methods
     private slots:
