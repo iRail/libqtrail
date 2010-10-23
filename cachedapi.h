@@ -35,6 +35,7 @@ namespace iRail
 
         // Member data
     private:
+        bool mInRequest;
         Storage* mStorage;
     };
 }

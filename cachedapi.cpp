@@ -15,6 +15,7 @@ using namespace iRail;
 
 CachedAPI::CachedAPI(const QString& iClientID, const QString& iClientVersion, Storage* iStorage) : AsyncAPI(iClientID, iClientVersion), mStorage(iStorage)
 {
+    mInRequest = false;
 }
 
 
@@ -33,7 +34,9 @@ void CachedAPI::requestStations()
     }
 
     // Request a new list
-    emit progress_start();
+    if (!mInRequest)
+        emit progress_start();
+    mInRequest = true;
     connect(this, SIGNAL(replyStations(QList<StationPointer>)), this, SLOT(cacheStations(QList<StationPointer>)));
     AsyncAPI::requestStations();
 
@@ -43,6 +46,8 @@ void CachedAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
 {
     // Request a new list
     emit progress_start();
+    // TODO: if requesting stations here as well, handle the progress indicators appropriately!
+    mInRequest = true;
     AsyncAPI::requestConnections(iConnectionRequest);
 }
 
