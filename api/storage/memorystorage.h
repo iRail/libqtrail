@@ -21,7 +21,7 @@ namespace iRail
         MemoryStorage();
 
         // Getters
-        QList<StationPointer>* stations() const;
+        const QList<StationPointer>* stations() const;
 
         // Setters
     public slots:
@@ -29,7 +29,7 @@ namespace iRail
 
         // Cache data
     private:
-        QList<StationPointer>* mStations;
+        const QList<StationPointer>* mStations;
     };
 }
 

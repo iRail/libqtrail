@@ -28,17 +28,18 @@ namespace iRail
     class Station : public QObject
     {
     Q_OBJECT
-    Q_PROPERTY(QString name READ getName CONSTANT)
-    // TODO: howto handle optional properties (location)?
+    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(bool locatable READ locatable)
+    Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Construction and destruction
         Station(QString iName);
         ~Station();
 
         // Basic I/O
-        QString getName() const;
-        bool hasLocation() const;
-        Location getLocation() const;
+        QString name() const;
+        const Location* location() const;
+        bool locatable() const;
         void setLocation(const Location& iLocation);
 
         // Debugging
@@ -46,6 +47,7 @@ namespace iRail
 
     private:
         QString mName;
+        bool mLocatable;
         Location* mLocation;
     };
 

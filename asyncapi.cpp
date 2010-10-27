@@ -65,17 +65,14 @@ void AsyncAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
     tURL.setPath("connections/");
 
     // Set the parameters
-    tURL.addQueryItem("from", iConnectionRequest->getOrigin());
-    tURL.addQueryItem("to", iConnectionRequest->getDestination());
-    if (iConnectionRequest->hasDateTime())
+    tURL.addQueryItem("from", iConnectionRequest->origin());
+    tURL.addQueryItem("to", iConnectionRequest->destination());
+    if (iConnectionRequest->timed())
     {
-        ConnectionRequest::DateTime tDateTime = iConnectionRequest->getDateTime();
-        QString tDate = tDateTime.datetime.date().toString("ddMMyy");
-        tURL.addQueryItem("date", tDate);
-        QString tTime = tDateTime.datetime.time().toString("hhmm");
-        tURL.addQueryItem("time", tTime);
-        QString tType = tDateTime.type == ConnectionRequest::Arrival ? "arrive" : "depart";
-        tURL.addQueryItem("timeSel", tType);
+        const ConnectionRequest::Time *tTime = iConnectionRequest->time();
+        tURL.addQueryItem("date", tTime->datetime.date().toString("ddMMyy"));
+        tURL.addQueryItem("time", tTime->datetime.time().toString("hhmm"));
+        tURL.addQueryItem("timeSel", tTime->type == ConnectionRequest::Arrival ? "arrive" : "depart");
     }
 
     // Create a request

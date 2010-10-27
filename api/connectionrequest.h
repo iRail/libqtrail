@@ -21,8 +21,8 @@ namespace iRail
     class ConnectionRequest : public QObject
     {
     Q_OBJECT
-    Q_PROPERTY(QString origin READ getOrigin CONSTANT)
-    Q_PROPERTY(QString destination READ getDestination CONSTANT)
+    Q_PROPERTY(QString origin READ origin CONSTANT)
+    Q_PROPERTY(QString destination READ destination CONSTANT)
     // TODO: howto handle optional properties (DateTime)?
     Q_ENUMS(TimeType)
     public:
@@ -36,26 +36,27 @@ namespace iRail
             Arrival
         };
 
-        struct DateTime
+        struct Time
         {
             TimeType type;
             QDateTime datetime;
         };
 
         // Basic I/O
-        QString getOrigin() const;  // TODO: these should be StationPointers...
-        QString getDestination() const;
-        bool hasDateTime() const;
-        DateTime getDateTime() const;
-        void setDateTime(const DateTime& iDateTime);
-        void setDateTime(const TimeType& iTimeType, const QDate& iDate, const QTime& iTime);
+        QString origin() const;  // TODO: these should be StationPointers...
+        QString destination() const;
+        bool timed() const;
+        const Time* time() const;
+        void setTime(const Time& iTime);
+        void setTime(const TimeType& iTimeType, const QDate& iDate, const QTime& iTime);
 
         // Debugging
         friend QDebug operator<<(QDebug dbg, const ConnectionRequest &iConnectionRequest);
 
     private:
         QString mOrigin, mDestination;
-        DateTime *mDateTime;
+        bool mTimed;
+        const Time *mTime;
     };
 
     typedef QSharedPointer<ConnectionRequest> ConnectionRequestPointer;

@@ -23,7 +23,7 @@ MemoryStorage::MemoryStorage()
 // Getters
 //
 
-QList<StationPointer>* MemoryStorage::stations() const
+const QList<StationPointer>* MemoryStorage::stations() const
 {
     return mStations;
 }

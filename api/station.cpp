@@ -17,13 +17,14 @@ using namespace iRail;
 Station::Station(QString iName) : mName(iName)
 {
     qRegisterMetaType<StationPointer>("StationPointer");
+    mLocatable = false;
     mLocation = 0;
 }
 
 
 Station::~Station()
 {
-    if (mLocation)
+    if (mLocatable)
         delete mLocation;
 }
 
@@ -32,25 +33,27 @@ Station::~Station()
 // Basic I/O
 //
 
-QString Station::getName() const
+QString Station::name() const
 {
     return mName;
 }
 
-bool Station::hasLocation() const
+bool Station::locatable() const
 {
-    return (mLocation != 0);
+    return mLocatable;
 }
 
-QPair<qreal, qreal> Station::getLocation() const
+const Location* Station::location() const
 {
-    return *mLocation;
+    return mLocation;
 }
 
 void Station::setLocation(const Location& iLocation)
 {
-    if (mLocation)
+    if (mLocatable)
         delete mLocation;
+    else
+        mLocatable = true;
     mLocation = new Location(iLocation);
 }
 
@@ -61,9 +64,9 @@ void Station::setLocation(const Location& iLocation)
 
 QDebug operator<<(QDebug dbg, const Station &iStation)
 {
-    dbg << "Station(name='" << iStation.getName() << "'";
-    if (iStation.hasLocation())
-        dbg << ", location='" << iStation.getLocation().first << " x " << iStation.getLocation().second << "'";
+    dbg << "Station(name='" << iStation.name() << "'";
+    if (iStation.locatable())
+        dbg << ", location='" << iStation.location()->first << " x " << iStation.location()->second << "'";
     dbg << ")";
     return dbg.maybeSpace();
 }

@@ -26,10 +26,10 @@ CachedAPI::CachedAPI(const QString& iClientID, const QString& iClientVersion, St
 void CachedAPI::requestStations()
 {
     // Check the cache
-    QList<StationPointer>* tCachedStations = mStorage->stations();
+    const QList<StationPointer>* tCachedStations = mStorage->stations();
     if (tCachedStations != 0)
     {
-        emit replyStations(*tCachedStations);
+        emit replyStations(QList<StationPointer>(*tCachedStations));
         return;
     }
 

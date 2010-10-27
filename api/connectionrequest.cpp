@@ -16,14 +16,15 @@ using namespace iRail;
 ConnectionRequest::ConnectionRequest(const QString& iOrigin, const QString& iDestination) : mOrigin(iOrigin), mDestination(iDestination)
 {
     qRegisterMetaType<ConnectionRequestPointer>("ConnectionRequestPointer");
-    mDateTime = 0;
+    mTimed = false;
+    mTime = 0;
 }
 
 
 ConnectionRequest::~ConnectionRequest()
 {
-    if (mDateTime)
-        delete mDateTime;
+    if (mTimed)
+        delete mTime;
 }
 
 
@@ -31,42 +32,47 @@ ConnectionRequest::~ConnectionRequest()
 // Basic I/O
 //
 
-QString ConnectionRequest::getOrigin() const
+QString ConnectionRequest::origin() const
 {
     return mOrigin;
 }
 
-QString ConnectionRequest::getDestination() const
+QString ConnectionRequest::destination() const
 {
     return mDestination;
 }
 
 
-bool ConnectionRequest::hasDateTime() const
+bool ConnectionRequest::timed() const
 {
-    return (mDateTime != 0);
+    return mTimed;
 }
 
-ConnectionRequest::DateTime ConnectionRequest::getDateTime() const
+const ConnectionRequest::Time *ConnectionRequest::time() const
 {
-    return *mDateTime;
+    return mTime;
 }
 
-void ConnectionRequest::setDateTime(const ConnectionRequest::DateTime& iDateTime)
+void ConnectionRequest::setTime(const ConnectionRequest::Time& iTime)
 {
-    if (mDateTime)
-        delete mDateTime;
-    mDateTime = new DateTime(iDateTime);
+    if (mTimed)
+        delete mTime;
+    else
+        mTimed = true;
+    mTime = new Time(iTime);
 }
 
-void ConnectionRequest::setDateTime(const TimeType& iTimeType, const QDate& iDate, const QTime& iTime)
+void ConnectionRequest::setTime(const TimeType& iTimeType, const QDate& iDate, const QTime& iTime)
 {
-    if (mDateTime)
-        delete mDateTime;
-    mDateTime = new DateTime();
-    mDateTime->type = iTimeType;
-    mDateTime->datetime.setDate(iDate);
-    mDateTime->datetime.setTime(iTime);
+    if (mTimed)
+        delete mTime;
+    else
+        mTimed = true;
+    Time *tTime = new Time();
+    tTime->type = iTimeType;
+    tTime->datetime.setDate(iDate);
+    tTime->datetime.setTime(iTime);
+    mTime = tTime;
 }
 
 //
@@ -75,9 +81,9 @@ void ConnectionRequest::setDateTime(const TimeType& iTimeType, const QDate& iDat
 
 QDebug operator<<(QDebug dbg, const ConnectionRequest &iConnectionRequest)
 {
-    dbg << "ConnectionRequest(from='" << iConnectionRequest.getOrigin() << "', to='" << iConnectionRequest.getDestination() << "'";
-    if (iConnectionRequest.hasDateTime())
-        dbg << ", at='" << iConnectionRequest.getDateTime().datetime.toString(Qt::LocaleDate) << " (" << iConnectionRequest.getDateTime().type << ")'";
+    dbg << "ConnectionRequest(from='" << iConnectionRequest.origin() << "', to='" << iConnectionRequest.destination() << "'";
+    if (iConnectionRequest.timed())
+        dbg << ", at='" << iConnectionRequest.time()->datetime.toString(Qt::LocaleDate) << " (" << iConnectionRequest.time()->type << ")'";
     dbg << ")";
     return dbg.maybeSpace();
 }

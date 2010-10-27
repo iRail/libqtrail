@@ -15,14 +15,21 @@ namespace iRail
     class Storage : public QObject
     {
     Q_OBJECT
-    public:
         // Getters
-        // TODO: the cache _should_ be data agnostic...
-        virtual QList<StationPointer>* stations() const = 0;
+    public:
+        /*!
+          This method fetches the list of stations from the storage.
+          The actual object is returned, hence a copy should be taken
+          and no changes should be applied to the returnet list iself.
+          */
+        virtual const QList<StationPointer>* stations() const = 0;
 
         // Setters
-        // TODO: document that setters take ownership by taking a copy
     public slots:
+        /*!
+          This method inserts a list of stations in the storage. The
+          list is copied upon insertion.
+          */
         virtual void setStations(const QList<StationPointer>& iStations) = 0;
     };
 }
