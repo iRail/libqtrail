@@ -23,7 +23,8 @@ namespace iRail
     Q_OBJECT
     Q_PROPERTY(QString origin READ origin CONSTANT)
     Q_PROPERTY(QString destination READ destination CONSTANT)
-    // TODO: howto handle optional properties (DateTime)?
+    Q_PROPERTY(bool timed READ timed)
+    Q_PROPERTY(Time time READ time WRITE setTime)
     Q_ENUMS(TimeType)
     public:
         // Construction and destruction

@@ -14,6 +14,7 @@
 #include <QPair>
 #include <QDateTime>
 #include <QDebug>
+#include <QVariant>
 
 namespace iRail
 {
@@ -23,8 +24,8 @@ namespace iRail
     {
     Q_OBJECT
     Q_PROPERTY(Transfer transfer READ transfer CONSTANT)
-    // TODO: howto handle optional properties (location)?
-    // TODO: howto handle lists?
+    // Q_PROPERTY(QList transfersVariant READ transfers WRITE setTransfers)
+    // TODO: see Qt::properties doc, QList needs to be QVariant<QList<QVariant>>? How to bind with QML?
     public:
         // Auxiliary types
         enum POIType
@@ -35,7 +36,7 @@ namespace iRail
         struct POI
         {
             POIType type;
-            QString station;    // TODO: StationPointer, but we must have an ApiCache for this
+            QString station;    // TODO: StationPointer
             QString vehicle;    // TODO: VehiclePointer?
             unsigned int platform;
             unsigned int delay;
