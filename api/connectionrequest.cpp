@@ -83,7 +83,7 @@ QDebug operator<<(QDebug dbg, const ConnectionRequest &iConnectionRequest)
 {
     dbg << "ConnectionRequest(from='" << iConnectionRequest.origin() << "', to='" << iConnectionRequest.destination() << "'";
     if (iConnectionRequest.timed())
-        dbg << ", at='" << iConnectionRequest.time()->datetime.toString(Qt::LocaleDate) << " (" << iConnectionRequest.time()->type << ")'";
+        dbg << ", at='" << iConnectionRequest.time()->datetime.toString(Qt::DefaultLocaleShortDate) << " (" << iConnectionRequest.time()->type << ")'";
     dbg << ")";
     return dbg.maybeSpace();
 }
