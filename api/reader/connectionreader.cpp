@@ -14,7 +14,12 @@ using namespace iRail;
 // Construction and destruction
 //
 
-QList<ConnectionPointer> ConnectionReader::getConnections()
+ConnectionReader::ConnectionReader()
+{
+    mConnections = 0;
+}
+
+QList<ConnectionPointer>* ConnectionReader::connections()
 {
     return mConnections;
 }
@@ -76,7 +81,7 @@ void ConnectionReader::readConnections()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "connection")
-                mConnections << ConnectionPointer(readConnection());
+                *mConnections << ConnectionPointer(readConnection());
             else
                 skipUnknownElement();
         }
@@ -363,7 +368,7 @@ Connection::Transfer ConnectionReader::readVia()
 // Auxiliary
 //
 
-void ConnectionReader::reset()
+void ConnectionReader::allocate()
 {
-    mConnections.clear();
+    mConnections = new QList<ConnectionPointer>();
 }

@@ -29,6 +29,7 @@ void CachedAPI::requestStations()
     const QList<StationPointer>* tCachedStations = mStorage->stations();
     if (tCachedStations != 0)
     {
+        qDebug() << "Copying cached list " << tCachedStations;
         emit replyStations(new QList<StationPointer>(*tCachedStations));
         return;
     }
@@ -59,6 +60,6 @@ void CachedAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
 void CachedAPI::cacheStations(QList<StationPointer>* iStations)
 {
     if (iStations != 0)
-        mStorage->setStations(iStations);
+        mStorage->setStations(*iStations);
     disconnect(this, SIGNAL(replyStations(QList<StationPointer>*)), this, SLOT(cacheStations(QList<StationPointer>*)));
 }

@@ -25,11 +25,11 @@ namespace iRail
 
         // Setters
     public slots:
-        void setStations(const QList<StationPointer>* iStations);
+        void setStations(const QList<StationPointer>& iStations);
 
         // Cache data
     private:
-        const QList<StationPointer>* mStations;
+        QList<StationPointer>* mStations;
     };
 }
 

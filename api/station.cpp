@@ -24,6 +24,7 @@ Station::Station(QString iName) : mName(iName)
 
 Station::~Station()
 {
+    qDebug() << "Deleting station";
     if (mLocatable)
         delete mLocation;
 }

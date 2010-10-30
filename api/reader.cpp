@@ -16,7 +16,7 @@ using namespace iRail;
 void Reader::read(QIODevice *iDevice) throw(ParserException)
 {
     // Setup the reader
-    this->reset();
+    this->allocate();
     mReader.clear();
     mReader.addData(iDevice->readAll());
 

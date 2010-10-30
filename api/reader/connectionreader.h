@@ -18,15 +18,17 @@ namespace iRail
     {
     Q_OBJECT
     public:
+        ConnectionReader();
         void readDocument();
-        QList<ConnectionPointer> getConnections();
+        QList<ConnectionPointer>* connections();
     private:
         // Member data
-        QList<ConnectionPointer> mConnections;
+        QList<ConnectionPointer>* mConnections;
         QDateTime mTimestamp;
         double mVersion;
 
         // Tag readers
+        void allocate();
         void readConnections();
         Connection* readConnection();
         Connection::POI readPOI(Connection::POIType);
@@ -36,9 +38,6 @@ namespace iRail
         QString readStation();
         QList<Connection::Transfer> readVias();
         Connection::Transfer readVia();
-
-        // Auxiliary
-        void reset();
     };
 }
 

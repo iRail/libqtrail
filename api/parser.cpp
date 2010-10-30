@@ -30,7 +30,7 @@ QList<StationPointer>* Parser::parseStations(QIODevice *iDevice) throw(ParserExc
     StationReader tReader;
     tReader.read(iDevice);
 
-    return new QList<StationPointer>(tReader.getStations());
+    return tReader.stations();
 }
 
 QList<ConnectionPointer>* Parser::parseConnections(QIODevice *iDevice) throw(ParserException)
@@ -39,6 +39,6 @@ QList<ConnectionPointer>* Parser::parseConnections(QIODevice *iDevice) throw(Par
     ConnectionReader tReader;
     tReader.read(iDevice);
 
-    return new QList<ConnectionPointer>(tReader.getConnections());
+    return tReader.connections();
 }
 

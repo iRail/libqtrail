@@ -20,10 +20,16 @@ namespace iRail
         void read(QIODevice *iDevice) throw(ParserException);   // TODO: incremental parsing, http://doc.trolltech.com/4.6/qxmlstreamreader.html
         virtual void readDocument() = 0;
     protected:
-        virtual void reset() {}
         QXmlStreamReader mReader;
 
         // Auxiliary
+        /*!
+          This method allocates heap space for the data to be read,
+          and is called when the document is about to be read.
+          WARNING: this allocated data is not deallocated, that
+          is up to the user!
+          */
+        virtual void allocate() = 0;
         void readError();
         void skipUnknownElement();
     };

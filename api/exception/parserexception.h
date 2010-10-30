@@ -9,14 +9,8 @@
 // Includes
 #include <QString>
 #include <QtXml/QXmlParseException>
-#include "../parser/messagehandler.h"
 #include "../exception.h"
 #include <QDebug>
-
-// Optional includes
-#ifdef BETRAINS_VALIDATINGXML
-#include "../parser/messagehandler.h"
-#endif // BETRAINS_VALIDATINGXML
 
 /*
  TODO
@@ -33,12 +27,6 @@ namespace iRail
         ParserException(const QString& iMessage) : Exception(iMessage)
         {
         }
-#ifdef BETRAINS_VALIDATINGXML
-        ParserException(const MessageHandler& iMessageHandler) : Exception(iMessageHandler.getDescription())
-        {
-            // TODO: do something more (source location)
-        }
-#endif // BETRAINS_VALIDATINGXML
         ParserException(const QXmlParseException& iException) : Exception(iException.message())
         {
             // TODO: do something more

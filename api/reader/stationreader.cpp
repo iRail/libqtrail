@@ -14,7 +14,12 @@ using namespace iRail;
 // Construction and destruction
 //
 
-QList<StationPointer> StationReader::getStations()
+StationReader::StationReader()
+{
+    mStations = 0;
+}
+
+QList<StationPointer>* StationReader::stations()
 {
     return mStations;
 }
@@ -76,7 +81,7 @@ void StationReader::readStations()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "station")
-                mStations << StationPointer(readStation());
+                *mStations << StationPointer(readStation());
             else
                 skipUnknownElement();
         }
@@ -125,7 +130,7 @@ Station* StationReader::readStation()
 // Auxiliary
 //
 
-void StationReader::reset()
+void StationReader::allocate()
 {
-    mStations.clear();
+    mStations = new QList<StationPointer>();
 }

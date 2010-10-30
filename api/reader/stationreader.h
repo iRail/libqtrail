@@ -18,19 +18,18 @@ namespace iRail
     {
     Q_OBJECT
     public:
+        StationReader();
         void readDocument();
-        QList<StationPointer> getStations();
+        QList<StationPointer>* stations();
     private:
         // Member data
-        QList<StationPointer> mStations;
+        QList<StationPointer>* mStations;
         QDateTime mTimestamp;
 
         // Tag readers
+        void allocate();
         void readStations();
         Station* readStation();
-
-        // Auxiliary
-        void reset();
     };
 }
 

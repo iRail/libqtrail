@@ -33,7 +33,12 @@ const QList<StationPointer>* MemoryStorage::stations() const
 // Setters
 //
 
-void MemoryStorage::setStations(const QList<StationPointer>* iStations)
+void MemoryStorage::setStations(const QList<StationPointer>& iStations)
 {
-    mStations = new QList<StationPointer>(*iStations);
+    mStations = new QList<StationPointer>(iStations);
+
+    // Manually detach the cached copy from all its COW brethren
+    // This because QList deletes a COW-copy (which has not yet
+    // been detached) when its parent gets destroyed...
+    mStations->detach();
 }
