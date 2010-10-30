@@ -33,6 +33,8 @@ void ConnectionReader::readDocument()
         {
             if (mReader.name() == "connections")
                 readConnections();
+            else if (mReader.name() == "error")
+                readError();
             else
                 mReader.raiseError("could not find connections index");
         }

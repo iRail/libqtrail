@@ -24,6 +24,7 @@ namespace iRail
         QXmlStreamReader mReader;
 
         // Auxiliary
+        void readError();
         void skipUnknownElement();
     };
 }

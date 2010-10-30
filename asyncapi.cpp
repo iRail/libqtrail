@@ -37,6 +37,11 @@ Exception AsyncAPI::error() const
     return mError;
 }
 
+QString AsyncAPI::errorString() const
+{
+    return mError.what();
+}
+
 
 //
 // Request slots
@@ -93,13 +98,14 @@ void AsyncAPI::processStations()
         mParser.validateStations(tXmlInputSource);
         resetXmlInputSource(tXmlInputSource, iReply);
 #endif // BETRAINS_VALIDATINGXML
-        QList<StationPointer> oStations = mParser.parseStations(mNetworkReply);
+        QList<StationPointer>* oStations = mParser.parseStations(mNetworkReply);
         emit replyStations(oStations);
     }
     catch (Exception& iException)
     {
         mError = iException;
         mHasError = true;
+        emit replyStations(0);
     }
 
     // Clean up
@@ -116,13 +122,14 @@ void AsyncAPI::processConnections()
         mParser.validateConnections(tXmlInputSource);
         resetXmlInputSource(tXmlInputSource, iReply);
 #endif // BETRAINS_VALIDATINGXML
-        QList<ConnectionPointer> oStations = mParser.parseConnections(mNetworkReply);
-        emit replyConnections(oStations);
+        QList<ConnectionPointer>* oConnections = mParser.parseConnections(mNetworkReply);
+        emit replyConnections(oConnections);
     }
     catch (Exception& iException)
     {
         mError = iException;
         mHasError = true;
+        emit replyConnections(0);
     }
 
     // Clean up

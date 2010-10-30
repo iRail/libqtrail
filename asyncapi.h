@@ -35,6 +35,7 @@ namespace iRail
         // Error handling
         bool hasError() const;
         Exception error() const;
+        QString errorString() const;
 
         // Request slots
     public slots:
@@ -54,8 +55,8 @@ namespace iRail
 
         // Reply signals
     signals:
-        void replyStations(QList<StationPointer> iStations);
-        void replyConnections(QList<ConnectionPointer> iConnections);
+        void replyStations(QList<StationPointer>* iStations);
+        void replyConnections(QList<ConnectionPointer>* iConnections);
 
         // Progress indicator signals
     signals:

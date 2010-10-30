@@ -33,7 +33,7 @@ const QList<StationPointer>* MemoryStorage::stations() const
 // Setters
 //
 
-void MemoryStorage::setStations(const QList<StationPointer>& iStations)
+void MemoryStorage::setStations(const QList<StationPointer>* iStations)
 {
-    mStations = new QList<StationPointer>(iStations);
+    mStations = new QList<StationPointer>(*iStations);
 }

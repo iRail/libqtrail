@@ -37,7 +37,6 @@ namespace iRail
         QList<Connection::Transfer> readVias();
         Connection::Transfer readVia();
 
-
         // Auxiliary
         void reset();
     };

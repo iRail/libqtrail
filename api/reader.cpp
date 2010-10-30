@@ -35,6 +35,16 @@ void Reader::read(QIODevice *iDevice) throw(ParserException)
 // Auxiliary
 //
 
+void Reader::readError()
+{
+    // Process the contents
+    QString oError = mReader.readElementText();
+    if (mReader.isEndElement())
+        mReader.readNext();
+
+    mReader.raiseError(oError);
+}
+
 void Reader::skipUnknownElement()
 {
     // TODO: warn about the unknown element

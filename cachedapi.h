@@ -27,7 +27,7 @@ namespace iRail
 
         // Caching slots
     private slots:
-        void cacheStations(QList<StationPointer> iStations);
+        void cacheStations(QList<StationPointer>* iStations);
 
         // Progress indicator signals
     signals:

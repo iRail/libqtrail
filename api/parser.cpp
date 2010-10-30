@@ -38,22 +38,22 @@ void Parser::validateStations(QXmlInputSource& iXmlInputSource) throw(ParserExce
 // Parsing routines
 //
 
-QList<StationPointer> Parser::parseStations(QIODevice *iDevice) throw(ParserException)
+QList<StationPointer>* Parser::parseStations(QIODevice *iDevice) throw(ParserException)
 {
     // Parse the document
     StationReader tReader;
     tReader.read(iDevice);
 
-    return tReader.getStations();
+    return new QList<StationPointer>(tReader.getStations());
 }
 
-QList<ConnectionPointer> Parser::parseConnections(QIODevice *iDevice) throw(ParserException)
+QList<ConnectionPointer>* Parser::parseConnections(QIODevice *iDevice) throw(ParserException)
 {
     // Parse the document
     ConnectionReader tReader;
     tReader.read(iDevice);
 
-    return tReader.getConnections();
+    return new QList<ConnectionPointer>(tReader.getConnections());
 }
 
 

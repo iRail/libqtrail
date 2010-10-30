@@ -30,7 +30,7 @@ namespace iRail
           This method inserts a list of stations in the storage. The
           list is copied upon insertion.
           */
-        virtual void setStations(const QList<StationPointer>& iStations) = 0;
+        virtual void setStations(const QList<StationPointer>* iStations) = 0;
     };
 }
 

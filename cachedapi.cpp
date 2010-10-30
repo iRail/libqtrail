@@ -29,7 +29,7 @@ void CachedAPI::requestStations()
     const QList<StationPointer>* tCachedStations = mStorage->stations();
     if (tCachedStations != 0)
     {
-        emit replyStations(QList<StationPointer>(*tCachedStations));
+        emit replyStations(new QList<StationPointer>(*tCachedStations));
         return;
     }
 
@@ -37,7 +37,7 @@ void CachedAPI::requestStations()
     if (!mInRequest)
         emit progress_start();
     mInRequest = true;
-    connect(this, SIGNAL(replyStations(QList<StationPointer>)), this, SLOT(cacheStations(QList<StationPointer>)));
+    connect(this, SIGNAL(replyStations(QList<StationPointer>*)), this, SLOT(cacheStations(QList<StationPointer>*)));
     AsyncAPI::requestStations();
 
 }
@@ -56,8 +56,9 @@ void CachedAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
 // Caching slots
 //
 
-void CachedAPI::cacheStations(QList<StationPointer> iStations)
+void CachedAPI::cacheStations(QList<StationPointer>* iStations)
 {
-    mStorage->setStations(iStations);
-    disconnect(this, SIGNAL(replyStations(QList<StationPointer>)), this, SLOT(cacheStations(QList<StationPointer>)));
+    if (iStations != 0)
+        mStorage->setStations(iStations);
+    disconnect(this, SIGNAL(replyStations(QList<StationPointer>*)), this, SLOT(cacheStations(QList<StationPointer>*)));
 }

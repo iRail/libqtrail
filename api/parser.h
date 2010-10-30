@@ -44,8 +44,8 @@ namespace iRail
 #endif // BETRAINS_VALIDATINGXML
 
         // Parsing routines
-        QList<StationPointer> parseStations(QIODevice *iDevice) throw(ParserException);
-        QList<ConnectionPointer> parseConnections(QIODevice *iDevice) throw(ParserException);
+        QList<StationPointer>* parseStations(QIODevice *iDevice) throw(ParserException);
+        QList<ConnectionPointer>* parseConnections(QIODevice *iDevice) throw(ParserException);
 
     private:
         // Member data

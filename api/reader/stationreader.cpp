@@ -33,6 +33,8 @@ void StationReader::readDocument()
         {
             if (mReader.name() == "stations")
                 readStations();
+            else if (mReader.name() == "error")
+                readError();
             else
                 mReader.raiseError("could not find stations index");
         }
