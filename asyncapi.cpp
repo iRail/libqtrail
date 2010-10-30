@@ -94,10 +94,6 @@ void AsyncAPI::processStations()
     // Parse the data
     try
     {
-#ifdef BETRAINS_VALIDATINGXML
-        mParser.validateStations(tXmlInputSource);
-        resetXmlInputSource(tXmlInputSource, iReply);
-#endif // BETRAINS_VALIDATINGXML
         QList<StationPointer>* oStations = mParser.parseStations(mNetworkReply);
         emit replyStations(oStations);
     }
@@ -118,10 +114,6 @@ void AsyncAPI::processConnections()
     // Parse the data
     try
     {
-#ifdef BETRAINS_VALIDATINGXML
-        mParser.validateConnections(tXmlInputSource);
-        resetXmlInputSource(tXmlInputSource, iReply);
-#endif // BETRAINS_VALIDATINGXML
         QList<ConnectionPointer>* oConnections = mParser.parseConnections(mNetworkReply);
         emit replyConnections(oConnections);
     }

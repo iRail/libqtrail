@@ -21,20 +21,6 @@ Parser::Parser() : mException("this is a base exception which should never be th
 
 
 //
-// Validating routines
-//
-
-#ifdef BETRAINS_VALIDATINGXML
-
-void Parser::validateStations(QXmlInputSource& iXmlInputSource) throw(ParserException)
-{
-    validate(iXmlInputSource, QUrl("qrc:parser/schemas/stations.xsd"));
-}
-
-#endif // BETRAINS_VALIDATINGXML
-
-
-//
 // Parsing routines
 //
 
@@ -56,29 +42,3 @@ QList<ConnectionPointer>* Parser::parseConnections(QIODevice *iDevice) throw(Par
     return new QList<ConnectionPointer>(tReader.getConnections());
 }
 
-
-
-//
-// Auxiliary
-//
-
-#ifdef BETRAINS_VALIDATINGXML
-void Parser::validate(const QXmlInputSource& iXml, const QUrl& iSchemaURL) throw(ParserException)
-{
-    // Load the schema
-    MessageHandler tMessageHandler;
-    QXmlSchema tSchema;
-    if (!tSchema.load(iSchemaURL))
-        throw ParserException("invalid schema");
-
-    // Validate the document
-    QXmlSchemaValidator tValidator(tSchema);
-    tValidator.setMessageHandler(&tMessageHandler);
-    tSchema.setMessageHandler(&tMessageHandler);
-    if (!tValidator.validate(iXml.data()))      // This fails somehow, without reporting any error (even when not using a MessageHandler)
-    {
-        qDebug() << "Error while validating (validator.validate returned false), an error should follow now";
-        throw ParserException(tMessageHandler);
-    }
-}
-#endif // BETRAINS_VALIDATINGXML

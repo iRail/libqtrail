@@ -37,17 +37,3 @@ HEADERS += \
     api/reader.h \
     api/reader/stationreader.h \
     api/reader/connectionreader.h
-
-
-#
-# Optional modules
-#
-
-# Validate XML files
-ValidatingXml {
-    QT += xmlpatterns
-
-    HEADERS += api/parser/messagehandler.h
-
-    DEFINES += BETRAINS_VALIDATINGXML
-}
