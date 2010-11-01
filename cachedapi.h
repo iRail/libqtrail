@@ -31,11 +31,10 @@ namespace iRail
 
         // Progress indicator signals
     signals:
-        void progress_start();
+        void miss();
 
         // Member data
     private:
-        bool mInRequest;
         Storage* mStorage;
     };
 }

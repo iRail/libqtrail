@@ -36,4 +36,5 @@ HEADERS += \
     api/storage/memorystorage.h \
     api/reader.h \
     api/reader/stationreader.h \
-    api/reader/connectionreader.h
+    api/reader/connectionreader.h \
+    api/progresshandler.h

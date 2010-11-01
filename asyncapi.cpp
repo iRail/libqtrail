@@ -19,6 +19,9 @@ AsyncAPI::AsyncAPI(const QString& iClientID, const QString& iClientVersion) : mC
 {
     mUserAgent.append("BETrains-Qt/" + mClientVersion + " (" + mClientID + " edition)");
     mNetworkReply = 0;
+
+    mProgressLevel = 0;
+    mProgress = 0;
 }
 
 
@@ -49,8 +52,9 @@ QString AsyncAPI::errorString() const
 
 void AsyncAPI::requestStations()
 {
-    // Reset
+    // Setup
     mHasError = false;
+    mProgressHandler.enter();
 
     // Construct URL
     QUrl tURL = createBaseURL();
@@ -62,8 +66,9 @@ void AsyncAPI::requestStations()
 
 void AsyncAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
 {
-    // Reset
+    // Setup
     mHasError = false;
+    mProgressHandler.enter();
 
     // Construct URL
     QUrl tURL = createBaseURL();
@@ -105,6 +110,7 @@ void AsyncAPI::processStations()
     }
 
     // Clean up
+    mProgressHandler.exit();
     network_cleanup();
 }
 
@@ -125,6 +131,7 @@ void AsyncAPI::processConnections()
     }
 
     // Clean up
+    mProgressHandler.exit();
     network_cleanup();
 }
 
@@ -157,8 +164,9 @@ void AsyncAPI::network_progress(qint64 iProgress, qint64 totalSteps)
 {
     if (iProgress >= totalSteps && totalSteps > 0)
     {
-        int smallprogress = iProgress/totalSteps * 100;
-        emit progress(smallprogress);
+        int subprogress = iProgress/totalSteps * 100;
+        mProgressHandler.setProgress(subprogress);
+        emit mProgressHandler.progress();
     }
 }
 

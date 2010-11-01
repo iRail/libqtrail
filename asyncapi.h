@@ -16,6 +16,7 @@
 #include <QList>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
+#include "api/progresshandler.h"
 #include "api/station.h"
 #include "api/parser.h"
 #include "api/exception/networkexception.h"
@@ -60,7 +61,7 @@ namespace iRail
 
         // Progress indicator signals
     signals:
-        void progress(int current); // Value between 0 and 100
+        void progress(int current);
         void action(QString action);
 
         // Member data
@@ -72,6 +73,9 @@ namespace iRail
         QNetworkReply* mNetworkReply;
         Exception mError;
         bool mHasError;
+        int mProgressLevel;
+        int mProgress;
+        ProgressHandler mProgressHandler;
 
         // Auxiliary
     private:
