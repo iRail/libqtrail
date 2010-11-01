@@ -15,7 +15,8 @@ using namespace iRail;
 
 CachedAPI::CachedAPI(const QString& iClientID, const QString& iClientVersion, Storage* iStorage) : AsyncAPI(iClientID, iClientVersion), mStorage(iStorage)
 {
-    mInRequest = false;
+    mInRequest = false; // TODO: int instead of bool && handle interrupted request
+    connect(this, SIGNAL(replyStations(QList<StationPointer>*)), this, SLOT(cacheStations(QList<StationPointer>*)));
 }
 
 
@@ -29,7 +30,6 @@ void CachedAPI::requestStations()
     const QList<StationPointer>* tCachedStations = mStorage->stations();
     if (tCachedStations != 0)
     {
-        qDebug() << "Copying cached list " << tCachedStations;
         emit replyStations(new QList<StationPointer>(*tCachedStations));
         return;
     }
@@ -38,7 +38,6 @@ void CachedAPI::requestStations()
     if (!mInRequest)
         emit progress_start();
     mInRequest = true;
-    connect(this, SIGNAL(replyStations(QList<StationPointer>*)), this, SLOT(cacheStations(QList<StationPointer>*)));
     AsyncAPI::requestStations();
 
 }
@@ -61,5 +60,4 @@ void CachedAPI::cacheStations(QList<StationPointer>* iStations)
 {
     if (iStations != 0)
         mStorage->setStations(*iStations);
-    disconnect(this, SIGNAL(replyStations(QList<StationPointer>*)), this, SLOT(cacheStations(QList<StationPointer>*)));
 }
