@@ -17,7 +17,7 @@ using namespace iRail;
 
 AsyncAPI::AsyncAPI(const QString& iClientID, const QString& iClientVersion) : mClientID(iClientID), mClientVersion(iClientVersion)
 {
-    mUserAgent.append("BETrains-Qt/" + mClientVersion + " (" + mClientID + " edition)");
+    mUserAgent.append("BeTrains-Qt/" + mClientVersion + " (" + mClientID + " edition)");
     mNetworkReply = 0;
 
     mProgressLevel = 0;
