@@ -5,7 +5,6 @@
 // Includes
 #include "connectionreader.h"
 #include <QStringRef>
-
 // Namespaces
 using namespace iRail;
 
@@ -234,17 +233,10 @@ QDateTime ConnectionReader::readDatetime()
 {
     // Process the attributes
     QDateTime oDatetime;
-    if (mReader.attributes().hasAttribute("formatted"))
-    {
-        QStringRef tDatetimeString = mReader.attributes().value("formatted");
-
-        oDatetime = QDateTime::fromString(tDatetimeString.toString(), "yyyy-MM-dd'T'HH:mm'Z'");
-    }
-    else
-        mReader.raiseError("could not find time formatted attribute");
-
-    // Ditch the contents (unixtime, meh)
-    mReader.readElementText();
+    // Maleadt: Ditch the contents (unixtime, meh)
+    // Pieter: I will ditch you if you keep saying unixtime, meh. Unixtime rules and you know it!
+    QString secondsstring = mReader.readElementText();
+    oDatetime = QDateTime::fromTime_t(atoi(secondsstring.toStdString().c_str()));
     if (mReader.isEndElement())
         mReader.readNext();
 
