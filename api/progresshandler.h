@@ -8,7 +8,6 @@
 
 // Includes
 #include <memory>
-#include <QDebug>
 
 namespace iRail
 {

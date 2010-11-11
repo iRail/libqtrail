@@ -10,7 +10,6 @@
 #include <QString>
 #include <QtXml/QXmlParseException>
 #include "../exception.h"
-#include <QDebug>
 
 /*
  TODO

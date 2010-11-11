@@ -9,7 +9,6 @@
 // Includes
 #include <QXmlStreamReader>
 #include "exception/parserexception.h"
-#include <QDebug>
 
 namespace iRail
 {
