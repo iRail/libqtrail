@@ -104,8 +104,9 @@ Connection* ConnectionReader::readConnection()
         mReader.raiseError("could not find connection id attribute");
 
     // Process the tags
-    Connection::POI tDeparture, tArrival, tDummy;
+    Connection::POI tDeparture, tArrival;
     QList<Connection::Line> tLines;
+    tLines << Connection::Line(Connection::POI(), Connection::POI());
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -265,8 +266,8 @@ QList<Connection::Line> ConnectionReader::readVias()
         mReader.raiseError("could not find vias count attribute");
 
     // Process the tags
-    Connection::POI tDummy;
     QList<Connection::Line> tLines;
+    tLines << Connection::Line(Connection::POI(), Connection::POI());
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -281,10 +282,8 @@ QList<Connection::Line> ConnectionReader::readVias()
             if (mReader.name() == "via")
             {
                 Connection::Line tLine = readVia();
-                if (tLines.isEmpty())
-                    tLines << Connection::Line(tDummy, tDummy);
                 tLines.last().arrival = tLine.arrival;
-                tLines << Connection::Line(tLine.departure, tDummy);
+                tLines << Connection::Line(tLine.departure, Connection::POI());
             }
             else
                 skipUnknownElement();
