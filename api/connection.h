@@ -70,5 +70,6 @@ namespace iRail
 }
 
 Q_DECLARE_METATYPE(iRail::ConnectionPointer)
+Q_DECLARE_METATYPE(iRail::Connection::POI)
 
 #endif // CONNECTION_H

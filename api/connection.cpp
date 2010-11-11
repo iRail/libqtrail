@@ -17,6 +17,7 @@ using namespace iRail;
 Connection::Connection(const POI& iDeparture, const POI& iArrival) : mDeparture(iDeparture), mArrival(iArrival)
 {
     qRegisterMetaType<ConnectionPointer>("ConnectionPointer");
+    qRegisterMetaType<Connection::POI>("Connection::POI");
 }
 
 
