@@ -104,8 +104,8 @@ Connection* ConnectionReader::readConnection()
         mReader.raiseError("could not find connection id attribute");
 
     // Process the tags
-    Connection::POI tDeparture, tArrival;
-    QList<Connection::Transfer> tTransfers;
+    Connection::POI tDeparture, tArrival, tDummy;
+    QList<Connection::Line> tLines;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -118,11 +118,11 @@ Connection* ConnectionReader::readConnection()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-                tDeparture = readPOI(Connection::Departure);
+                tDeparture = readPOI();
             else if (mReader.name() == "arrival")
-                tArrival = readPOI(Connection::Arrival);
+                tArrival = readPOI();
             else if (mReader.name() == "vias")
-                tTransfers = readVias();
+                tLines = readVias();
             else
                 skipUnknownElement();
         }
@@ -131,18 +131,14 @@ Connection* ConnectionReader::readConnection()
     }
 
     // Construct the object
-    Connection::Transfer tTransfer;
-    tTransfer.arrival = tArrival;
-    tTransfer.departure = tDeparture;
-    Connection *oConnection = new Connection(tTransfer);
-    if (tTransfers.size() > 0)
-    {
-        oConnection->setTransfers(tTransfers);
-    }
+    Connection *oConnection = new Connection(tDeparture, tArrival);
+    tLines.first().departure = tDeparture;
+    tLines.last().arrival = tArrival;
+    oConnection->setLines(tLines);
     return oConnection;
 }
 
-Connection::POI ConnectionReader::readPOI(Connection::POIType iType)
+Connection::POI ConnectionReader::readPOI()
 {
     // Process the attributes
     int tDelay = 0;
@@ -190,7 +186,6 @@ Connection::POI ConnectionReader::readPOI(Connection::POIType iType)
     oPOI.vehicle = tVehicle;
     oPOI.delay = tDelay;
     oPOI.platform = tPlatform;
-    oPOI.type = iType;
     return oPOI;
 }
 
@@ -256,7 +251,7 @@ QString ConnectionReader::readStation()
 
 }
 
-QList<Connection::Transfer> ConnectionReader::readVias()
+QList<Connection::Line> ConnectionReader::readVias()
 {
     // Process the attributes
     int tNumber;
@@ -270,7 +265,8 @@ QList<Connection::Transfer> ConnectionReader::readVias()
         mReader.raiseError("could not find vias count attribute");
 
     // Process the tags
-    QList<Connection::Transfer> tTransfers;
+    Connection::POI tDummy;
+    QList<Connection::Line> tLines;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -284,12 +280,11 @@ QList<Connection::Transfer> ConnectionReader::readVias()
         {
             if (mReader.name() == "via")
             {
-                Connection::Transfer tTransfer = readVia();
-                if (tTransfers.size() > 0)
-                {
-                    tTransfers.back().departure.vehicle = tTransfer.arrival.vehicle;
-                }
-                tTransfers << tTransfer;
+                Connection::Line tLine = readVia();
+                if (tLines.isEmpty())
+                    tLines << Connection::Line(tDummy, tDummy);
+                tLines.last().arrival = tLine.arrival;
+                tLines << Connection::Line(tLine.departure, tDummy);
             }
             else
                 skipUnknownElement();
@@ -298,12 +293,12 @@ QList<Connection::Transfer> ConnectionReader::readVias()
             mReader.readNext();
     }
 
-    if (tTransfers.size() != tNumber)
+    if (tLines.size() != tNumber+1)
         mReader.raiseError("advertised nubmer of vias did not match the actual amount");
-    return tTransfers;
+    return tLines;
 }
 
-Connection::Transfer ConnectionReader::readVia()
+Connection::Line ConnectionReader::readVia()
 {
     // Process the attributes
     unsigned int tId;   // TODO: do something with this
@@ -331,9 +326,9 @@ Connection::Transfer ConnectionReader::readVia()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-                tDeparture = readPOI(Connection::Departure);
+                tDeparture = readPOI();
             else if (mReader.name() == "arrival")
-                tArrival = readPOI(Connection::Arrival);
+                tArrival = readPOI();
             else if (mReader.name() == "vehicle")
                 tVehicle = readVehicle();
             else if (mReader.name() == "station")
@@ -349,10 +344,8 @@ Connection::Transfer ConnectionReader::readVia()
     tArrival.vehicle = tVehicle;
     tArrival.station = tStation;
     tDeparture.station = tStation;
-    Connection::Transfer oTransfer;
-    oTransfer.arrival = tArrival;
-    oTransfer.departure = tDeparture;
-    return oTransfer;
+    Connection::Line oLine(tDeparture, tArrival);
+    return oLine;
 }
 
 

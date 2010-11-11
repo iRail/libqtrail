@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Connection::Connection(const Transfer& iTransfer) : mTransfer(iTransfer)
+Connection::Connection(const POI& iDeparture, const POI& iArrival) : mDeparture(iDeparture), mArrival(iArrival)
 {
     qRegisterMetaType<ConnectionPointer>("ConnectionPointer");
 }
@@ -30,19 +30,24 @@ Connection::~Connection()
 //
 
 
-Connection::Transfer Connection::transfer() const
+Connection::POI Connection::departure() const
 {
-    return mTransfer;
+    return mDeparture;
 }
 
-QList<Connection::Transfer> Connection::transfers() const
+Connection::POI Connection::arrival() const
 {
-    return mTransfers;
+    return mArrival;
 }
 
-void Connection::setTransfers(const QList<Connection::Transfer>& iTransfers)
+QList<Connection::Line> Connection::lines() const
 {
-    mTransfers = QList<Connection::Transfer>(iTransfers);
+    return mLines;
+}
+
+void Connection::setLines(const QList<Connection::Line>& iLines)
+{
+    mLines = QList<Connection::Line>(iLines);
 }
 
 
@@ -53,9 +58,9 @@ void Connection::setTransfers(const QList<Connection::Transfer>& iTransfers)
 
 QDebug operator<<(QDebug dbg, const Connection &iConnection)
 {
-    dbg << "Connection('" << iConnection.transfer().departure.station << "', platform " << iConnection.transfer().departure.platform << " → ";
-    for (int i = 0; i < iConnection.transfers().size(); i++)
-        dbg << "Connection('" << iConnection.transfers().at(i).arrival.station << "', platform " << iConnection.transfers().at(i).arrival.platform << " to " << iConnection.transfers().at(i).departure.platform << " → ";
-    dbg << iConnection.transfer().arrival.station << "', platform " << iConnection.transfer().arrival.platform << ")";
+    dbg << "Connection('" << iConnection.departure().station << "', platform " << iConnection.departure().platform << " → ";
+    for (int i = 0; i < iConnection.lines().size(); i++)
+        dbg << "Connection('" << iConnection.lines().at(i).arrival.station << "', platform " << iConnection.lines().at(i).arrival.platform << " to " << iConnection.lines().at(i).departure.platform << " → ";
+    dbg << iConnection.arrival().station << "', platform " << iConnection.arrival().platform << ")";
     return dbg.maybeSpace();
 }

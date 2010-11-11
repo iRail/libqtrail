@@ -31,13 +31,13 @@ namespace iRail
         void allocate();
         void readConnections();
         Connection* readConnection();
-        Connection::POI readPOI(Connection::POIType);
+        Connection::POI readPOI();
         QString readVehicle();
         int readPlatform();
         QDateTime readDatetime();
         QString readStation();
-        QList<Connection::Transfer> readVias();
-        Connection::Transfer readVia();
+        QList<Connection::Line> readVias();
+        Connection::Line readVia();
     };
 }
 

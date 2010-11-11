@@ -23,19 +23,12 @@ namespace iRail
     class Connection : public QObject
     {
     Q_OBJECT
-    Q_PROPERTY(Transfer transfer READ transfer CONSTANT)
-    // Q_PROPERTY(QList transfersVariant READ transfers WRITE setTransfers)
-    // TODO: see Qt::properties doc, QList needs to be QVariant<QList<QVariant>>? How to bind with QML?
+    // Q_PROPERTY(QList linesVariant READ lines WRITE setLines)
+        // TODO: see Qt::properties doc, QList needs to be QVariant<QList<QVariant>>? How to bind with QML?
     public:
-        // Auxiliary types
-        enum POIType
-        {
-            Arrival,
-            Departure
-        };
+        // Auxiliary typeseparture
         struct POI
         {
-            POIType type;
             QString station;    // TODO: StationPointer
             QString vehicle;    // TODO: VehiclePointer?
             unsigned int platform;
@@ -43,27 +36,34 @@ namespace iRail
 
             QDateTime datetime;
         };
-        struct Transfer
+        struct Line
         {
-            POI arrival;
+            Line(POI _departure, POI _arrival) : departure(_departure), arrival(_arrival)
+            {
+
+            }
+
             POI departure;
+            POI arrival;
+            // guid line_id;
         };
 
         // Construction and destruction
-        Connection(const Transfer& iTransfer);
+        Connection(const POI& iDeparture, const POI& iArrival);
         ~Connection();
 
         // Basic I/O
-        Transfer transfer() const;
-        QList<Transfer> transfers() const;
-        void setTransfers(const QList<Transfer>& iTransfers);
+        POI departure() const;  // TODO: same data at two places, with one being changeable
+        POI arrival() const;
+        QList<Line> lines() const;
+        void setLines(const QList<Line>& iLines);
 
         // Debugging
         friend QDebug operator<<(QDebug dbg, const Connection &iConnection);
 
     private:
-        Transfer mTransfer;
-        QList<Transfer> mTransfers;
+        POI mDeparture, mArrival;
+        QList<Line> mLines;
     };
 
     typedef QSharedPointer<Connection> ConnectionPointer;
