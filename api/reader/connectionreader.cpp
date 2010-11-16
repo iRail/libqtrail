@@ -242,8 +242,13 @@ QDateTime ConnectionReader::readDatetime()
 
 QString ConnectionReader::readStation()
 {
+    // Fetch the station id (we don't need the other stuff)
+    if (!mReader.attributes().hasAttribute("id"))
+        mReader.raiseError("station without id");
+    QString tId = mReader.attributes().value("id").toString();
+
     // Process the contents
-    // TODO: cache lookup
+    // TODO: ditch this and perform a cache lookup
     QString oStation = mReader.readElementText();
     if (mReader.isEndElement())
         mReader.readNext();
