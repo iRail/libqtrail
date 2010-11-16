@@ -109,6 +109,9 @@ Station* StationReader::readStation()
         qreal tLatitude = tLocationString.toString().midRef(tSeparator+1).toString().toDouble();
         tLocation = new Location(tLongitude, tLatitude);
     }
+    if (! mReader.attributes().hasAttribute("id"))
+        mReader.raiseError("station without id");
+    QString tId = mReader.attributes().value("id").toString();
 
     // Process the contents
     QString tName = mReader.readElementText();
@@ -116,7 +119,8 @@ Station* StationReader::readStation()
         mReader.readNext();
 
     // Construct the object
-    Station *oStation = new Station(tName);
+    Station *oStation = new Station(tId);
+    oStation->setName(tName);
     if (tLocation != 0)
     {
         oStation->setLocation(*tLocation);

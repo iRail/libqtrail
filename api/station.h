@@ -28,16 +28,19 @@ namespace iRail
     class Station : public QObject
     {
     Q_OBJECT
-    Q_PROPERTY(QString name READ name CONSTANT)
+    Q_PROPERTY(QString id READ id CONSTANT)
+    Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(bool locatable READ locatable)
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Construction and destruction
-        Station(QString iName);
+        Station(QString iId);
         ~Station();
 
         // Basic I/O
+        QString id() const;
         QString name() const;
+        void setName(const QString& iName);
         const Location* location() const;
         bool locatable() const;
         void setLocation(const Location& iLocation);
@@ -46,6 +49,7 @@ namespace iRail
         friend QDebug operator<<(QDebug dbg, const Station &iStation);
 
     private:
+        QString mId;
         QString mName;
         bool mLocatable;
         Location* mLocation;

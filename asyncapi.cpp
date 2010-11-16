@@ -186,7 +186,7 @@ QUrl AsyncAPI::createBaseURL() const
     // Build base URL
     QUrl oUrl;
     oUrl.setScheme("http");
-    oUrl.setHost("api.irail.be");
+    oUrl.setHost("dev.api.irail.be");
     oUrl.setQueryDelimiters('=', '&');
 
     return oUrl;
