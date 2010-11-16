@@ -22,6 +22,9 @@ AsyncAPI::AsyncAPI(const QString& iClientID, const QString& iClientVersion) : mC
 
     mProgressLevel = 0;
     mProgress = 0;
+
+    // Reset temporary data (makes debugging easier)
+    tStations = 0;
 }
 
 
@@ -64,9 +67,11 @@ void AsyncAPI::requestStations()
     network_request(getRequest(tURL), this, SLOT(processStations()));
 }
 
-void AsyncAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
+// iStations has to exist during the compelete request
+void AsyncAPI::requestConnections(const QList<StationPointer>* iStations, ConnectionRequestPointer iConnectionRequest)
 {
     // Setup
+    tStations = iStations;
     mHasError = false;
     mProgressHandler.enter();
 
@@ -97,42 +102,45 @@ void AsyncAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
 void AsyncAPI::processStations()
 {
     // Parse the data
+    QList<StationPointer>* oStations;
     try
     {
-        QList<StationPointer>* oStations = mParser.parseStations(mNetworkReply);
-        emit replyStations(oStations);
+        oStations = mParser.parseStations(mNetworkReply);
     }
     catch (Exception& iException)
     {
         mError = iException;
         mHasError = true;
-        emit replyStations(0);
+        oStations = 0;
     }
 
     // Clean up
     mProgressHandler.exit();
     network_cleanup();
+    emit replyStations(oStations);
 }
 
 
 void AsyncAPI::processConnections()
 {
-    // Parse the data
+    // Parse the data;
+    QList<ConnectionPointer>* oConnections;
     try
     {
-        QList<ConnectionPointer>* oConnections = mParser.parseConnections(mNetworkReply);
-        emit replyConnections(oConnections);
+        oConnections = mParser.parseConnections(tStations, mNetworkReply);
     }
     catch (Exception& iException)
     {
         mError = iException;
         mHasError = true;
-        emit replyConnections(0);
+        oConnections = 0;
     }
 
     // Clean up
+    tStations = 0;
     mProgressHandler.exit();
     network_cleanup();
+    emit replyConnections(oConnections);
 }
 
 //
@@ -155,6 +163,7 @@ void AsyncAPI::network_request(QNetworkRequest iRequest, QObject* iObject, const
     }
     else
     {
+        // TODO: flagging this doesn't cancel cached connection request
         mError = Exception("concurrent network requests are currently impossible");
         mHasError = true;
     }

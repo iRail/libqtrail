@@ -15,6 +15,7 @@
 #include <QDateTime>
 #include <QDebug>
 #include <QVariant>
+#include "station.h"
 
 namespace iRail
 {
@@ -29,7 +30,7 @@ namespace iRail
         // Auxiliary typeseparture
         struct POI
         {
-            QString station;    // TODO: StationPointer
+            StationPointer station;
             QString vehicle;    // TODO: VehiclePointer?
             unsigned int platform;
             unsigned int delay;

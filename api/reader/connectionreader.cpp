@@ -13,8 +13,9 @@ using namespace iRail;
 // Construction and destruction
 //
 
-ConnectionReader::ConnectionReader()
+ConnectionReader::ConnectionReader(const QList<StationPointer>* iStations)
 {
+    mStations = iStations;
     mConnections = 0;
 }
 
@@ -151,7 +152,8 @@ Connection::POI ConnectionReader::readPOI()
     }
 
     // Process the tags
-    QString tVehicle, tStation;
+    StationPointer tStation;
+    QString tVehicle;
     int tPlatform;
     QDateTime tDatetime;
     mReader.readNext();
@@ -228,33 +230,33 @@ int ConnectionReader::readPlatform()
 QDateTime ConnectionReader::readDatetime()
 {
     // Process the attributes
-    QDateTime oDatetime;
-    // Maleadt: Ditch the contents (unixtime, meh)
-    // Pieter: I will ditch you if you keep saying unixtime, meh. Unixtime rules and you know it!
-    QString secondsstring = mReader.readElementText();
-    oDatetime = QDateTime::fromTime_t(atoi(secondsstring.toStdString().c_str()));
+    QString tUnixtime = mReader.readElementText();
+    QDateTime oDatetime = QDateTime::fromTime_t(tUnixtime.toUInt());
     if (mReader.isEndElement())
         mReader.readNext();
 
     return oDatetime;
-
 }
 
-QString ConnectionReader::readStation()
+StationPointer ConnectionReader::readStation()
 {
     // Fetch the station id (we don't need the other stuff)
     if (!mReader.attributes().hasAttribute("id"))
         mReader.raiseError("station without id");
     QString tId = mReader.attributes().value("id").toString();
-
-    // Process the contents
-    // TODO: ditch this and perform a cache lookup
-    QString oStation = mReader.readElementText();
+    mReader.readElementText();
     if (mReader.isEndElement())
         mReader.readNext();
 
-    return oStation;
-
+    // Lookup the station
+    QListIterator<StationPointer> tStationIterator(*mStations);
+    while (tStationIterator.hasNext() && tStationIterator.peekNext()->id() != tId)
+    {
+        tStationIterator.next();
+    }
+    if (! tStationIterator.hasNext())
+        mReader.raiseError("unknown station id");
+    return tStationIterator.next();
 }
 
 QList<Connection::Line> ConnectionReader::readVias()
@@ -317,7 +319,8 @@ Connection::Line ConnectionReader::readVia()
 
     // Process the tags
     Connection::POI tArrival, tDeparture;
-    QString tStation, tVehicle;
+    StationPointer tStation;
+    QString tVehicle;
     mReader.readNext();
     while (!mReader.atEnd())
     {
