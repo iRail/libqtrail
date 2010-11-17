@@ -35,8 +35,8 @@ namespace iRail
 
         // Parsing routines
         QList<StationPointer>* parseStations(QIODevice *iDevice) throw(ParserException);
-        QList<ConnectionPointer>* parseConnections(const QList<StationPointer>* iStations, QIODevice *iDevice) throw(ParserException);
-        VehiclePointer parseVehicle(const QList<StationPointer>* iStations, QIODevice *iDevice) throw(ParserException);
+        QList<ConnectionPointer>* parseConnections(QIODevice *iDevice) throw(ParserException);
+        VehiclePointer* parseVehicle(QIODevice *iDevice) throw(ParserException);
 
     private:
         // Member data

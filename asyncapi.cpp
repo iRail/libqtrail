@@ -22,9 +22,6 @@ AsyncAPI::AsyncAPI(const QString& iClientID, const QString& iClientVersion) : mC
 
     mProgressLevel = 0;
     mProgress = 0;
-
-    // Reset temporary data (makes debugging easier)
-    tStations = 0;
 }
 
 
@@ -68,10 +65,9 @@ void AsyncAPI::requestStations()
 }
 
 // iStations has to exist during the compelete request
-void AsyncAPI::requestConnections(const QList<StationPointer>* iStations, ConnectionRequestPointer iConnectionRequest)
+void AsyncAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
 {
     // Setup
-    tStations = iStations;
     mHasError = false;
     mProgressHandler.enter();
 
@@ -127,7 +123,7 @@ void AsyncAPI::processConnections()
     QList<ConnectionPointer>* oConnections;
     try
     {
-        oConnections = mParser.parseConnections(tStations, mNetworkReply);
+        oConnections = mParser.parseConnections(mNetworkReply);
     }
     catch (Exception& iException)
     {
@@ -137,7 +133,6 @@ void AsyncAPI::processConnections()
     }
 
     // Clean up
-    tStations = 0;
     mProgressHandler.exit();
     network_cleanup();
     emit replyConnections(oConnections);

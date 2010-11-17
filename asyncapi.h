@@ -41,7 +41,7 @@ namespace iRail
         // Request slots
     public slots:
         virtual void requestStations();
-        virtual void requestConnections(const QList<StationPointer>* iStations, ConnectionRequestPointer iConnectionRequest);
+        virtual void requestConnections(ConnectionRequestPointer iConnectionRequest);
 
         // Processing methods
     private slots:
@@ -76,9 +76,6 @@ namespace iRail
         int mProgressLevel;
         int mProgress;
         ProgressHandler mProgressHandler;
-
-        // Temporary data
-        const QList<StationPointer>* tStations;
 
         // Auxiliary
     private:

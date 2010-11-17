@@ -41,31 +41,9 @@ void CachedAPI::requestStations()
 
 void CachedAPI::requestConnections(const ConnectionRequestPointer& iConnectionRequest)
 {
-    tConnectionRequest = iConnectionRequest;
-    connect(this, SIGNAL(replyStations(QList<StationPointer>*)), this, SLOT(requestConnectionsAfterStations(QList<StationPointer>*)));
-    requestStations();
-}
-
-
-//
-// Secondary stage request slots
-//
-
-void CachedAPI::requestConnectionsAfterStations(QList<StationPointer>* iStations)
-{
-    if (iStations != 0)
-    {
-        // Request a new list
-        emit miss();
-        AsyncAPI::requestConnections(iStations, tConnectionRequest);
-    }
-    else
-    {
-        emit replyConnections(0);
-    }
-
-    disconnect(this, SIGNAL(replyStations(QList<StationPointer>*)), this, SLOT(requestConnectionsAfterStations(QList<StationPointer>*)));
-    tConnectionRequest.clear();
+    // Request a new list
+    emit miss();
+    AsyncAPI::requestConnections(iConnectionRequest);
 }
 
 

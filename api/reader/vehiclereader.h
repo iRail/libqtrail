@@ -19,12 +19,11 @@ namespace iRail
     {
     Q_OBJECT
     public:
-        VehicleReader(const QList<StationPointer>* iStations);
+        VehicleReader();
         void readDocument();
         VehiclePointer* vehicle();
     private:
         // Member data
-        const QList<StationPointer>* mStations;
         VehiclePointer* mVehicle;
         QDateTime mTimestamp;
         double mVersion;
@@ -35,7 +34,7 @@ namespace iRail
         Vehicle::Location readLocation();
         QList<Vehicle::Stop> readStops();
         Vehicle::Stop readStop();
-        StationPointer readStation();
+        QString readStation();
         double readDelay();
         QDateTime readDatetime();
     };

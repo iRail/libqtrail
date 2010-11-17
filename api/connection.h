@@ -30,7 +30,7 @@ namespace iRail
         // Auxiliary types
         struct POI
         {
-            StationPointer station;
+            QString station;
             unsigned int platform;
             unsigned int delay;
 
@@ -45,7 +45,7 @@ namespace iRail
 
             POI departure;
             POI arrival;
-            QString vehicle;    // TODO: VehiclePointer?
+            QString vehicle;
         };
 
         // Construction and destruction

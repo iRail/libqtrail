@@ -14,9 +14,8 @@ using namespace iRail;
 // Construction and destruction
 //
 
-ConnectionReader::ConnectionReader(const QList<StationPointer>* iStations)
+ConnectionReader::ConnectionReader()
 {
-    mStations = iStations;
     mConnections = 0;
 }
 
@@ -163,7 +162,7 @@ Connection::POI ConnectionReader::readPOI(QString& iVehicle)
     }
 
     // Process the tags
-    StationPointer tStation;
+    QString tStationId;
     int tPlatform;
     QDateTime tDatetime;
     mReader.readNext();
@@ -184,7 +183,7 @@ Connection::POI ConnectionReader::readPOI(QString& iVehicle)
             else if (mReader.name() == "time")
                 tDatetime = readDatetime();
             else if (mReader.name() == "station")
-                tStation = readStation();
+                tStationId = readStation();
             else
                 skipUnknownElement();
         }
@@ -194,7 +193,7 @@ Connection::POI ConnectionReader::readPOI(QString& iVehicle)
 
     // Construct the object
     Connection::POI oPOI;
-    oPOI.station = tStation;
+    oPOI.station = tStationId;
     oPOI.datetime = tDatetime;
     oPOI.delay = tDelay;
     oPOI.platform = tPlatform;
@@ -246,13 +245,13 @@ QDateTime ConnectionReader::readDatetime()
     return QDateTime::fromTime_t(tUnixtime.toUInt());
 }
 
-StationPointer ConnectionReader::readStation()
+QString ConnectionReader::readStation()
 {
     // Process the attributes
-    QString tStationId;
+    QString oStationId;
     if (mReader.attributes().hasAttribute("id"))
     {
-        tStationId = mReader.attributes().value("id").toString();
+        oStationId = mReader.attributes().value("id").toString();
     }
     else
         mReader.raiseError("station without id");
@@ -263,14 +262,7 @@ StationPointer ConnectionReader::readStation()
         mReader.readNext();
 
     // Construct the object
-    QListIterator<StationPointer> tStationIterator(*mStations);
-    while (tStationIterator.hasNext() && tStationIterator.peekNext()->id() != tStationId)
-    {
-        tStationIterator.next();
-    }
-    if (! tStationIterator.hasNext())
-        mReader.raiseError("unknown station id");
-    return tStationIterator.next();
+    return oStationId;
 }
 
 QList<Connection::Line> ConnectionReader::readVias(QList<QString>& iVehicles)
@@ -336,7 +328,7 @@ Connection::Line ConnectionReader::readVia(QString& iVehicle)
     // Process the tags
     Connection::POI tArrival, tDeparture;
     QString tVehicleDummy;
-    StationPointer tStation;
+    QString tStationId;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -355,7 +347,7 @@ Connection::Line ConnectionReader::readVia(QString& iVehicle)
             else if (mReader.name() == "vehicle")
                 iVehicle = readVehicle();
             else if (mReader.name() == "station")
-                tStation = readStation();
+                tStationId = readStation();
             else
                 skipUnknownElement();
         }
@@ -364,8 +356,8 @@ Connection::Line ConnectionReader::readVia(QString& iVehicle)
     }
 
     // Construct the object
-    tArrival.station = tStation;
-    tDeparture.station = tStation;
+    tArrival.station = tStationId;
+    tDeparture.station = tStationId;
     Connection::Line oLine(tDeparture, tArrival);
     return oLine;
 }

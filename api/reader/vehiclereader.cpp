@@ -14,9 +14,8 @@ using namespace iRail;
 // Construction and destruction
 //
 
-VehicleReader::VehicleReader(const QList<StationPointer>* iStations)
+VehicleReader::VehicleReader()
 {
-    mStations = iStations;
     mVehicle = 0;
 }
 
@@ -166,7 +165,7 @@ QList<Vehicle::Stop> VehicleReader::readStops()
 Vehicle::Stop VehicleReader::readStop()
 {
     // Process the tags
-    StationPointer tStation;
+    QString tStationId;
     double tDelay;
     QDateTime tDateTime;
     mReader.readNext();
@@ -181,7 +180,7 @@ Vehicle::Stop VehicleReader::readStop()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "station")
-                tStation = readStation();
+                tStationId = readStation();
             if (mReader.name() == "delay")
                 tDelay = readDelay();
             if (mReader.name() == "time")
@@ -196,18 +195,18 @@ Vehicle::Stop VehicleReader::readStop()
     // Construct the object
     Vehicle::Stop oStop;
     oStop.datetime = tDateTime;
-    oStop.station = tStation;
+    oStop.station = tStationId;
     oStop.delay = tDelay;
     return oStop;
 }
 
-StationPointer VehicleReader::readStation()
+QString VehicleReader::readStation()
 {
     // Process the attributes
-    QString tStationId;
+    QString oStationId;
     if (mReader.attributes().hasAttribute("id"))
     {
-        tStationId = mReader.attributes().value("id").toString();
+        oStationId = mReader.attributes().value("id").toString();
     }
     else
         mReader.raiseError("station without id");
@@ -218,14 +217,7 @@ StationPointer VehicleReader::readStation()
         mReader.readNext();
 
     // Construct the object
-    QListIterator<StationPointer> tStationIterator(*mStations);
-    while (tStationIterator.hasNext() && tStationIterator.peekNext()->id() != tStationId)
-    {
-        tStationIterator.next();
-    }
-    if (! tStationIterator.hasNext())
-        mReader.raiseError("unknown station id");
-    return tStationIterator.next();
+    return oStationId;
 }
 
 double VehicleReader::readDelay()

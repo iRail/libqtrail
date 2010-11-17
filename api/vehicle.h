@@ -29,7 +29,7 @@ namespace iRail
         typedef QPair<qreal, qreal> Location;
         struct Stop
         {
-            StationPointer station;
+            QString station;
             unsigned int delay;
             QDateTime datetime;
         };

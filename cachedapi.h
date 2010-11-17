@@ -25,10 +25,6 @@ namespace iRail
         void requestStations();
         void requestConnections(const ConnectionRequestPointer& iConnectionRequest);
 
-        // Secondary stage request slots
-    private slots:
-        void requestConnectionsAfterStations(QList<StationPointer>* iStations);
-
         // Caching slots
     private slots:
         void cacheStations(QList<StationPointer>* iStations);
@@ -40,9 +36,6 @@ namespace iRail
         // Member data
     private:
         Storage* mStorage;
-
-        // Temporary data
-        ConnectionRequestPointer tConnectionRequest;
     };
 }
 

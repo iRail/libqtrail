@@ -19,12 +19,11 @@ namespace iRail
     {
     Q_OBJECT
     public:
-        ConnectionReader(const QList<StationPointer>* iStations);
+        ConnectionReader();
         void readDocument();
         QList<ConnectionPointer>* connections();
     private:
         // Member data
-        const QList<StationPointer>* mStations;
         QList<ConnectionPointer>* mConnections;
         QDateTime mTimestamp;
         double mVersion;
@@ -37,7 +36,7 @@ namespace iRail
         QString readVehicle();
         int readPlatform();
         QDateTime readDatetime();
-        StationPointer readStation();
+        QString readStation();
         QList<Connection::Line> readVias(QList<QString>& iVehicles);
         Connection::Line readVia(QString& iVehicle);
     };

@@ -34,19 +34,19 @@ QList<StationPointer>* Parser::parseStations(QIODevice *iDevice) throw(ParserExc
     return tReader.stations();
 }
 
-QList<ConnectionPointer>* Parser::parseConnections(const QList<StationPointer>* iStations, QIODevice *iDevice) throw(ParserException)
+QList<ConnectionPointer>* Parser::parseConnections(QIODevice *iDevice) throw(ParserException)
 {
     // Parse the document
-    ConnectionReader tReader(iStations);
+    ConnectionReader tReader;
     tReader.read(iDevice);
 
     return tReader.connections();
 }
 
-VehiclePointer Parser::parseVehicle(const QList<StationPointer>* iStations, QIODevice *iDevice) throw(ParserException)
+VehiclePointer* Parser::parseVehicle(QIODevice *iDevice) throw(ParserException)
 {
     // Parse the document
-    VehicleReader tReader(iStations);
+    VehicleReader tReader;
     tReader.read(iDevice);
 
     return tReader.vehicle();
