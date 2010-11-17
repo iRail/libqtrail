@@ -30,8 +30,8 @@ namespace iRail
 
         // Tag readers
         void allocate();
+        Vehicle* readVehicleInformation();
         Vehicle* readVehicle();
-        Vehicle::Location readLocation();
         QList<Vehicle::Stop> readStops();
         Vehicle::Stop readStop();
         QString readStation();

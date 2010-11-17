@@ -37,7 +37,7 @@ void VehicleReader::readDocument()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "vehicleinformation")
-                mVehicle = new VehiclePointer(readVehicle());
+                mVehicle = new VehiclePointer(readVehicleInformation());
             else if (mReader.name() == "error")
                 readError();
             else
@@ -48,7 +48,7 @@ void VehicleReader::readDocument()
     }
 }
 
-Vehicle* VehicleReader::readVehicle()
+Vehicle* VehicleReader::readVehicleInformation()
 {
     // Process the attributes
     if (mReader.attributes().hasAttribute("timestamp"))
@@ -69,7 +69,7 @@ Vehicle* VehicleReader::readVehicle()
         mReader.raiseError("could not find vehicles version attribute");
 
     // Process the tags
-    Vehicle::Location* tLocation = 0;
+    Vehicle* tVehicle;
     QList<Vehicle::Stop> tStops;
     mReader.readNext();
     while (!mReader.atEnd())
@@ -83,7 +83,7 @@ Vehicle* VehicleReader::readVehicle()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "location")
-                tLocation = new Vehicle::Location(readLocation());
+                tVehicle = readVehicle();
             else if (mReader.name() == "stops")
                 tStops = readStops();
             else
@@ -94,17 +94,11 @@ Vehicle* VehicleReader::readVehicle()
     }
 
     // Construct the object
-    Vehicle* tVehicle = new Vehicle("dummy");   // TODO: read ID
     tVehicle->setStops(tStops);
-    if (tLocation != 0)
-    {
-        tVehicle->setLocation(*tLocation);
-        delete tLocation;
-    }
     return tVehicle;
 }
 
-Vehicle::Location VehicleReader::readLocation()
+Vehicle* VehicleReader::readVehicle()
 {
     // Process the attributes
     double tLocationX, tLocationY;
@@ -125,13 +119,15 @@ Vehicle::Location VehicleReader::readLocation()
     else
         mReader.raiseError("could not find vehicle y-location attribute");
 
-
-    // Process the tags
+    // Process the contents
+    QString tVehicleId = mReader.readElementText();
     if (mReader.isEndElement())
         mReader.readNext();
 
     // Construct the object
-    return Vehicle::Location(tLocationX, tLocationY);
+    Vehicle* oVehicle = new Vehicle(tVehicleId);
+    oVehicle->setLocation(Vehicle::Location(tLocationX, tLocationY));
+    return oVehicle;
 }
 
 QList<Vehicle::Stop> VehicleReader::readStops()

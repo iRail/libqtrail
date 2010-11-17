@@ -25,6 +25,7 @@ namespace iRail
         // Member data
         QList<StationPointer>* mStations;
         QDateTime mTimestamp;
+        double mVersion;
 
         // Tag readers
         void allocate();

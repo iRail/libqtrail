@@ -55,18 +55,18 @@ void StationReader::readStations()
     {
         QStringRef tTimestampString = mReader.attributes().value("timestamp");
 
-        // TODO: when Qt 4.8 gets released, QStringRef
-        //       will natively implement these
-        //       convenience functionality
-        //       http://qt.gitorious.org/qt/qt/merge_requests/625
-        int tDay = tTimestampString.toString().midRef(0, 2).toString().toInt();
-        int tMonth = tTimestampString.toString().midRef(2, 2).toString().toInt();
-        int tYear = tTimestampString.toString().midRef(4, 2).toString().toInt() + 2000;
-
-        mTimestamp = QDateTime(QDate(tYear, tMonth, tDay));
+        mTimestamp.setTime_t(tTimestampString.toString().toLong());
     }
     else
-        mReader.raiseError("could not find stations timestamp attribute");
+        mReader.raiseError("could not find connections timestamp attribute");
+    if (mReader.attributes().hasAttribute("version"))
+    {
+        QStringRef tVersionString = mReader.attributes().value("version");
+
+       mVersion = tVersionString.toString().toDouble();
+    }
+    else
+        mReader.raiseError("could not find connections version attribute");
 
     // Process the tags
     mReader.readNext();
