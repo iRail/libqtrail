@@ -9,7 +9,7 @@
 // Includes
 #include "api/reader.h"
 #include "api/station.h"
-#include <QList>
+#include <QMap>
 #include <QDateTime>
 
 namespace iRail
@@ -20,10 +20,10 @@ namespace iRail
     public:
         StationReader();
         void readDocument();
-        QList<StationPointer>* stations();
+        QMap<QString, StationPointer>* stations();
     private:
         // Member data
-        QList<StationPointer>* mStations;
+        QMap<QString, StationPointer>* mStations;
         QDateTime mTimestamp;
         double mVersion;
 

@@ -23,7 +23,7 @@ MemoryStorage::MemoryStorage()
 // Getters
 //
 
-const QList<StationPointer>* MemoryStorage::stations() const
+const QMap<QString, StationPointer>* MemoryStorage::stations() const
 {
     return mStations;
 }
@@ -33,9 +33,9 @@ const QList<StationPointer>* MemoryStorage::stations() const
 // Setters
 //
 
-void MemoryStorage::setStations(const QList<StationPointer>& iStations)
+void MemoryStorage::setStations(const QMap<QString, StationPointer>& iStations)
 {
-    mStations = new QList<StationPointer>(iStations);
+    mStations = new QMap<QString, StationPointer>(iStations);
 
     // Manually detach the cached copy from all its COW brethren
     // This because QList deletes a COW-copy (which has not yet

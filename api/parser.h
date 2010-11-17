@@ -8,6 +8,7 @@
 
 // Includes
 #include <QtNetwork/QNetworkReply>
+#include <QMap>
 #include <QList>
 #include <QtXml/QXmlSimpleReader>
 #include <QtXml/QXmlStreamReader>
@@ -34,7 +35,7 @@ namespace iRail
         Parser();
 
         // Parsing routines
-        QList<StationPointer>* parseStations(QIODevice *iDevice) throw(ParserException);
+        QMap<QString, StationPointer>* parseStations(QIODevice *iDevice) throw(ParserException);
         QList<ConnectionPointer>* parseConnections(QIODevice *iDevice) throw(ParserException);
         VehiclePointer* parseVehicle(QIODevice *iDevice) throw(ParserException);
 

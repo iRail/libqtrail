@@ -8,7 +8,7 @@
 
 // Includes
 #include "station.h"
-#include <QList>
+#include <QMap>
 
 namespace iRail
 {
@@ -22,7 +22,7 @@ namespace iRail
           The actual object is returned, hence a copy should be taken
           and no changes should be applied to the returnet list iself.
           */
-        virtual const QList<StationPointer>* stations() const = 0;
+        virtual const QMap<QString, StationPointer>* stations() const = 0;
 
         // Setters
     public slots:
@@ -30,7 +30,7 @@ namespace iRail
           This method inserts a list of stations in the storage. The
           list is copied upon insertion.
           */
-        virtual void setStations(const QList<StationPointer>& iStations) = 0;
+        virtual void setStations(const QMap<QString, StationPointer>& iStations) = 0;
     };
 }
 

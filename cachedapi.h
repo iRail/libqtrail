@@ -11,6 +11,7 @@
 #include "api/storage.h"
 #include "api/connectionrequest.h"
 #include <QString>
+#include <QMap>
 
 namespace iRail
 {
@@ -29,7 +30,7 @@ namespace iRail
 
         // Caching slots
     private slots:
-        void cacheStations(QList<StationPointer>* iStations);
+        void cacheStations(QMap<QString, StationPointer>* iStations);
 
         // Progress indicator signals
     signals:

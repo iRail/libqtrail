@@ -9,7 +9,7 @@
 // Includes
 #include "api/storage.h"
 #include "api/station.h"
-#include <QList>
+#include <QMap>
 
 namespace iRail
 {
@@ -21,15 +21,15 @@ namespace iRail
         MemoryStorage();
 
         // Getters
-        const QList<StationPointer>* stations() const;
+        const QMap<QString, StationPointer>* stations() const;
 
         // Setters
     public slots:
-        void setStations(const QList<StationPointer>& iStations);
+        void setStations(const QMap<QString, StationPointer>& iStations);
 
         // Cache data
     private:
-        QList<StationPointer>* mStations;
+        QMap<QString, StationPointer>* mStations;
     };
 }
 

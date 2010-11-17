@@ -19,7 +19,7 @@ StationReader::StationReader()
     mStations = 0;
 }
 
-QList<StationPointer>* StationReader::stations()
+QMap<QString, StationPointer>* StationReader::stations()
 {
     return mStations;
 }
@@ -81,7 +81,10 @@ void StationReader::readStations()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "station")
-                *mStations << StationPointer(readStation());
+            {
+                Station* tStation = readStation();
+                mStations->insert(tStation->id(), StationPointer(tStation));
+            }
             else
                 skipUnknownElement();
         }
@@ -136,5 +139,5 @@ Station* StationReader::readStation()
 
 void StationReader::allocate()
 {
-    mStations = new QList<StationPointer>();
+    mStations = new QMap<QString, StationPointer>();
 }

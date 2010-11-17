@@ -114,7 +114,7 @@ void AsyncAPI::requestVehicle(const QString& iVehicleId)
 void AsyncAPI::processStations()
 {
     // Parse the data
-    QList<StationPointer>* oStations;
+    QMap<QString, StationPointer>* oStations;
     try
     {
         oStations = mParser.parseStations(mNetworkReply);

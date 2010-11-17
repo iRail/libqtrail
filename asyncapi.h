@@ -13,6 +13,7 @@
 
 // Includes
 #include <QUrl>
+#include <QMap>
 #include <QList>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
@@ -58,7 +59,7 @@ namespace iRail
 
         // Reply signals
     signals:
-        void replyStations(QList<StationPointer>* iStations);
+        void replyStations(QMap<QString, StationPointer>* iStations);
         void replyConnections(QList<ConnectionPointer>* iConnections);
         void replyVehicle(VehiclePointer* iVehicle);
 

@@ -25,7 +25,7 @@ Parser::Parser() : mException("this is a base exception which should never be th
 // Parsing routines
 //
 
-QList<StationPointer>* Parser::parseStations(QIODevice *iDevice) throw(ParserException)
+QMap<QString, StationPointer>* Parser::parseStations(QIODevice *iDevice) throw(ParserException)
 {
     // Parse the document
     StationReader tReader;

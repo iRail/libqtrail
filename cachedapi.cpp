@@ -15,7 +15,7 @@ using namespace iRail;
 
 CachedAPI::CachedAPI(const QString& iClientID, const QString& iClientVersion, Storage* iStorage) : AsyncAPI(iClientID, iClientVersion), mStorage(iStorage)
 {
-    connect(this, SIGNAL(replyStations(QList<StationPointer>*)), this, SLOT(cacheStations(QList<StationPointer>*)));
+    connect(this, SIGNAL(replyStations(QMap<QString, StationPointer>*)), this, SLOT(cacheStations(QMap<QString, StationPointer>*)));
 }
 
 
@@ -26,10 +26,10 @@ CachedAPI::CachedAPI(const QString& iClientID, const QString& iClientVersion, St
 void CachedAPI::requestStations()
 {
     // Check the cache
-    const QList<StationPointer>* tCachedStations = mStorage->stations();
+    const QMap<QString, StationPointer>* tCachedStations = mStorage->stations();
     if (tCachedStations != 0)
     {
-        emit replyStations(new QList<StationPointer>(*tCachedStations));
+        emit replyStations(new QMap<QString, StationPointer>(*tCachedStations));
         return;
     }
 
@@ -60,7 +60,7 @@ void CachedAPI::requestVehicle(const QString& iVehicleId)
 // Caching slots
 //
 
-void CachedAPI::cacheStations(QList<StationPointer>* iStations)
+void CachedAPI::cacheStations(QMap<QString, StationPointer>* iStations)
 {
     if (iStations != 0)
         mStorage->setStations(*iStations);
