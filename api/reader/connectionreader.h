@@ -9,6 +9,7 @@
 // Includes
 #include "api/reader.h"
 #include "api/connection.h"
+#include "api/station.h"
 #include <QList>
 #include <QDateTime>
 
@@ -32,13 +33,13 @@ namespace iRail
         void allocate();
         void readConnections();
         Connection* readConnection();
-        Connection::POI readPOI();
+        Connection::POI readPOI(QString& iVehicle);
         QString readVehicle();
         int readPlatform();
         QDateTime readDatetime();
         StationPointer readStation();
-        QList<Connection::Line> readVias();
-        Connection::Line readVia();
+        QList<Connection::Line> readVias(QList<QString>& iVehicles);
+        Connection::Line readVia(QString& iVehicle);
     };
 }
 

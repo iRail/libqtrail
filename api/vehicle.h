@@ -2,15 +2,9 @@
 // Configuration
 //
 
-/*
- TODO: thread safety. When moving from QSharedDataPointer to
-       QSharedPointer to conserve QObject idioms, we lost
-       thread safety...
- */
-
 // Include guard
-#ifndef STATION_H
-#define STATION_H
+#ifndef VEHICLE_H
+#define VEHICLE_H
 
 // Includes
 #include <QObject>
@@ -19,45 +13,52 @@
 #include <QString>
 #include <QPair>
 #include <QDebug>
+#include <QDateTime>
+#include "station.h"
 
 namespace iRail
 {
-    class Station : public QObject
+    class Vehicle : public QObject
     {
     Q_OBJECT
     Q_PROPERTY(QString id READ id CONSTANT)
-    Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(bool locatable READ locatable)
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Auxiliary types
         typedef QPair<qreal, qreal> Location;
+        struct Stop
+        {
+            StationPointer station;
+            unsigned int delay;
+            QDateTime datetime;
+        };
 
         // Construction and destruction
-        Station(QString iId);
-        ~Station();
+        Vehicle(QString iId);
+        ~Vehicle();
 
         // Basic I/O
         QString id() const;
-        QString name() const;
-        void setName(const QString& iName);
         const Location* location() const;
         bool locatable() const;
         void setLocation(const Location& iLocation);
+        QList<Stop> stops() const;
+        void setStops(const QList<Stop>& iStops);
 
         // Debugging
         friend QDebug operator<<(QDebug dbg, const Station &iStation);
 
     private:
         QString mId;
-        QString mName;
         bool mLocatable;
         Location* mLocation;
+        QList<Stop> mStops;
     };
 
-    typedef QSharedPointer<Station> StationPointer;
+    typedef QSharedPointer<Vehicle> VehiclePointer;
 }
 
-Q_DECLARE_METATYPE(iRail::StationPointer)
+Q_DECLARE_METATYPE(iRail::VehiclePointer)
 
 #endif // STATION_H

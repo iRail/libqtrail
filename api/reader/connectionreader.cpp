@@ -5,6 +5,7 @@
 // Includes
 #include "connectionreader.h"
 #include <QStringRef>
+
 // Namespaces
 using namespace iRail;
 
@@ -61,7 +62,7 @@ void ConnectionReader::readConnections()
         mReader.raiseError("could not find connections timestamp attribute");
     if (mReader.attributes().hasAttribute("version"))
     {
-        QStringRef tVersionString = mReader.attributes().value("timestamp");
+        QStringRef tVersionString = mReader.attributes().value("version");
 
        mVersion = tVersionString.toString().toDouble();
     }
@@ -108,6 +109,8 @@ Connection* ConnectionReader::readConnection()
     Connection::POI tDeparture, tArrival;
     QList<Connection::Line> tLines;
     tLines << Connection::Line(Connection::POI(), Connection::POI());
+    QString tVehicleDeparture, tVehicleArrival;   //  NOTE TO READER: the iRail API _really_ sucks
+    QList<QString> tVehicles;                     //  when it comes to connections and via's...
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -120,17 +123,25 @@ Connection* ConnectionReader::readConnection()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-                tDeparture = readPOI();
+                tDeparture = readPOI(tVehicleDeparture);
             else if (mReader.name() == "arrival")
-                tArrival = readPOI();
+                tArrival = readPOI(tVehicleArrival);
             else if (mReader.name() == "vias")
-                tLines = readVias();
+                tLines = readVias(tVehicles);
             else
                 skipUnknownElement();
         }
         else
             mReader.readNext();
     }
+
+    // Fix the via/connection vehicle counterintuitiveness
+    if (tVehicles.size() == 0)
+        tVehicles << tVehicleDeparture;
+    tVehicles << tVehicleArrival;
+    Q_ASSERT(tVehicles.size() == tLines.size());
+    for (int i = 0; i < tLines.size(); i++)
+        tLines[i].vehicle = tVehicles.at(i);
 
     // Construct the object
     Connection *oConnection = new Connection(tDeparture, tArrival);
@@ -140,7 +151,7 @@ Connection* ConnectionReader::readConnection()
     return oConnection;
 }
 
-Connection::POI ConnectionReader::readPOI()
+Connection::POI ConnectionReader::readPOI(QString& iVehicle)
 {
     // Process the attributes
     int tDelay = 0;
@@ -153,7 +164,6 @@ Connection::POI ConnectionReader::readPOI()
 
     // Process the tags
     StationPointer tStation;
-    QString tVehicle;
     int tPlatform;
     QDateTime tDatetime;
     mReader.readNext();
@@ -168,7 +178,7 @@ Connection::POI ConnectionReader::readPOI()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "vehicle")
-                tVehicle = readVehicle();
+                iVehicle = readVehicle();
             else if (mReader.name() == "platform")
                 tPlatform = readPlatform();
             else if (mReader.name() == "time")
@@ -186,7 +196,6 @@ Connection::POI ConnectionReader::readPOI()
     Connection::POI oPOI;
     oPOI.station = tStation;
     oPOI.datetime = tDatetime;
-    oPOI.vehicle = tVehicle;
     oPOI.delay = tDelay;
     oPOI.platform = tPlatform;
     return oPOI;
@@ -229,28 +238,33 @@ int ConnectionReader::readPlatform()
 
 QDateTime ConnectionReader::readDatetime()
 {
-    // Process the attributes
+    // Process the contents
     QString tUnixtime = mReader.readElementText();
-    QDateTime oDatetime = QDateTime::fromTime_t(tUnixtime.toUInt());
     if (mReader.isEndElement())
         mReader.readNext();
 
-    return oDatetime;
+    return QDateTime::fromTime_t(tUnixtime.toUInt());
 }
 
 StationPointer ConnectionReader::readStation()
 {
-    // Fetch the station id (we don't need the other stuff)
-    if (!mReader.attributes().hasAttribute("id"))
+    // Process the attributes
+    QString tStationId;
+    if (mReader.attributes().hasAttribute("id"))
+    {
+        tStationId = mReader.attributes().value("id").toString();
+    }
+    else
         mReader.raiseError("station without id");
-    QString tId = mReader.attributes().value("id").toString();
+
+    // Process the contents
     mReader.readElementText();
     if (mReader.isEndElement())
         mReader.readNext();
 
-    // Lookup the station
+    // Construct the object
     QListIterator<StationPointer> tStationIterator(*mStations);
-    while (tStationIterator.hasNext() && tStationIterator.peekNext()->id() != tId)
+    while (tStationIterator.hasNext() && tStationIterator.peekNext()->id() != tStationId)
     {
         tStationIterator.next();
     }
@@ -259,7 +273,7 @@ StationPointer ConnectionReader::readStation()
     return tStationIterator.next();
 }
 
-QList<Connection::Line> ConnectionReader::readVias()
+QList<Connection::Line> ConnectionReader::readVias(QList<QString>& iVehicles)
 {
     // Process the attributes
     int tNumber;
@@ -274,6 +288,7 @@ QList<Connection::Line> ConnectionReader::readVias()
 
     // Process the tags
     QList<Connection::Line> tLines;
+    QString tVehicle;
     tLines << Connection::Line(Connection::POI(), Connection::POI());
     mReader.readNext();
     while (!mReader.atEnd())
@@ -288,7 +303,8 @@ QList<Connection::Line> ConnectionReader::readVias()
         {
             if (mReader.name() == "via")
             {
-                Connection::Line tLine = readVia();
+                Connection::Line tLine = readVia(tVehicle);
+                iVehicles << tVehicle;
                 tLines.last().arrival = tLine.arrival;
                 tLines << Connection::Line(tLine.departure, Connection::POI());
             }
@@ -304,7 +320,7 @@ QList<Connection::Line> ConnectionReader::readVias()
     return tLines;
 }
 
-Connection::Line ConnectionReader::readVia()
+Connection::Line ConnectionReader::readVia(QString& iVehicle)
 {
     // Process the attributes
     unsigned int tId;   // TODO: do something with this
@@ -319,8 +335,8 @@ Connection::Line ConnectionReader::readVia()
 
     // Process the tags
     Connection::POI tArrival, tDeparture;
+    QString tVehicleDummy;
     StationPointer tStation;
-    QString tVehicle;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -333,11 +349,11 @@ Connection::Line ConnectionReader::readVia()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-                tDeparture = readPOI();
+                tDeparture = readPOI(tVehicleDummy);
             else if (mReader.name() == "arrival")
-                tArrival = readPOI();
+                tArrival = readPOI(tVehicleDummy);
             else if (mReader.name() == "vehicle")
-                tVehicle = readVehicle();
+                iVehicle = readVehicle();
             else if (mReader.name() == "station")
                 tStation = readStation();
             else
@@ -348,7 +364,6 @@ Connection::Line ConnectionReader::readVia()
     }
 
     // Construct the object
-    tArrival.vehicle = tVehicle;
     tArrival.station = tStation;
     tDeparture.station = tStation;
     Connection::Line oLine(tDeparture, tArrival);

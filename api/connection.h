@@ -27,11 +27,10 @@ namespace iRail
     // Q_PROPERTY(QList linesVariant READ lines WRITE setLines)
         // TODO: see Qt::properties doc, QList needs to be QVariant<QList<QVariant>>? How to bind with QML?
     public:
-        // Auxiliary typeseparture
+        // Auxiliary types
         struct POI
         {
             StationPointer station;
-            QString vehicle;    // TODO: VehiclePointer?
             unsigned int platform;
             unsigned int delay;
 
@@ -46,7 +45,7 @@ namespace iRail
 
             POI departure;
             POI arrival;
-            // guid line_id;
+            QString vehicle;    // TODO: VehiclePointer?
         };
 
         // Construction and destruction

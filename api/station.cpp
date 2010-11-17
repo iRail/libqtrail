@@ -54,7 +54,7 @@ bool Station::locatable() const
     return mLocatable;
 }
 
-const Location* Station::location() const
+const Station::Location* Station::location() const
 {
     return mLocation;
 }

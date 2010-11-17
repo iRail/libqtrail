@@ -94,7 +94,7 @@ void StationReader::readStations()
 Station* StationReader::readStation()
 {
     // Process the attributes
-    Location* tLocation = 0;
+    Station::Location* tLocation = 0;
     if (mReader.attributes().hasAttribute("location"))
     {
         QStringRef tLocationString = mReader.attributes().value("location");
@@ -107,7 +107,7 @@ Station* StationReader::readStation()
         //       http://qt.gitorious.org/qt/qt/merge_requests/625
         qreal tLongitude = tLocationString.toString().midRef(0, tSeparator).toString().toDouble();
         qreal tLatitude = tLocationString.toString().midRef(tSeparator+1).toString().toDouble();
-        tLocation = new Location(tLongitude, tLatitude);
+        tLocation = new Station::Location(tLongitude, tLatitude);
     }
     if (! mReader.attributes().hasAttribute("id"))
         mReader.raiseError("station without id");

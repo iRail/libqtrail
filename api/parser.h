@@ -15,6 +15,7 @@
 #include <QtXmlPatterns/QXmlSchemaValidator>
 #include "station.h"
 #include "connection.h"
+#include "vehicle.h"
 #include "exception/parserexception.h"
 #include <QBuffer>
 
@@ -35,6 +36,7 @@ namespace iRail
         // Parsing routines
         QList<StationPointer>* parseStations(QIODevice *iDevice) throw(ParserException);
         QList<ConnectionPointer>* parseConnections(const QList<StationPointer>* iStations, QIODevice *iDevice) throw(ParserException);
+        VehiclePointer parseVehicle(const QList<StationPointer>* iStations, QIODevice *iDevice) throw(ParserException);
 
     private:
         // Member data

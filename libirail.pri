@@ -20,7 +20,9 @@ SOURCES += \
     api/storage/memorystorage.cpp \
     api/reader.cpp \
     api/reader/stationreader.cpp \
-    api/reader/connectionreader.cpp
+    api/reader/connectionreader.cpp \
+    ../libirail/api/vehicle.cpp \
+    ../libirail/api/reader/vehiclereader.cpp
 HEADERS += \
     asyncapi.h \
     cachedapi.h \
@@ -37,4 +39,6 @@ HEADERS += \
     api/reader.h \
     api/reader/stationreader.h \
     api/reader/connectionreader.h \
-    api/progresshandler.h
+    api/progresshandler.h \
+    ../libirail/api/vehicle.h \
+    ../libirail/api/reader/vehiclereader.h
