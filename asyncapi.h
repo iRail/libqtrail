@@ -42,11 +42,13 @@ namespace iRail
     public slots:
         virtual void requestStations();
         virtual void requestConnections(ConnectionRequestPointer iConnectionRequest);
+        virtual void requestVehicle(const QString& iVehicleId);
 
         // Processing methods
     private slots:
         void processStations();
         void processConnections();
+        void processVehicle();
 
         // Network routines
     private slots:
@@ -58,6 +60,7 @@ namespace iRail
     signals:
         void replyStations(QList<StationPointer>* iStations);
         void replyConnections(QList<ConnectionPointer>* iConnections);
+        void replyVehicle(VehiclePointer* iVehicle);
 
         // Progress indicator signals
     signals:

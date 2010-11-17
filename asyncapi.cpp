@@ -64,7 +64,6 @@ void AsyncAPI::requestStations()
     network_request(getRequest(tURL), this, SLOT(processStations()));
 }
 
-// iStations has to exist during the compelete request
 void AsyncAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
 {
     // Setup
@@ -88,6 +87,23 @@ void AsyncAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
 
     // Create a request
     network_request(getRequest(tURL), this, SLOT(processConnections()));
+}
+
+void AsyncAPI::requestVehicle(const QString& iVehicleId)
+{
+    // Setup
+    mHasError = false;
+    mProgressHandler.enter();
+
+    // Construct URL
+    QUrl tURL = createBaseURL();
+    tURL.setPath("vehicle/");
+
+    // Set the parameters
+    tURL.addQueryItem("id", iVehicleId);
+
+    // Create a request
+    network_request(getRequest(tURL), this, SLOT(processVehicle()));
 }
 
 
@@ -116,7 +132,6 @@ void AsyncAPI::processStations()
     emit replyStations(oStations);
 }
 
-
 void AsyncAPI::processConnections()
 {
     // Parse the data;
@@ -137,6 +152,28 @@ void AsyncAPI::processConnections()
     network_cleanup();
     emit replyConnections(oConnections);
 }
+
+void AsyncAPI::processVehicle()
+{
+    // Parse the data;
+    VehiclePointer* oVehicle;
+    try
+    {
+        oVehicle = mParser.parseVehicle(mNetworkReply);
+    }
+    catch (Exception& iException)
+    {
+        mError = iException;
+        mHasError = true;
+        oVehicle = 0;
+    }
+
+    // Clean up
+    mProgressHandler.exit();
+    network_cleanup();
+    emit replyVehicle(oVehicle);
+}
+
 
 //
 // Network routines

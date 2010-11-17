@@ -46,6 +46,15 @@ void CachedAPI::requestConnections(const ConnectionRequestPointer& iConnectionRe
     AsyncAPI::requestConnections(iConnectionRequest);
 }
 
+void CachedAPI::requestVehicle(const QString& iVehicleId)
+{
+    // TODO: perform a cache lookup, but somehow mind expiry time!
+
+    // Request a new list
+    emit miss();
+    AsyncAPI::requestVehicle(iVehicleId);
+}
+
 
 //
 // Caching slots

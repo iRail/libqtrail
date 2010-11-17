@@ -24,6 +24,7 @@ namespace iRail
     public slots:
         void requestStations();
         void requestConnections(const ConnectionRequestPointer& iConnectionRequest);
+        void requestVehicle(const QString& iVehicleId);
 
         // Caching slots
     private slots:
