@@ -9,6 +9,7 @@
 // Includes
 #include "asyncapi.h"
 #include "api/storage.h"
+#include "api/connectionrequest.h"
 #include <QString>
 
 namespace iRail

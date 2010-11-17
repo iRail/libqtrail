@@ -135,8 +135,6 @@ Connection* ConnectionReader::readConnection()
     }
 
     // Fix the via/connection vehicle counterintuitiveness
-    if (tVehicles.size() == 0)
-        tVehicles << tVehicleDeparture;
     tVehicles << tVehicleArrival;
     Q_ASSERT(tVehicles.size() == tLines.size());
     for (int i = 0; i < tLines.size(); i++)
