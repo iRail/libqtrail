@@ -82,7 +82,7 @@ Vehicle* VehicleReader::readVehicleInformation()
 
         if (mReader.isStartElement())
         {
-            if (mReader.name() == "location")
+            if (mReader.name() == "vehicle")
                 tVehicle = readVehicle();
             else if (mReader.name() == "stops")
                 tStops = readStops();

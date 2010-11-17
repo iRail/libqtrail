@@ -17,6 +17,7 @@ using namespace iRail;
 Vehicle::Vehicle(QString iId) : mId(iId)
 {
     qRegisterMetaType<VehiclePointer>("VehiclePointer");
+    qRegisterMetaType<Vehicle::Stop>("Vehicle::Stop");
     mLocatable = false;
     mLocation = 0;
 }

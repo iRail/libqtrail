@@ -29,9 +29,16 @@ namespace iRail
         typedef QPair<qreal, qreal> Location;
         struct Stop
         {
+            Stop()
+            {
+                delay = 0;
+                platform = 0;
+            }
+
             QString station;
             unsigned int delay;
             QDateTime datetime;
+            int platform;
         };
 
         // Construction and destruction
@@ -60,5 +67,6 @@ namespace iRail
 }
 
 Q_DECLARE_METATYPE(iRail::VehiclePointer)
+Q_DECLARE_METATYPE(iRail::Vehicle::Stop)
 
 #endif // STATION_H
