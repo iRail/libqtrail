@@ -54,7 +54,7 @@ namespace iRail
         void setStops(const QList<Stop>& iStops);
 
         // Debugging
-        friend QDebug operator<<(QDebug dbg, const Station &iStation);
+        friend QDebug operator<<(QDebug dbg, const Vehicle &iVehicle);
 
     private:
         QString mId;
