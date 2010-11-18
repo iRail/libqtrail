@@ -117,7 +117,7 @@ Station* StationReader::readStation()
     QString tId = mReader.attributes().value("id").toString();
 
     // Process the contents
-    QString tName = mReader.readElementText();
+    QString tName = capitalize(mReader.readElementText());
     if (mReader.isEndElement())
         mReader.readNext();
 

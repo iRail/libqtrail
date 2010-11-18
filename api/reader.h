@@ -21,7 +21,7 @@ namespace iRail
     protected:
         QXmlStreamReader mReader;
 
-        // Auxiliary
+        // Parsing helpers
         /*!
           This method allocates heap space for the data to be read,
           and is called when the document is about to be read.
@@ -31,6 +31,9 @@ namespace iRail
         virtual void allocate() = 0;
         void readError();
         void skipUnknownElement();
+
+        // Auxiliary
+        QString capitalize(const QString& iString);
     };
 }
 

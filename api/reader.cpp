@@ -32,7 +32,7 @@ void Reader::read(QIODevice *iDevice) throw(ParserException)
 }
 
 //
-// Auxiliary
+// Parsing helpers
 //
 
 void Reader::readError()
@@ -61,4 +61,31 @@ void Reader::skipUnknownElement()
             mReader.readNext();
         }
     }
+}
+
+
+//
+// Auxiliary
+//
+#include <QDebug>
+QString Reader::capitalize(const QString& iString)
+{
+    if (iString.isEmpty())
+        return iString;
+
+    // TODO: QStringRef
+    bool split = true;
+    QString oString = iString.toLower();
+    for (int i = 0; i < oString.length(); i++)
+    {
+        if (split)
+        {
+            oString[i] = oString[i].toUpper();
+            split = false;
+        }
+        if (!oString[i].isLetterOrNumber())
+            split = true;
+    }
+
+    return oString;
 }
