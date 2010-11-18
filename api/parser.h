@@ -12,13 +12,12 @@
 #include <QList>
 #include <QtXml/QXmlSimpleReader>
 #include <QtXml/QXmlStreamReader>
-#include <QtXmlPatterns/QXmlSchema>
-#include <QtXmlPatterns/QXmlSchemaValidator>
+#include <QBuffer>
 #include "station.h"
 #include "connection.h"
 #include "vehicle.h"
+#include "liveboard.h"
 #include "exception/parserexception.h"
-#include <QBuffer>
 
 /*
  This class provides the raw translation between the replies of the several API pages (trains.php, stations.php, etc)
@@ -38,6 +37,7 @@ namespace iRail
         QMap<QString, StationPointer>* parseStations(QIODevice *iDevice) throw(ParserException);
         QList<ConnectionPointer>* parseConnections(QIODevice *iDevice) throw(ParserException);
         VehiclePointer* parseVehicle(QIODevice *iDevice) throw(ParserException);
+        LiveboardPointer* parseLiveboard(QIODevice *iDevice) throw(ParserException);
 
     private:
         // Member data

@@ -7,6 +7,7 @@
 #include "reader/stationreader.h"
 #include "reader/connectionreader.h"
 #include "reader/vehiclereader.h"
+#include "reader/liveboardreader.h"
 
 // Namespaces
 using namespace iRail;
@@ -50,4 +51,13 @@ VehiclePointer* Parser::parseVehicle(QIODevice *iDevice) throw(ParserException)
     tReader.read(iDevice);
 
     return tReader.vehicle();
+}
+
+LiveboardPointer* Parser::parseLiveboard(QIODevice *iDevice) throw(ParserException)
+{
+    // Parse the document
+    LiveboardReader tReader;
+    tReader.read(iDevice);
+
+    return tReader.liveboard();
 }
