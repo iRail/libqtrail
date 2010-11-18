@@ -23,7 +23,8 @@ SOURCES += \
     api/reader/connectionreader.cpp \
     api/vehicle.cpp \
     api/reader/vehiclereader.cpp \
-    ../libirail/api/liveboard.cpp
+    api/liveboard.cpp \
+    api/reader/liveboardreader.cpp
 HEADERS += \
     asyncapi.h \
     cachedapi.h \
@@ -43,4 +44,5 @@ HEADERS += \
     api/progresshandler.h \
     api/vehicle.h \
     api/reader/vehiclereader.h \
-    ../libirail/api/liveboard.h
+    ../libirail/api/liveboard.h \
+    ../libirail/api/reader/liveboardreader.h

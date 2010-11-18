@@ -3,39 +3,39 @@
 //
 
 // Include guard
-#ifndef VEHICLEREADER_H
-#define VEHICLEREADER_H
+#ifndef LIVEBOARDREADER_H
+#define LIVEBOARDREADER_H
 
 // Includes
 #include "api/reader.h"
-#include "api/vehicle.h"
+#include "api/liveboard.h"
 #include <QList>
 #include <QDateTime>
 
 namespace iRail
 {
-    class VehicleReader : public Reader
+    class LiveboardReader : public Reader
     {
     Q_OBJECT
     public:
-        VehicleReader();
+        LiveboardReader();
         void readDocument();
-        VehiclePointer* vehicle();
+        LiveboardPointer* liveboard();
     private:
         // Member data
-        VehiclePointer* mVehicle;
+        LiveboardPointer* mLiveboard;
         QDateTime mTimestamp;
         double mVersion;
 
         // Tag readers
         void allocate();
-        Vehicle* readVehicleInformation();
-        Vehicle* readVehicle();
-        QList<Vehicle::Stop> readStops();
-        Vehicle::Stop readStop();
+        Liveboard* readLiveboard();
         QString readStation();
-        double readDelay();
+        Liveboard::Departure readDeparture();
+        QString readVehicle();
         QDateTime readDatetime();
+        double readDelay();
+        int readPlatform();
     };
 }
 
