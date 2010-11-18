@@ -20,6 +20,24 @@ AsyncAPI::AsyncAPI(const QString& iClientID, const QString& iClientVersion) : mC
     mUserAgent.append("BeTrains-Qt/" + mClientVersion + " (" + mClientID + " edition)");
     mNetworkReply = 0;
 
+    switch (QLocale::system().language())
+    {
+    case QLocale::English:
+        mClientLanguage = "en";
+        break;
+    case QLocale::French:
+        mClientLanguage = "fr";
+        break;
+    case QLocale::German:
+        mClientLanguage = "de";
+        break;
+    case QLocale::Dutch:
+        mClientLanguage = "nl";
+        break;
+    default:
+        mClientLanguage = "en";
+    }
+
     mProgressLevel = 0;
     mProgress = 0;
 }
@@ -228,6 +246,7 @@ QUrl AsyncAPI::createBaseURL() const
     QUrl oUrl;
     oUrl.setScheme("http");
     oUrl.setHost("dev.api.irail.be");
+    oUrl.addQueryItem("lang", mClientLanguage);
     oUrl.setQueryDelimiters('=', '&');
 
     return oUrl;

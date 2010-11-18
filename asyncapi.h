@@ -70,7 +70,7 @@ namespace iRail
 
         // Member data
     private:
-        QString mClientID, mClientVersion;
+        QString mClientID, mClientVersion, mClientLanguage;
         QByteArray mUserAgent;
         Parser mParser;
         QNetworkAccessManager mNetworkAccessManager;
