@@ -23,6 +23,7 @@
 #include "api/exception/networkexception.h"
 #include "api/connectionrequest.h"
 #include "api/connection.h"
+#include "api/liveboard.h"
 
 namespace iRail
 {
@@ -44,12 +45,14 @@ namespace iRail
         virtual void requestStations();
         virtual void requestConnections(ConnectionRequestPointer iConnectionRequest);
         virtual void requestVehicle(const QString& iVehicleId);
+        virtual void requestLiveboard(const QString& iStationId);
 
         // Processing methods
     private slots:
         void processStations();
         void processConnections();
         void processVehicle();
+        void processLiveboard();
 
         // Network routines
     private slots:
@@ -62,6 +65,7 @@ namespace iRail
         void replyStations(QMap<QString, StationPointer>* iStations);
         void replyConnections(QList<ConnectionPointer>* iConnections);
         void replyVehicle(VehiclePointer* iVehicle);
+        void replyLiveboard(LiveboardPointer* iVehicle);
 
         // Progress indicator signals
     signals:

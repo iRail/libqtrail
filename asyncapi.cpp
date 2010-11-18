@@ -124,6 +124,23 @@ void AsyncAPI::requestVehicle(const QString& iVehicleId)
     network_request(getRequest(tURL), this, SLOT(processVehicle()));
 }
 
+void AsyncAPI::requestLiveboard(const QString& iStationId)
+{
+    // Setup
+    mHasError = false;
+    mProgressHandler.enter();
+
+    // Construct URL
+    QUrl tURL = createBaseURL();
+    tURL.setPath("liveboard/");
+
+    // Set the parameters
+    tURL.addQueryItem("id", iStationId);
+
+    // Create a request
+    network_request(getRequest(tURL), this, SLOT(processLiveboard()));
+}
+
 
 //
 // Processing methods
@@ -190,6 +207,27 @@ void AsyncAPI::processVehicle()
     mProgressHandler.exit();
     network_cleanup();
     emit replyVehicle(oVehicle);
+}
+
+void AsyncAPI::processLiveboard()
+{
+    // Parse the data;
+    LiveboardPointer* oLiveboard;
+    try
+    {
+        oLiveboard = mParser.parseLiveboard(mNetworkReply);
+    }
+    catch (Exception& iException)
+    {
+        mError = iException;
+        mHasError = true;
+        oLiveboard = 0;
+    }
+
+    // Clean up
+    mProgressHandler.exit();
+    network_cleanup();
+    emit replyLiveboard(oLiveboard);
 }
 
 
