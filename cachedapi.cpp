@@ -55,6 +55,13 @@ void CachedAPI::requestVehicle(const QString& iVehicleId)
     AsyncAPI::requestVehicle(iVehicleId);
 }
 
+void CachedAPI::requestLiveboard(const QString& iLiveboardId)
+{
+    // Request a new list
+    emit miss();
+    AsyncAPI::requestLiveboard(iLiveboardId);
+}
+
 
 //
 // Caching slots
