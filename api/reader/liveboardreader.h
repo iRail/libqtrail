@@ -31,6 +31,7 @@ namespace iRail
         void allocate();
         Liveboard* readLiveboard();
         QString readStation();
+        QList<Liveboard::Departure> readDepartures();
         Liveboard::Departure readDeparture();
         QString readVehicle();
         QDateTime readDatetime();

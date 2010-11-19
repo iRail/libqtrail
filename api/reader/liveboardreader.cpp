@@ -84,8 +84,8 @@ Liveboard* LiveboardReader::readLiveboard()
         {
             if (mReader.name() == "station")
                 tStation = readStation();
-            else if (mReader.name() == "departure")
-                tDepartures << readDeparture();
+            else if (mReader.name() == "departures")
+                tDepartures = readDepartures();
             else
                 skipUnknownElement();
         }
@@ -117,6 +117,46 @@ QString LiveboardReader::readStation()
 
     // Construct the object
     return oStationId;
+}
+
+QList<Liveboard::Departure> LiveboardReader::readDepartures()
+{
+    // Process the attributes
+    int tNumber;
+    if (mReader.attributes().hasAttribute("number"))
+    {
+        QStringRef tNumberString = mReader.attributes().value("number");
+
+        tNumber = tNumberString.toString().toInt();
+    }
+    else
+        mReader.raiseError("could not find departures count attribute");
+
+    // Process the tags
+    QList<Liveboard::Departure> oDepartures;
+    mReader.readNext();
+    while (!mReader.atEnd())
+    {
+        if (mReader.isEndElement())
+        {
+            mReader.readNext();
+            break;
+        }
+
+        if (mReader.isStartElement())
+        {
+            if (mReader.name() == "departure")
+                oDepartures << readDeparture();
+            else
+                skipUnknownElement();
+        }
+        else
+            mReader.readNext();
+    }
+
+    if (oDepartures.size() != tNumber)
+        mReader.raiseError("advertised nubmer of departures did not match the actual amount");
+    return oDepartures;
 }
 
 Liveboard::Departure LiveboardReader::readDeparture()

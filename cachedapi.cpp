@@ -55,11 +55,11 @@ void CachedAPI::requestVehicle(const QString& iVehicleId)
     AsyncAPI::requestVehicle(iVehicleId);
 }
 
-void CachedAPI::requestLiveboard(const QString& iLiveboardId)
+void CachedAPI::requestLiveboard(const QString& iStationId)
 {
     // Request a new list
     emit miss();
-    AsyncAPI::requestLiveboard(iLiveboardId);
+    AsyncAPI::requestLiveboard(iStationId);
 }
 
 
