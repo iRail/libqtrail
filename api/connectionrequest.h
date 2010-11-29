@@ -7,12 +7,13 @@
 #define CONNECTIONREQUEST_H
 
 // Includes
+#include <QDebug>
 #include <QObject>
 #include <QSharedPointer>
 #include <QMetaType>
 #include <QString>
 #include <QDateTime>
-#include <QDebug>
+#include <QMetaEnum>
 
 namespace iRail
 {
@@ -36,11 +37,38 @@ namespace iRail
             Departure,
             Arrival
         };
+        Q_ENUMS(TimeType);
 
         struct Time
         {
             TimeType type;
             QDateTime datetime;
+
+            QDataStream &operator<<(QDataStream& iStream) const
+            {
+                const QMetaObject& tMetaObject = ConnectionRequest::staticMetaObject;
+                int tEnumIndex = tMetaObject.indexOfEnumerator("TimeType");
+                QMetaEnum tMetaEnum = tMetaObject.enumerator(tEnumIndex);
+
+                iStream << tMetaEnum.valueToKey(type);
+                iStream << datetime;
+
+                return iStream;
+            }
+            QDataStream &operator>>(QDataStream& iStream)
+            {
+                const QMetaObject& tMetaObject = ConnectionRequest::staticMetaObject;
+                int tEnumIndex = tMetaObject.indexOfEnumerator("TimeType");
+                QMetaEnum tMetaEnum = tMetaObject.enumerator(tEnumIndex);
+
+                char* tEnumValue;
+                iStream >> tEnumValue;
+                type = static_cast<TimeType>(tMetaEnum.keyToValue(tEnumValue));
+
+                iStream >> datetime;
+
+                return iStream;
+            }
         };
 
         // Basic I/O
@@ -51,13 +79,15 @@ namespace iRail
         void setTime(const Time& iTime);
         void setTime(const TimeType& iTimeType, const QDate& iDate, const QTime& iTime);
 
-        // Debugging
-        friend QDebug operator<<(QDebug dbg, const ConnectionRequest &iConnectionRequest);
+        // Operators
+        QDebug operator<<(QDebug dbg) const;
+        QDataStream &operator<<(QDataStream& iStream) const;
+        QDataStream &operator>>(QDataStream& iStream);
 
     private:
         QString mOrigin, mDestination;
         bool mTimed;
-        const Time *mTime;
+        Time *mTime;
     };
 
     typedef QSharedPointer<ConnectionRequest> ConnectionRequestPointer;

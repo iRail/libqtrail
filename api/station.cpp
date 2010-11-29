@@ -70,14 +70,40 @@ void Station::setLocation(const Location& iLocation)
 
 
 //
-// Debugging
+// Operators
 //
 
-QDebug operator<<(QDebug dbg, const Station &iStation)
+QDebug Station::operator<<(QDebug dbg) const
 {
-    dbg << "Station(id=" << iStation.id() << ",name='" << iStation.name() << "'";
-    if (iStation.locatable())
-        dbg << ", location='" << iStation.location()->first << " x " << iStation.location()->second << "'";
+    dbg << "Station(id=" << id() << ",name='" << name() << "'";
+    if (locatable())
+        dbg << ", location='" << location()->first << " x " << location()->second << "'";
     dbg << ")";
+
     return dbg.maybeSpace();
+}
+
+QDataStream& Station::operator<<(QDataStream& iStream) const
+{
+    iStream << mId;
+    iStream << mName;
+    iStream << mLocatable;
+    if (locatable())
+        iStream << *mLocation;
+
+    return iStream;
+}
+
+QDataStream& Station::operator>>(QDataStream& iStream)
+{
+    iStream >> mId;
+    iStream >> mName;
+    iStream >> mLocatable;
+    if (locatable())
+    {
+        mLocation = new Location();
+        iStream >> *mLocation;
+    }
+
+    return iStream;
 }

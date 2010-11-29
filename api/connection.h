@@ -31,10 +31,28 @@ namespace iRail
         struct POI
         {
             QString station;
-            unsigned int platform;
             unsigned int delay;
-
             QDateTime datetime;
+            unsigned int platform;
+
+            QDataStream &operator<<(QDataStream& iStream) const
+            {
+                iStream << station;
+                iStream << delay;
+                iStream << datetime;
+                iStream << platform;
+
+                return iStream;
+            }
+            QDataStream &operator>>(QDataStream& iStream)
+            {
+                iStream >> station;
+                iStream >> delay;
+                iStream >> datetime;
+                iStream >> platform;
+
+                return iStream;
+            }
         };
         struct Line
         {
@@ -46,6 +64,23 @@ namespace iRail
             POI departure;
             POI arrival;
             QString vehicle;
+
+            QDataStream &operator<<(QDataStream& iStream) const
+            {
+                departure.operator <<(iStream);
+                arrival.operator <<(iStream);
+                iStream << vehicle;
+
+                return iStream;
+            }
+            QDataStream &operator>>(QDataStream& iStream)
+            {
+                departure.operator >>(iStream);
+                arrival.operator >>(iStream);
+                iStream >> vehicle;
+
+                return iStream;
+            }
         };
 
         // Construction and destruction
@@ -58,8 +93,10 @@ namespace iRail
         QList<Line> lines() const;
         void setLines(const QList<Line>& iLines);
 
-        // Debugging
-        friend QDebug operator<<(QDebug dbg, const Connection &iConnection);
+        // Operators
+        QDebug operator<<(QDebug dbg) const;
+        QDataStream &operator<<(QDataStream& iStream) const;
+        QDataStream &operator>>(QDataStream& iStream);
 
     private:
         POI mDeparture, mArrival;

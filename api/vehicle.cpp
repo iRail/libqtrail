@@ -70,14 +70,51 @@ void Vehicle::setStops(const QList<Vehicle::Stop>& iStop)
 
 
 //
-// Debugging
+// Operators
 //
 
-QDebug operator<<(QDebug dbg, const Vehicle &iVehicle)
+QDebug Vehicle::operator<<(QDebug dbg) const
 {
-    dbg << "Vehicle(id=" << iVehicle.id() << ",stops=" << iVehicle.stops().size() << "";
-    if (iVehicle.locatable())
-        dbg << ", location='" << iVehicle.location()->first << " x " << iVehicle.location()->second << "'";
+    dbg << "Vehicle(id=" << id() << ",stops=" << stops().size() << "";
+    if (locatable())
+        dbg << ", location='" << location()->first << " x " << location()->second << "'";
     dbg << ")";
+
     return dbg.maybeSpace();
+}
+
+QDataStream& Vehicle::operator<<(QDataStream& iStream) const
+{
+    iStream << mId;
+
+    iStream << mLocatable;
+    if (locatable())
+        iStream << *mLocation;
+
+    iStream << mStops.size();
+    foreach (Stop tStop, mStops)
+        tStop.operator <<(iStream);
+
+    return iStream;
+}
+
+QDataStream& Vehicle::operator>>(QDataStream& iStream)
+{
+    iStream >> mId;
+
+    iStream >> mLocatable;
+    if (locatable())
+        iStream << *mLocation;
+
+    int tStops;
+    iStream >> tStops;
+    mStops = QList<Stop>();
+    for (int i = 0; i < tStops; i++)
+    {
+        Stop tStop;
+        tStop.operator >>(iStream);
+        mStops << tStop;
+    }
+
+    return iStream;
 }

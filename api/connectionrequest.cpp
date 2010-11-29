@@ -76,14 +76,40 @@ void ConnectionRequest::setTime(const TimeType& iTimeType, const QDate& iDate, c
 }
 
 //
-// Debugging
+// Operators
 //
 
-QDebug operator<<(QDebug dbg, const ConnectionRequest &iConnectionRequest)
+QDebug ConnectionRequest::operator<<(QDebug dbg) const
 {
-    dbg << "ConnectionRequest(from='" << iConnectionRequest.origin() << "', to='" << iConnectionRequest.destination() << "'";
-    if (iConnectionRequest.timed())
-        dbg << ", at='" << iConnectionRequest.time()->datetime.toString(Qt::DefaultLocaleShortDate) << " (" << iConnectionRequest.time()->type << ")'";
+    dbg << "ConnectionRequest(from='" << origin() << "', to='" << destination() << "'";
+    if (timed())
+        dbg << ", at='" << time()->datetime.toString(Qt::DefaultLocaleShortDate) << " (" << time()->type << ")'";
     dbg << ")";
+
     return dbg.maybeSpace();
+}
+
+QDataStream& ConnectionRequest::operator<<(QDataStream& iStream) const
+{
+    iStream << mOrigin;
+    iStream << mDestination;
+    iStream << mTimed;
+    if (mTimed)
+        mTime->operator <<(iStream);
+
+    return iStream;
+}
+
+QDataStream& ConnectionRequest::operator>>(QDataStream& iStream)
+{
+    iStream >> mOrigin;
+    iStream >> mDestination;
+    iStream >> mTimed;
+    if (mTimed)
+    {
+        mTime = new Time();
+        mTime->operator >>(iStream);
+    }
+
+    return iStream;
 }

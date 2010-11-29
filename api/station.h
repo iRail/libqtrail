@@ -45,8 +45,10 @@ namespace iRail
         bool locatable() const;
         void setLocation(const Location& iLocation);
 
-        // Debugging
-        friend QDebug operator<<(QDebug dbg, const Station &iStation);
+        // Operators
+        QDebug operator<<(QDebug dbg) const;
+        QDataStream &operator<<(QDataStream& iStream) const;
+        QDataStream &operator>>(QDataStream& iStream);
 
     private:
         QString mId;

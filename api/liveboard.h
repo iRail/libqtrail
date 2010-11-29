@@ -35,6 +35,27 @@ namespace iRail
             unsigned int delay;
             QDateTime datetime;
             int platform;
+
+            QDataStream &operator<<(QDataStream& iStream) const
+            {
+                iStream << station;
+                iStream << vehicle;
+                iStream << delay;
+                iStream << datetime;
+                iStream << platform;
+
+                return iStream;
+            }
+            QDataStream &operator>>(QDataStream& iStream)
+            {
+                iStream >> station;
+                iStream >> vehicle;
+                iStream >> delay;
+                iStream >> datetime;
+                iStream >> platform;
+
+                return iStream;
+            }
         };
 
         // Construction and destruction
@@ -45,8 +66,10 @@ namespace iRail
         QList<Departure> departures() const;
         void setDepartures(const QList<Departure>& iDepartures);
 
-        // Debugging
-        friend QDebug operator<<(QDebug dbg, const Liveboard &iLiveboard);
+        // Operators
+        QDebug operator<<(QDebug dbg) const;
+        QDataStream &operator<<(QDataStream& iStream) const;
+        QDataStream &operator>>(QDataStream& iStream);
 
     private:
         QString mStation;
