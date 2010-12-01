@@ -17,6 +17,7 @@ using namespace iRail;
 Connection::Connection(const POI& iDeparture, const POI& iArrival) : mDeparture(iDeparture), mArrival(iArrival)
 {
     qRegisterMetaType<ConnectionPointer>("ConnectionPointer");
+    qRegisterMetaType<Connection::Line>("Connection::Line");
     qRegisterMetaType<Connection::POI>("Connection::POI");
 }
 
@@ -88,8 +89,7 @@ QDataStream& Connection::operator>>(QDataStream& iStream)
     mLines = QList<Line>();
     for (int i = 0; i < tLines; i++)
     {
-        POI tDummy;
-        Line tLine(tDummy, tDummy);
+        Line tLine;
         tLine.operator >>(iStream);
         mLines << tLine;
     }

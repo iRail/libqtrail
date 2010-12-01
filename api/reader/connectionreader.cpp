@@ -107,7 +107,7 @@ Connection* ConnectionReader::readConnection()
     // Process the tags
     Connection::POI tDeparture, tArrival;
     QList<Connection::Line> tLines;
-    tLines << Connection::Line(Connection::POI(), Connection::POI());
+    tLines << Connection::Line();
     QString tVehicleDeparture, tVehicleArrival;   //  NOTE TO READER: the iRail API _really_ sucks
     QList<QString> tVehicles;                     //  when it comes to connections and via's...
     mReader.readNext();
@@ -279,7 +279,7 @@ QList<Connection::Line> ConnectionReader::readVias(QList<QString>& iVehicles)
     // Process the tags
     QList<Connection::Line> tLines;
     QString tVehicle;
-    tLines << Connection::Line(Connection::POI(), Connection::POI());
+    tLines << Connection::Line();
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -296,7 +296,8 @@ QList<Connection::Line> ConnectionReader::readVias(QList<QString>& iVehicles)
                 Connection::Line tLine = readVia(tVehicle);
                 iVehicles << tVehicle;
                 tLines.last().arrival = tLine.arrival;
-                tLines << Connection::Line(tLine.departure, Connection::POI());
+                tLine.arrival = Connection::POI();
+                tLines << tLine;
             }
             else
                 skipUnknownElement();
@@ -356,7 +357,9 @@ Connection::Line ConnectionReader::readVia(QString& iVehicle)
     // Construct the object
     tArrival.station = tStationId;
     tDeparture.station = tStationId;
-    Connection::Line oLine(tDeparture, tArrival);
+    Connection::Line oLine;
+    oLine.departure = tDeparture;
+    oLine.arrival = tArrival;
     return oLine;
 }
 

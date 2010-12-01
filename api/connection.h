@@ -56,11 +56,6 @@ namespace iRail
         };
         struct Line
         {
-            Line(POI _departure, POI _arrival) : departure(_departure), arrival(_arrival)
-            {
-
-            }
-
             POI departure;
             POI arrival;
             QString vehicle;
@@ -107,6 +102,7 @@ namespace iRail
 }
 
 Q_DECLARE_METATYPE(iRail::ConnectionPointer)
+Q_DECLARE_METATYPE(iRail::Connection::Line)
 Q_DECLARE_METATYPE(iRail::Connection::POI)
 
 #endif // CONNECTION_H
