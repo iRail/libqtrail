@@ -76,7 +76,7 @@ void AsyncAPI::requestStations()
 
     // Construct URL
     QUrl tURL = createBaseURL();
-    tURL.setPath("stations/");
+    tURL.setPath("stations/?lang=" + mClientLanguage);
 
     // Create a request
     network_request(getRequest(tURL), this, SLOT(processStations()));
