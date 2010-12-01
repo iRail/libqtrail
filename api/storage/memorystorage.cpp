@@ -33,6 +33,12 @@ QDateTime MemoryStorage::stationsTimestamp() const
     return mStationsTimestamp;
 }
 
+void MemoryStorage::clearStations()
+{
+    delete mStations;
+    mStations = 0;
+}
+
 
 //
 // Setters

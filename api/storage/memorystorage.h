@@ -24,6 +24,7 @@ namespace iRail
         // Getters
         const QMap<QString, StationPointer>* stations() const;
         QDateTime stationsTimestamp() const;
+        void clearStations();
 
         // Setters
     public slots:
