@@ -15,7 +15,6 @@ using namespace iRail;
 
 CachedAPI::CachedAPI(const QString& iClientID, const QString& iClientVersion, Storage* iStorage) : AsyncAPI(iClientID, iClientVersion), mStorage(iStorage)
 {
-    connect(this, SIGNAL(replyStations(QMap<QString, StationPointer>*, QDateTime)), this, SLOT(cacheStations(QMap<QString, StationPointer>*, QDateTime)));
 }
 
 
@@ -36,6 +35,7 @@ void CachedAPI::requestStations(bool& oCached)
 
     // Request a new list
     oCached = false;
+    connect(this, SIGNAL(replyStations(QMap<QString, StationPointer>*, QDateTime)), this, SLOT(cacheStations(QMap<QString, StationPointer>*, QDateTime)));
     AsyncAPI::requestStations();
 
 }
@@ -70,6 +70,7 @@ void CachedAPI::requestLiveboard(const QString& iStationId, bool& oCached)
 
 void CachedAPI::cacheStations(QMap<QString, StationPointer>* iStations, QDateTime iTimestamp)
 {
+    disconnect(this, SIGNAL(replyStations(QMap<QString, StationPointer>*, QDateTime)), this, SLOT(cacheStations(QMap<QString, StationPointer>*, QDateTime)));
     if (iStations != 0)
     {
         const QMap<QString, StationPointer>* tCachedStations = mStorage->stations();
