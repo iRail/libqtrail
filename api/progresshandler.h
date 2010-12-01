@@ -52,7 +52,7 @@ namespace iRail
             {
                 unsigned int* tProgress = new unsigned int[mLevel];
                 memcpy(mProgress, tProgress, mLevel * sizeof(unsigned int));
-                delete mProgress;
+                delete[] mProgress;
                 mProgress = tProgress;
             }
         }
