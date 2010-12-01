@@ -23,42 +23,43 @@ CachedAPI::CachedAPI(const QString& iClientID, const QString& iClientVersion, St
 // Request slots
 //
 
-void CachedAPI::requestStations()
+void CachedAPI::requestStations(bool& oCached)
 {
     // Check the cache
     const QMap<QString, StationPointer>* tCachedStations = mStorage->stations();
-    if (tCachedStations != 0 && mStorage->stationsTimestamp().secsTo(QDateTime::currentDateTime()) > STATIONS_REFRESH)
+    if (tCachedStations != 0 && mStorage->stationsTimestamp().secsTo(QDateTime::currentDateTime()) <= STATIONS_REFRESH)
     {
+        oCached = true;
         emit replyStations(new QMap<QString, StationPointer>(*tCachedStations), mStorage->stationsTimestamp());
         return;
     }
 
     // Request a new list
-    emit miss();
+    oCached = false;
     AsyncAPI::requestStations();
 
 }
 
-void CachedAPI::requestConnections(const ConnectionRequestPointer& iConnectionRequest)
+void CachedAPI::requestConnections(const ConnectionRequestPointer& iConnectionRequest, bool& oCached)
 {
     // Request a new list
-    emit miss();
+    oCached = false;
     AsyncAPI::requestConnections(iConnectionRequest);
 }
 
-void CachedAPI::requestVehicle(const QString& iVehicleId)
+void CachedAPI::requestVehicle(const QString& iVehicleId, bool& oCached)
 {
     // TODO: perform a cache lookup, but somehow mind expiry time!
 
     // Request a new list
-    emit miss();
+    oCached = false;
     AsyncAPI::requestVehicle(iVehicleId);
 }
 
-void CachedAPI::requestLiveboard(const QString& iStationId)
+void CachedAPI::requestLiveboard(const QString& iStationId, bool& oCached)
 {
     // Request a new list
-    emit miss();
+    oCached = false;
     AsyncAPI::requestLiveboard(iStationId);
 }
 

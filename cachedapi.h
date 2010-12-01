@@ -27,18 +27,14 @@ namespace iRail
 
         // Request slots
     public slots:
-        void requestStations();
-        void requestConnections(const ConnectionRequestPointer& iConnectionRequest);
-        void requestVehicle(const QString& iVehicleId);
-        void requestLiveboard(const QString& iStationId);
+        void requestStations(bool& oCached);
+        void requestConnections(const ConnectionRequestPointer& iConnectionRequest, bool& oCached);
+        void requestVehicle(const QString& iVehicleId, bool& oCached);
+        void requestLiveboard(const QString& iStationId, bool& oCached);
 
         // Caching slots
     private slots:
         void cacheStations(QMap<QString, StationPointer>* iStations, QDateTime iTimestamp);
-
-        // Progress indicator signals
-    signals:
-        void miss();
 
         // Member data
     private:
