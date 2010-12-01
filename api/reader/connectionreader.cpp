@@ -19,8 +19,9 @@ ConnectionReader::ConnectionReader()
     mConnections = 0;
 }
 
-QList<ConnectionPointer>* ConnectionReader::connections()
+QList<ConnectionPointer>* ConnectionReader::connections(QDateTime& oTimestamp)
 {
+    oTimestamp = mTimestamp;
     return mConnections;
 }
 

@@ -62,10 +62,10 @@ namespace iRail
 
         // Reply signals
     signals:
-        void replyStations(QMap<QString, StationPointer>* iStations);
-        void replyConnections(QList<ConnectionPointer>* iConnections);
-        void replyVehicle(VehiclePointer* iVehicle);
-        void replyLiveboard(LiveboardPointer* iVehicle);
+        void replyStations(QMap<QString, StationPointer>* iStations, QDateTime iTimestamp);
+        void replyConnections(QList<ConnectionPointer>* iConnections, QDateTime iTimestamp);
+        void replyVehicle(VehiclePointer* iVehicle, QDateTime iTimestamp);
+        void replyLiveboard(LiveboardPointer* iVehicle, QDateTime iTimestamp);
 
         // Progress indicator signals
     signals:

@@ -20,7 +20,7 @@ namespace iRail
     public:
         ConnectionReader();
         void readDocument();
-        QList<ConnectionPointer>* connections();
+        QList<ConnectionPointer>* connections(QDateTime& oTimestamp);
     private:
         // Member data
         QList<ConnectionPointer>* mConnections;

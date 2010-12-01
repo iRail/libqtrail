@@ -19,8 +19,9 @@ VehicleReader::VehicleReader()
     mVehicle = 0;
 }
 
-VehiclePointer* VehicleReader::vehicle()
+VehiclePointer* VehicleReader::vehicle(QDateTime& oTimestamp)
 {
+    oTimestamp = mTimestamp;
     return mVehicle;
 }
 

@@ -23,6 +23,7 @@ namespace iRail
           and no changes should be applied to the returnet list iself.
           */
         virtual const QMap<QString, StationPointer>* stations() const = 0;
+        virtual QDateTime stationsTimestamp() const = 0;
 
         // Setters
     public slots:
@@ -30,7 +31,7 @@ namespace iRail
           This method inserts a list of stations in the storage. The
           list is copied upon insertion.
           */
-        virtual void setStations(const QMap<QString, StationPointer>& iStations) = 0;
+        virtual void setStations(const QMap<QString, StationPointer>& iStations, const QDateTime& iTimestamp) = 0;
     };
 }
 

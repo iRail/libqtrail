@@ -150,9 +150,10 @@ void AsyncAPI::processStations()
 {
     // Parse the data
     QMap<QString, StationPointer>* oStations;
+    QDateTime tTimestamp;
     try
     {
-        oStations = mParser.parseStations(mNetworkReply);
+        oStations = mParser.parseStations(mNetworkReply, tTimestamp);
     }
     catch (Exception& iException)
     {
@@ -164,16 +165,17 @@ void AsyncAPI::processStations()
     // Clean up
     mProgressHandler.exit();
     network_cleanup();
-    emit replyStations(oStations);
+    emit replyStations(oStations, tTimestamp);
 }
 
 void AsyncAPI::processConnections()
 {
     // Parse the data;
     QList<ConnectionPointer>* oConnections;
+    QDateTime tTimestamp;
     try
     {
-        oConnections = mParser.parseConnections(mNetworkReply);
+        oConnections = mParser.parseConnections(mNetworkReply, tTimestamp);
     }
     catch (Exception& iException)
     {
@@ -185,16 +187,17 @@ void AsyncAPI::processConnections()
     // Clean up
     mProgressHandler.exit();
     network_cleanup();
-    emit replyConnections(oConnections);
+    emit replyConnections(oConnections, tTimestamp);
 }
 
 void AsyncAPI::processVehicle()
 {
     // Parse the data;
     VehiclePointer* oVehicle;
+    QDateTime tTimestamp;
     try
     {
-        oVehicle = mParser.parseVehicle(mNetworkReply);
+        oVehicle = mParser.parseVehicle(mNetworkReply, tTimestamp);
     }
     catch (Exception& iException)
     {
@@ -206,16 +209,17 @@ void AsyncAPI::processVehicle()
     // Clean up
     mProgressHandler.exit();
     network_cleanup();
-    emit replyVehicle(oVehicle);
+    emit replyVehicle(oVehicle, tTimestamp);
 }
 
 void AsyncAPI::processLiveboard()
 {
     // Parse the data;
     LiveboardPointer* oLiveboard;
+    QDateTime tTimestamp;
     try
     {
-        oLiveboard = mParser.parseLiveboard(mNetworkReply);
+        oLiveboard = mParser.parseLiveboard(mNetworkReply, tTimestamp);
     }
     catch (Exception& iException)
     {
@@ -227,7 +231,7 @@ void AsyncAPI::processLiveboard()
     // Clean up
     mProgressHandler.exit();
     network_cleanup();
-    emit replyLiveboard(oLiveboard);
+    emit replyLiveboard(oLiveboard, tTimestamp);
 }
 
 

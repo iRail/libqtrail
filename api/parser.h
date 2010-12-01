@@ -34,10 +34,10 @@ namespace iRail
         Parser();
 
         // Parsing routines
-        QMap<QString, StationPointer>* parseStations(QIODevice *iDevice) throw(ParserException);
-        QList<ConnectionPointer>* parseConnections(QIODevice *iDevice) throw(ParserException);
-        VehiclePointer* parseVehicle(QIODevice *iDevice) throw(ParserException);
-        LiveboardPointer* parseLiveboard(QIODevice *iDevice) throw(ParserException);
+        QMap<QString, StationPointer>* parseStations(QIODevice *iDevice, QDateTime& oTimestamp) throw(ParserException);
+        QList<ConnectionPointer>* parseConnections(QIODevice *iDevice, QDateTime& oTimestamp) throw(ParserException);
+        VehiclePointer* parseVehicle(QIODevice *iDevice, QDateTime& oTimestamp) throw(ParserException);
+        LiveboardPointer* parseLiveboard(QIODevice *iDevice, QDateTime& oTimestamp) throw(ParserException);
 
     private:
         // Member data

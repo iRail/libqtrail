@@ -19,8 +19,9 @@ LiveboardReader::LiveboardReader()
     mLiveboard = 0;
 }
 
-LiveboardPointer* LiveboardReader::liveboard()
+LiveboardPointer* LiveboardReader::liveboard(QDateTime& oTimestamp)
 {
+    oTimestamp = mTimestamp;
     return mLiveboard;
 }
 

@@ -19,8 +19,9 @@ StationReader::StationReader()
     mStations = 0;
 }
 
-QMap<QString, StationPointer>* StationReader::stations()
+QMap<QString, StationPointer>* StationReader::stations(QDateTime& oTimestamp)
 {
+    oTimestamp = mTimestamp;
     return mStations;
 }
 

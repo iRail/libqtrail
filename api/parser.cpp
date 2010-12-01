@@ -26,38 +26,38 @@ Parser::Parser() : mException("this is a base exception which should never be th
 // Parsing routines
 //
 
-QMap<QString, StationPointer>* Parser::parseStations(QIODevice *iDevice) throw(ParserException)
+QMap<QString, StationPointer>* Parser::parseStations(QIODevice *iDevice, QDateTime& oTimestamp) throw(ParserException)
 {
     // Parse the document
     StationReader tReader;
     tReader.read(iDevice);
 
-    return tReader.stations();
+    return tReader.stations(oTimestamp);
 }
 
-QList<ConnectionPointer>* Parser::parseConnections(QIODevice *iDevice) throw(ParserException)
+QList<ConnectionPointer>* Parser::parseConnections(QIODevice *iDevice, QDateTime& oTimestamp) throw(ParserException)
 {
     // Parse the document
     ConnectionReader tReader;
     tReader.read(iDevice);
 
-    return tReader.connections();
+    return tReader.connections(oTimestamp);
 }
 
-VehiclePointer* Parser::parseVehicle(QIODevice *iDevice) throw(ParserException)
+VehiclePointer* Parser::parseVehicle(QIODevice *iDevice, QDateTime& oTimestamp) throw(ParserException)
 {
     // Parse the document
     VehicleReader tReader;
     tReader.read(iDevice);
 
-    return tReader.vehicle();
+    return tReader.vehicle(oTimestamp);
 }
 
-LiveboardPointer* Parser::parseLiveboard(QIODevice *iDevice) throw(ParserException)
+LiveboardPointer* Parser::parseLiveboard(QIODevice *iDevice, QDateTime& oTimestamp) throw(ParserException)
 {
     // Parse the document
     LiveboardReader tReader;
     tReader.read(iDevice);
 
-    return tReader.liveboard();
+    return tReader.liveboard(oTimestamp);
 }

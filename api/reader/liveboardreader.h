@@ -20,7 +20,7 @@ namespace iRail
     public:
         LiveboardReader();
         void readDocument();
-        LiveboardPointer* liveboard();
+        LiveboardPointer* liveboard(QDateTime& oTimestamp);
     private:
         // Member data
         LiveboardPointer* mLiveboard;

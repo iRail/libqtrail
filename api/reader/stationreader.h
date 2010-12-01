@@ -20,7 +20,7 @@ namespace iRail
     public:
         StationReader();
         void readDocument();
-        QMap<QString, StationPointer>* stations();
+        QMap<QString, StationPointer>* stations(QDateTime& oTimestamp);
     private:
         // Member data
         QMap<QString, StationPointer>* mStations;

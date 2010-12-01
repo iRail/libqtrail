@@ -10,6 +10,7 @@
 #include "api/storage.h"
 #include "api/station.h"
 #include <QMap>
+#include <QDateTime>
 
 namespace iRail
 {
@@ -22,14 +23,16 @@ namespace iRail
 
         // Getters
         const QMap<QString, StationPointer>* stations() const;
+        QDateTime stationsTimestamp() const;
 
         // Setters
     public slots:
-        void setStations(const QMap<QString, StationPointer>& iStations);
+        void setStations(const QMap<QString, StationPointer>& iStations, const QDateTime& iTimestamp);
 
         // Cache data
     private:
         QMap<QString, StationPointer>* mStations;
+        QDateTime mStationsTimestamp;
     };
 }
 

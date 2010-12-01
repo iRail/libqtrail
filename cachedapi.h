@@ -13,6 +13,9 @@
 #include <QString>
 #include <QMap>
 
+// Definitions (TODO: move to Qt configuration objects)
+#define STATIONS_REFRESH 3600
+
 namespace iRail
 {
     class CachedAPI : public AsyncAPI
@@ -31,7 +34,7 @@ namespace iRail
 
         // Caching slots
     private slots:
-        void cacheStations(QMap<QString, StationPointer>* iStations);
+        void cacheStations(QMap<QString, StationPointer>* iStations, QDateTime iTimestamp);
 
         // Progress indicator signals
     signals:

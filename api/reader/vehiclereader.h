@@ -20,7 +20,7 @@ namespace iRail
     public:
         VehicleReader();
         void readDocument();
-        VehiclePointer* vehicle();
+        VehiclePointer* vehicle(QDateTime& oTimestamp);
     private:
         // Member data
         VehiclePointer* mVehicle;
