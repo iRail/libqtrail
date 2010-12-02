@@ -16,12 +16,12 @@ using namespace iRail;
 void Reader::read(QIODevice *iDevice) throw(ParserException)
 {
     // Setup the reader
-    this->allocate();
+    allocate();
     mReader.clear();
     mReader.addData(iDevice->readAll());
 
     // Read the document
-    this->readDocument();
+    readDocument();
 
     // Check the status
     if (mReader.hasError())
