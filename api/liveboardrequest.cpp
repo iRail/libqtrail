@@ -15,6 +15,7 @@ using namespace iRail;
 
 LiveboardRequest::LiveboardRequest(const QString& iStation) : mStation(iStation)
 {
+    qRegisterMetaType<LiveboardRequestPointer>("LiveboardRequestPointer");
     mTimed = false;
     mTime = 0;
 }

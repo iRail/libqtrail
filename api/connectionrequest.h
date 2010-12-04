@@ -18,7 +18,6 @@
 namespace iRail
 {
     // TODO: use constCast()'s
-    // TODO typeoftransport
     class ConnectionRequest : public QObject
     {
     Q_OBJECT
@@ -72,7 +71,7 @@ namespace iRail
         };
 
         // Basic I/O
-        QString origin() const;  // TODO: these should be StationPointers...
+        QString origin() const;
         QString destination() const;
         bool timed() const;
         const Time* time() const;

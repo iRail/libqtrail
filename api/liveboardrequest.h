@@ -12,11 +12,12 @@
 #include <QString>
 #include <QDateTime>
 #include <QMetaEnum>
+#include <QSharedPointer>
+#include <QMetaType>
 
 namespace iRail
 {
     // TODO: use constCast()'s
-    // TODO typeoftransport
     class LiveboardRequest : public QObject
     {
     Q_OBJECT
@@ -45,7 +46,10 @@ namespace iRail
         bool mTimed;
         QDateTime *mTime;
     };
+
+    typedef QSharedPointer<LiveboardRequest> LiveboardRequestPointer;
 }
 
+Q_DECLARE_METATYPE(iRail::LiveboardRequestPointer)
 
 #endif // LIVEBOARDREQUEST_H
