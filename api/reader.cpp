@@ -67,7 +67,7 @@ void Reader::skipUnknownElement()
 //
 // Auxiliary
 //
-#include <QDebug>
+
 QString Reader::capitalize(const QString& iString)
 {
     if (iString.isEmpty())
