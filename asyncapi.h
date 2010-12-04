@@ -23,6 +23,7 @@
 #include "api/exception/networkexception.h"
 #include "api/connectionrequest.h"
 #include "api/connection.h"
+#include "api/liveboardrequest.h"
 #include "api/liveboard.h"
 
 namespace iRail
@@ -45,7 +46,7 @@ namespace iRail
         virtual void requestStations();
         virtual void requestConnections(ConnectionRequestPointer iConnectionRequest);
         virtual void requestVehicle(const QString& iVehicleId);
-        virtual void requestLiveboard(const QString& iStationId);
+        virtual void requestLiveboard(LiveboardRequestPointer iLiveboardRequest);
 
         // Processing methods
     private slots:

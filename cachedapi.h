@@ -10,6 +10,7 @@
 #include "asyncapi.h"
 #include "api/storage.h"
 #include "api/connectionrequest.h"
+#include "api/liveboardrequest.h"
 #include <QString>
 #include <QMap>
 
@@ -30,7 +31,7 @@ namespace iRail
         void requestStations(bool& oCached);
         void requestConnections(const ConnectionRequestPointer& iConnectionRequest, bool& oCached);
         void requestVehicle(const QString& iVehicleId, bool& oCached);
-        void requestLiveboard(const QString& iStationId, bool& oCached);
+        void requestLiveboard(const LiveboardRequestPointer& iLiveboardRequest, bool& oCached);
 
         // Caching slots
     private slots:

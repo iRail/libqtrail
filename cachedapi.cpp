@@ -57,11 +57,11 @@ void CachedAPI::requestVehicle(const QString& iVehicleId, bool& oCached)
     AsyncAPI::requestVehicle(iVehicleId);
 }
 
-void CachedAPI::requestLiveboard(const QString& iStationId, bool& oCached)
+void CachedAPI::requestLiveboard(const LiveboardRequestPointer& iLiveboardRequest, bool& oCached)
 {
     // Request a new list
     oCached = false;
-    AsyncAPI::requestLiveboard(iStationId);
+    AsyncAPI::requestLiveboard(iLiveboardRequest);
 }
 
 

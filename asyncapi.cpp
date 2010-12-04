@@ -124,7 +124,7 @@ void AsyncAPI::requestVehicle(const QString& iVehicleId)
     network_request(getRequest(tURL), this, SLOT(processVehicle()));
 }
 
-void AsyncAPI::requestLiveboard(const QString& iStationId)
+void AsyncAPI::requestLiveboard(LiveboardRequestPointer iLiveboardRequest)
 {
     // Setup
     mHasError = false;
@@ -135,7 +135,12 @@ void AsyncAPI::requestLiveboard(const QString& iStationId)
     tURL.setPath("liveboard/");
 
     // Set the parameters
-    tURL.addQueryItem("id", iStationId);
+    tURL.addQueryItem("id", iLiveboardRequest->station());
+    if (iLiveboardRequest->timed())
+    {
+        tURL.addQueryItem("date", iLiveboardRequest->time()->date().toString("ddMMyy"));
+        tURL.addQueryItem("time", iLiveboardRequest->time()->time().toString("hhmm"));
+    }
 
     // Create a request
     network_request(getRequest(tURL), this, SLOT(processLiveboard()));
