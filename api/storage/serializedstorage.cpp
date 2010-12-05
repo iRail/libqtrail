@@ -43,19 +43,42 @@ void SerializedStorage::serialize(QDataStream& iStream)
     else
         iStream << false;
 
-    // User lists
-    iStream << userLists().size();
-    QMap<QString, QList<QVariant> >::const_iterator i;
-    for (i = userLists().begin(); i != userLists().end(); i++)
+    // History
+    iStream << history().size();
+    for (int i = 0; i < history().size(); i++)
     {
-        iStream << i.key();
+        const QVariant& tHistoryEntry = history().at(i);
 
-        const QList<QVariant>& tUserList = i.value();
-        iStream << tUserList.size();
-        for (int j = 0; j < tUserList.size(); j++)
+        if (tHistoryEntry.canConvert<LiveboardRequestPointer>())
         {
-            iStream << tUserList.at(j);
+            iStream << LiveboardRequestType;
+            iStream << tHistoryEntry.value<LiveboardRequestPointer>();
         }
+        else if (tHistoryEntry.canConvert<ConnectionRequestPointer>())
+        {
+            iStream << ConnectionRequestType;
+            iStream << tHistoryEntry.value<ConnectionRequestPointer>();
+        }
+        // else: warn
+    }
+
+    // Favourites
+    iStream << favourites().size();
+    for (int i = 0; i < favourites().size(); i++)
+    {
+        const QVariant& tFavouriteEntry = favourites().at(i);
+
+        if (tFavouriteEntry.canConvert<LiveboardRequestPointer>())
+        {
+            iStream << LiveboardRequestType;
+            iStream << tFavouriteEntry.value<LiveboardRequestPointer>();
+        }
+        else if (tFavouriteEntry.canConvert<ConnectionRequestPointer>())
+        {
+            iStream << ConnectionRequestType;
+            iStream << tFavouriteEntry.value<ConnectionRequestPointer>();
+        }
+        // else: warn
     }
 }
 
@@ -84,24 +107,57 @@ void SerializedStorage::deserialize(QDataStream& iStream)
         setStations(tStations, tStationsTimestamp);
     }
 
-    // User lists
-    int tUserLists;
-    iStream >> tUserLists;
-    for (int i = 0; i < tUserLists; i++)
+    // History
+    int tHistoryEntries;
+    iStream >> tHistoryEntries;
+    QList<QVariant> tHistory;
+    for (int i = 0; i < tHistoryEntries; i++)
     {
-        QString tKey;
-        iStream >> tKey;
+        VariantType tType;
+        iStream >> tType;
 
-        int tUserListEntries;
-        iStream >> tUserListEntries;
-        QList<QVariant> tValue;
-        for (int j = 0; j < tUserListEntries; j++)
+        QVariant tHistoryEntry;
+        if (tType == LiveboardRequestType)
         {
-            QVariant tUserListEntry;
-            iStream >> tUserListEntry;
-            tValue << tUserListEntry;
+            LiveboardRequestPointer tLiveboardRequest;
+            iStream >> tLiveboardRequest;
+            tHistoryEntry = QVariant::fromValue(tLiveboardRequest);
+        }
+        else if (tType == ConnectionRequestType)
+        {
+            ConnectionRequestPointer tConnectionRequest;
+            iStream >> tConnectionRequest;
+            tHistoryEntry = QVariant::fromValue(tConnectionRequest);
         }
 
-        setUserList(tKey, tValue);
+        tHistory << tHistoryEntry;
     }
+    setHistory(tHistory);
+
+    // Favourites
+    int tFavouritesEntries;
+    iStream >> tFavouritesEntries;
+    QList<QVariant> tFavourites;
+    for (int i = 0; i < tFavouritesEntries; i++)
+    {
+        VariantType tType;
+        iStream >> tType;
+
+        QVariant tFavouritesEntry;
+        if (tType == LiveboardRequestType)
+        {
+            LiveboardRequestPointer tLiveboardRequest;
+            iStream >> tLiveboardRequest;
+            tFavouritesEntry = QVariant::fromValue(tLiveboardRequest);
+        }
+        else if (tType == ConnectionRequestType)
+        {
+            ConnectionRequestPointer tConnectionRequest;
+            iStream >> tConnectionRequest;
+            tFavouritesEntry = QVariant::fromValue(tConnectionRequest);
+        }
+
+        tFavourites << tFavouritesEntry;
+    }
+    setFavourites(tFavourites);
 }

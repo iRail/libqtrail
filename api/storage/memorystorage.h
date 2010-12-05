@@ -25,23 +25,22 @@ namespace iRail
         const QMap<QString, StationPointer>* stations() const;
         QDateTime stationsTimestamp() const;
         void clearStations();
-        const QList<QVariant>& userList(const QString &iName) const;
-        void clearUserList(const QString &iName);
+        const QList<QVariant>& favourites() const;
+        void clearFavourites();
+        const QList<QVariant>& history() const;
+        void clearHistory();
 
         // Setters
     public slots:
         void setStations(const QMap<QString, StationPointer>& iStations, const QDateTime& iTimestamp);
-        void setUserList(const QString &iName, const QList<QVariant> &iData);
-
-        // Protected getters
-    protected:
-        const QMap<QString, QList<QVariant> >& userLists() const;
+        void setFavourites(const QList<QVariant> &iFavourites);
+        void setHistory(const QList<QVariant> &iHistory);
 
         // Cache data
     private:
         QMap<QString, StationPointer>* mStations;
         QDateTime mStationsTimestamp;
-        QMap<QString, QList<QVariant> > mUserLists;
+        QList<QVariant> mHistory, mFavourites;
     };
 }
 

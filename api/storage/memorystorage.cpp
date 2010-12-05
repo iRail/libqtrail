@@ -39,14 +39,22 @@ void MemoryStorage::clearStations()
     mStations = 0;
 }
 
-const QList<QVariant>& MemoryStorage::userList(const QString &iName) const
+const QList<QVariant>& MemoryStorage::favourites() const
 {
-    return mUserLists[iName];
+    return mFavourites;
+}
+void MemoryStorage::clearFavourites()
+{
+    mFavourites.clear();
 }
 
-void MemoryStorage::clearUserList(const QString &iName)
+const QList<QVariant>& MemoryStorage::history() const
 {
-    mUserLists.remove(iName);
+    return mHistory;
+}
+void MemoryStorage::clearHistory()
+{
+    mHistory.clear();
 }
 
 
@@ -65,17 +73,12 @@ void MemoryStorage::setStations(const QMap<QString, StationPointer>& iStations, 
     mStations->detach();
 }
 
-void MemoryStorage::setUserList(const QString &iName, const QList<QVariant> &iData)
+void MemoryStorage::setFavourites(const QList<QVariant> &iFavourites)
 {
-    mUserLists[iName] = iData;
+    mFavourites = iFavourites;
 }
 
-
-//
-// Protected getters
-//
-
-const QMap<QString, QList<QVariant> >& MemoryStorage::userLists() const
+void MemoryStorage::setHistory(const QList<QVariant> &iHistory)
 {
-    return mUserLists;
+    mHistory = iHistory;
 }

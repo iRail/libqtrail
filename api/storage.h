@@ -27,8 +27,10 @@ namespace iRail
         virtual const QMap<QString, StationPointer>* stations() const = 0;
         virtual QDateTime stationsTimestamp() const = 0;
         virtual void clearStations() = 0;
-        virtual const QList<QVariant>& userList(const QString &iName) const = 0;
-        virtual void clearUserList(const QString &iName) = 0;
+        virtual const QList<QVariant>& favourites() const = 0;
+        virtual void clearFavourites() = 0;
+        virtual const QList<QVariant>& history() const = 0;
+        virtual void clearHistory() = 0;
 
         // Setters
     public slots:
@@ -37,7 +39,8 @@ namespace iRail
           list is copied upon insertion.
           */
         virtual void setStations(const QMap<QString, StationPointer>& iStations, const QDateTime& iTimestamp) = 0;
-        virtual void setUserList(const QString &iName, const QList<QVariant> &iData) = 0;
+        virtual void setFavourites(const QList<QVariant> &iData) = 0;
+        virtual void setHistory(const QList<QVariant> &iData) = 0;
     };
 }
 

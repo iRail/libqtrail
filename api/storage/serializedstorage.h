@@ -9,6 +9,8 @@
 // Includes
 #include "api/storage.h"
 #include "api/station.h"
+#include "api/liveboardrequest.h"
+#include "api/connectionrequest.h"
 #include "memorystorage.h"
 #include <QDataStream>
 
@@ -20,6 +22,14 @@ namespace iRail
     public:
         // Construction and destruction
         SerializedStorage();
+
+        // Auxiliary types
+    private:
+        enum VariantType
+        {
+            LiveboardRequestType,
+            ConnectionRequestType
+        };
 
         // Data I/O
         void serialize(QDataStream& iStream);
