@@ -22,8 +22,11 @@ SerializedStorage::SerializedStorage() : MemoryStorage()
 // Data I/O
 //
 
-void SerializedStorage::serialize(QDataStream& iStream)
+void SerializedStorage::serialize(QDataStream& iStream, const QString& iVersion)
 {
+    // Version check
+    iStream << iVersion;
+
     // Stations
     if (stations() != 0)
     {
@@ -87,8 +90,16 @@ void SerializedStorage::serialize(QDataStream& iStream)
     }
 }
 
-void SerializedStorage::deserialize(QDataStream& iStream)
+bool SerializedStorage::deserialize(QDataStream& iStream, const QString& iVersion)
 {
+    // Version check
+    QString tVersion;
+    iStream >> tVersion;
+    qDebug() << "Given version" << iVersion;
+    qDebug() << "Read version" << tVersion;
+    if (tVersion != iVersion)
+        return false;
+
     // Stations
     bool tHasStations;
     iStream >> tHasStations;
@@ -174,4 +185,6 @@ void SerializedStorage::deserialize(QDataStream& iStream)
         tFavourites << tFavouritesEntry;
     }
     setFavourites(tFavourites);
+
+    return true;
 }

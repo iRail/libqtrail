@@ -24,8 +24,8 @@ namespace iRail
         SerializedStorage();
 
         // Data I/O
-        void serialize(QDataStream& iStream);
-        void deserialize(QDataStream& iSteam);
+        void serialize(QDataStream& iStream, const QString& iVersion);
+        bool deserialize(QDataStream& iSteam, const QString& iVersion);
 
         // Auxiliary types
         enum VariantType
