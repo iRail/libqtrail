@@ -37,7 +37,7 @@ void SerializedStorage::serialize(QDataStream& iStream)
         {
             iStream << i.key();
             StationPointer tStation = i.value();
-            tStation->operator <<(iStream);
+            iStream << tStation;
         }
     }
     else
@@ -105,7 +105,7 @@ void SerializedStorage::deserialize(QDataStream& iStream)
             QString key;
             iStream >> key;
             Station *value = new Station("dummy");
-            value->operator >>(iStream);
+            iStream >> *value;
             tStations.insert(key, StationPointer(value));
         }
 

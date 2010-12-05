@@ -17,6 +17,7 @@ using namespace iRail;
 Station::Station(QString iId) : mId(iId)
 {
     qRegisterMetaType<StationPointer>("StationPointer");
+    qRegisterMetaTypeStreamOperators<StationPointer>("StationPointer");
     mName = "";
     mLocatable = false;
     mLocation = 0;
@@ -73,37 +74,53 @@ void Station::setLocation(const Location& iLocation)
 // Operators
 //
 
-QDebug Station::operator<<(QDebug dbg) const
+QDebug &iRail::operator<<(QDebug dbg, const Station& iStation)
 {
-    dbg << "Station(id=" << id() << ",name='" << name() << "'";
-    if (locatable())
-        dbg << ", location='" << location()->first << " x " << location()->second << "'";
+    dbg << "Station(id=" << iStation.id() << ",name='" << iStation.name() << "'";
+    if (iStation.locatable())
+        dbg << ", location='" << iStation.location()->first << " x " << iStation.location()->second << "'";
     dbg << ")";
 
     return dbg.maybeSpace();
 }
 
-QDataStream& Station::operator<<(QDataStream& iStream) const
+QDataStream& iRail::operator<<(QDataStream& iStream, const Station& iStation)
 {
-    iStream << mId;
-    iStream << mName;
-    iStream << mLocatable;
-    if (locatable())
-        iStream << *mLocation;
+    iStream << iStation.mId;
+    iStream << iStation.mName;
+    iStream << iStation.mLocatable;
+    if (iStation.locatable())
+        iStream << *iStation.mLocation;
 
     return iStream;
 }
 
-QDataStream& Station::operator>>(QDataStream& iStream)
+QDataStream& iRail::operator>>(QDataStream& iStream, Station& iStation)
 {
-    iStream >> mId;
-    iStream >> mName;
-    iStream >> mLocatable;
-    if (locatable())
+    iStream >> iStation.mId;
+    iStream >> iStation.mName;
+    iStream >> iStation.mLocatable;
+    if (iStation.locatable())
     {
-        mLocation = new Location();
-        iStream >> *mLocation;
+        iStation.mLocation = new Station::Location();
+        iStream >> *iStation.mLocation;
     }
+
+    return iStream;
+}
+
+QDataStream &iRail::operator<<(QDataStream& iStream, const StationPointer& iStation)
+{
+    iStream << (*iStation);
+
+    return iStream;
+}
+
+QDataStream &iRail::operator>>(QDataStream& iStream, StationPointer& iStation)
+{
+    Station *tStation = new Station("dummy");
+    iStream >> *tStation;
+    iStation = StationPointer(tStation);
 
     return iStream;
 }

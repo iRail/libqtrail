@@ -46,9 +46,9 @@ namespace iRail
         void setLocation(const Location& iLocation);
 
         // Operators
-        QDebug operator<<(QDebug dbg) const;
-        QDataStream &operator<<(QDataStream& iStream) const;
-        QDataStream &operator>>(QDataStream& iStream);
+        friend QDebug &operator<<(QDebug dbg, const Station& iStation);
+        friend QDataStream &operator<<(QDataStream& iStream, const Station& iStation);
+        friend QDataStream &operator>>(QDataStream& iStream, Station& iStation);
 
     private:
         QString mId;
@@ -58,6 +58,12 @@ namespace iRail
     };
 
     typedef QSharedPointer<Station> StationPointer;
+
+    QDebug &operator<<(QDebug dbg, const Station& iStation);
+    QDataStream &operator<<(QDataStream& iStream, const Station& iStation);
+    QDataStream &operator>>(QDataStream& iStream, Station& iStation);
+    QDataStream &operator<<(QDataStream& iStream, const StationPointer& iStation);
+    QDataStream &operator>>(QDataStream& iStream, StationPointer& iStation);
 }
 
 Q_DECLARE_METATYPE(iRail::StationPointer)
