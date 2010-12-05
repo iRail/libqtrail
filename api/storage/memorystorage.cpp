@@ -39,6 +39,16 @@ void MemoryStorage::clearStations()
     mStations = 0;
 }
 
+const QList<QVariant>& MemoryStorage::userList(const QString &iName) const
+{
+    return mUserLists[iName];
+}
+
+void MemoryStorage::clearUserList(const QString &iName)
+{
+    mUserLists.remove(iName);
+}
+
 
 //
 // Setters
@@ -53,4 +63,19 @@ void MemoryStorage::setStations(const QMap<QString, StationPointer>& iStations, 
     // This because QList deletes a COW-copy (which has not yet
     // been detached) when its parent gets destroyed...
     mStations->detach();
+}
+
+void MemoryStorage::setUserList(const QString &iName, const QList<QVariant> &iData)
+{
+    mUserLists[iName] = iData;
+}
+
+
+//
+// Protected getters
+//
+
+const QMap<QString, QList<QVariant> >& MemoryStorage::userLists() const
+{
+    return mUserLists;
 }

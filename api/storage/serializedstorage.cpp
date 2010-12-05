@@ -42,10 +42,26 @@ void SerializedStorage::serialize(QDataStream& iStream)
     }
     else
         iStream << false;
+
+    // User lists
+    iStream << userLists().size();
+    QMap<QString, QList<QVariant> >::const_iterator i;
+    for (i = userLists().begin(); i != userLists().end(); i++)
+    {
+        iStream << i.key();
+
+        const QList<QVariant>& tUserList = i.value();
+        iStream << tUserList.size();
+        for (int j = 0; j < tUserList.size(); j++)
+        {
+            iStream << tUserList.at(j);
+        }
+    }
 }
 
 void SerializedStorage::deserialize(QDataStream& iStream)
 {
+    // Stations
     bool tHasStations;
     iStream >> tHasStations;
     if (tHasStations)
@@ -66,5 +82,26 @@ void SerializedStorage::deserialize(QDataStream& iStream)
         }
 
         setStations(tStations, tStationsTimestamp);
+    }
+
+    // User lists
+    int tUserLists;
+    iStream >> tUserLists;
+    for (int i = 0; i < tUserLists; i++)
+    {
+        QString tKey;
+        iStream >> tKey;
+
+        int tUserListEntries;
+        iStream >> tUserListEntries;
+        QList<QVariant> tValue;
+        for (int j = 0; j < tUserListEntries; j++)
+        {
+            QVariant tUserListEntry;
+            iStream >> tUserListEntry;
+            tValue << tUserListEntry;
+        }
+
+        setUserList(tKey, tValue);
     }
 }
