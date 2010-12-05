@@ -43,6 +43,11 @@ void SerializedStorage::serialize(QDataStream& iStream)
     else
         iStream << false;
 
+    // History and favourites: enumeration processing
+    const QMetaObject& tMetaObject = SerializedStorage::staticMetaObject;
+    int tEnumIndex = tMetaObject.indexOfEnumerator("VariantType");
+    QMetaEnum tMetaEnum = tMetaObject.enumerator(tEnumIndex);
+
     // History
     iStream << history().size();
     for (int i = 0; i < history().size(); i++)
@@ -51,12 +56,12 @@ void SerializedStorage::serialize(QDataStream& iStream)
 
         if (tHistoryEntry.canConvert<LiveboardRequestPointer>())
         {
-            iStream << LiveboardRequestType;
+            iStream << tMetaEnum.valueToKey(LiveboardRequestType);
             iStream << tHistoryEntry.value<LiveboardRequestPointer>();
         }
         else if (tHistoryEntry.canConvert<ConnectionRequestPointer>())
         {
-            iStream << ConnectionRequestType;
+            iStream << tMetaEnum.valueToKey(ConnectionRequestType);
             iStream << tHistoryEntry.value<ConnectionRequestPointer>();
         }
         // else: warn
@@ -70,12 +75,12 @@ void SerializedStorage::serialize(QDataStream& iStream)
 
         if (tFavouriteEntry.canConvert<LiveboardRequestPointer>())
         {
-            iStream << LiveboardRequestType;
+            iStream << tMetaEnum.valueToKey(LiveboardRequestType);
             iStream << tFavouriteEntry.value<LiveboardRequestPointer>();
         }
         else if (tFavouriteEntry.canConvert<ConnectionRequestPointer>())
         {
-            iStream << ConnectionRequestType;
+            iStream << tMetaEnum.valueToKey(ConnectionRequestType);
             iStream << tFavouriteEntry.value<ConnectionRequestPointer>();
         }
         // else: warn
@@ -107,6 +112,11 @@ void SerializedStorage::deserialize(QDataStream& iStream)
         setStations(tStations, tStationsTimestamp);
     }
 
+    // History and favourites: enumeration processing
+    const QMetaObject& tMetaObject = SerializedStorage::staticMetaObject;
+    int tEnumIndex = tMetaObject.indexOfEnumerator("VariantType");
+    QMetaEnum tMetaEnum = tMetaObject.enumerator(tEnumIndex);
+
     // History
     int tHistoryEntries;
     iStream >> tHistoryEntries;
@@ -114,7 +124,9 @@ void SerializedStorage::deserialize(QDataStream& iStream)
     for (int i = 0; i < tHistoryEntries; i++)
     {
         VariantType tType;
-        iStream >> tType;
+        char* tTypeValue;
+        iStream >> tTypeValue;
+        tType = static_cast<VariantType>(tMetaEnum.keyToValue(tTypeValue));
 
         QVariant tHistoryEntry;
         if (tType == LiveboardRequestType)
@@ -141,7 +153,9 @@ void SerializedStorage::deserialize(QDataStream& iStream)
     for (int i = 0; i < tFavouritesEntries; i++)
     {
         VariantType tType;
-        iStream >> tType;
+        char* tTypeValue;
+        iStream >> tTypeValue;
+        tType = static_cast<VariantType>(tMetaEnum.keyToValue(tTypeValue));
 
         QVariant tFavouritesEntry;
         if (tType == LiveboardRequestType)

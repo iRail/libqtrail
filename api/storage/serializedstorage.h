@@ -30,6 +30,7 @@ namespace iRail
             LiveboardRequestType,
             ConnectionRequestType
         };
+        Q_ENUMS(VariantType)
 
         // Data I/O
         void serialize(QDataStream& iStream);
