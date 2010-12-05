@@ -51,8 +51,8 @@ namespace iRail
 
     QDebug &operator<<(QDebug dbg, const LiveboardRequest& iLiveboardRequest);
     QDataStream &operator<<(QDataStream& iStream, const LiveboardRequest& iLiveboardRequest);
-    QDataStream &operator<<(QDataStream& iStream, const LiveboardRequestPointer& iLiveboardRequest);
     QDataStream &operator>>(QDataStream& iStream, LiveboardRequest& iLiveboardRequest);
+    QDataStream &operator<<(QDataStream& iStream, const LiveboardRequestPointer& iLiveboardRequest);
     QDataStream &operator>>(QDataStream& iStream, LiveboardRequestPointer& iLiveboardRequest);
 }
 

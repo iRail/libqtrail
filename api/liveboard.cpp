@@ -17,6 +17,7 @@ using namespace iRail;
 Liveboard::Liveboard(QString iStation) : mStation(iStation)
 {
     qRegisterMetaType<LiveboardPointer>("LiveboardPointer");
+    qRegisterMetaTypeStreamOperators<LiveboardPointer>("LiveboardPointer");
     qRegisterMetaType<Liveboard::Departure>("Liveboard::Departure");
 }
 
@@ -45,37 +46,53 @@ void Liveboard::setDepartures(const QList<Liveboard::Departure>& iDepartures)
 // Operators
 //
 
-QDebug Liveboard::operator<<(QDebug dbg) const
+QDebug& iRail::operator<<(QDebug dbg, const Liveboard& iLiveboard)
 {
-    dbg << "Liveboard(station=" << station() << ",departures=" << departures().size() << ")";
+    dbg << "Liveboard(station=" << iLiveboard.station() << ",departures=" << iLiveboard.departures().size() << ")";
 
     return dbg.maybeSpace();
 }
 
-QDataStream& Liveboard::operator<<(QDataStream& iStream) const
+QDataStream& iRail::operator<<(QDataStream& iStream, const Liveboard& iLiveboard)
 {
-    iStream << mStation;
+    iStream << iLiveboard.mStation;
 
-    iStream << mDepartures.size();
-    foreach (Departure tDeparture, mDepartures)
+    iStream << iLiveboard.mDepartures.size();
+    foreach (Liveboard::Departure tDeparture, iLiveboard.mDepartures)
         tDeparture.operator <<(iStream);
 
     return iStream;
 }
 
-QDataStream& Liveboard::operator>>(QDataStream& iStream)
+QDataStream& iRail::operator>>(QDataStream& iStream, Liveboard& iLiveboard)
 {
-    iStream >> mStation;
+    iStream >> iLiveboard.mStation;
 
     int tDepartures;
     iStream >> tDepartures;
-    mDepartures = QList<Departure>();
+    iLiveboard.mDepartures = QList<Liveboard::Departure>();
     for (int i = 0; i < tDepartures; i++)
     {
-        Departure tDeparture;
+        Liveboard::Departure tDeparture;
         tDeparture.operator >>(iStream);
-        mDepartures << tDeparture;
+        iLiveboard.mDepartures << tDeparture;
     }
+
+    return iStream;
+}
+
+QDataStream &iRail::operator<<(QDataStream& iStream, const LiveboardPointer& iLiveboard)
+{
+    iStream << (*iLiveboard);
+
+    return iStream;
+}
+
+QDataStream &iRail::operator>>(QDataStream& iStream, LiveboardPointer& iLiveboard)
+{
+    Liveboard *tLiveboard = new Liveboard("dummy");
+    iStream >> *tLiveboard;
+    iLiveboard = LiveboardPointer(tLiveboard);
 
     return iStream;
 }

@@ -67,9 +67,9 @@ namespace iRail
         void setDepartures(const QList<Departure>& iDepartures);
 
         // Operators
-        QDebug operator<<(QDebug dbg) const;
-        QDataStream &operator<<(QDataStream& iStream) const;
-        QDataStream &operator>>(QDataStream& iStream);
+        friend QDebug &operator<<(QDebug dbg, const Liveboard& iLiveboard);
+        friend QDataStream &operator<<(QDataStream& iStream, const Liveboard& iLiveboard);
+        friend QDataStream &operator>>(QDataStream& iStream, Liveboard& iLiveboard);
 
     private:
         QString mStation;
@@ -77,6 +77,12 @@ namespace iRail
     };
 
     typedef QSharedPointer<Liveboard> LiveboardPointer;
+
+    QDebug &operator<<(QDebug dbg, const Liveboard& iLiveboard);
+    QDataStream &operator<<(QDataStream& iStream, const Liveboard& iLiveboard);
+    QDataStream &operator>>(QDataStream& iStream, Liveboard& iLiveboard);
+    QDataStream &operator<<(QDataStream& iStream, const LiveboardPointer& iLiveboard);
+    QDataStream &operator>>(QDataStream& iStream, LiveboardPointer& iLiveboard);
 }
 
 Q_DECLARE_METATYPE(iRail::LiveboardPointer)
