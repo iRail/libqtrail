@@ -68,22 +68,58 @@ QDebug& iRail::operator<<(QDebug dbg, const Connection& iConnection)
     return dbg.maybeSpace();
 }
 
+QDataStream &iRail::operator<<(QDataStream& iStream, const Connection::Line& iLine)
+{
+    iStream << iLine.departure;
+    iStream << iLine.arrival;
+    iStream << iLine.vehicle;
+
+    return iStream;
+}
+QDataStream &iRail::operator>>(QDataStream& iStream, Connection::Line& iLine)
+{
+    iStream >> iLine.departure;
+    iStream >> iLine.arrival;
+    iStream >> iLine.vehicle;
+
+    return iStream;
+}
+
+QDataStream &iRail::operator<<(QDataStream& iStream, const Connection::POI& iPOI)
+{
+    iStream << iPOI.station;
+    iStream << iPOI.delay;
+    iStream << iPOI.datetime;
+    iStream << iPOI.platform;
+
+    return iStream;
+}
+QDataStream &iRail::operator>>(QDataStream& iStream, Connection::POI& iPOI)
+{
+    iStream >> iPOI.station;
+    iStream >> iPOI.delay;
+    iStream >> iPOI.datetime;
+    iStream >> iPOI.platform;
+
+    return iStream;
+}
+
 QDataStream& iRail::operator<<(QDataStream& iStream, const Connection& iConnection)
 {
-    iConnection.mDeparture.operator <<(iStream);
-    iConnection.mArrival.operator <<(iStream);
+    iStream << iConnection.mDeparture;
+    iStream << iConnection.mArrival;
 
     iStream << iConnection.mLines.size();
     foreach (Connection::Line tLine, iConnection.mLines)
-        tLine.operator <<(iStream);
+        iStream << tLine;
 
     return iStream;
 }
 
 QDataStream& iRail::operator>>(QDataStream& iStream, Connection& iConnection)
 {
-    iConnection.mDeparture.operator >>(iStream);
-    iConnection.mArrival.operator >>(iStream);
+    iStream >> iConnection.mDeparture;
+    iStream >> iConnection.mArrival;
 
     int tLines;
     iStream >> tLines;
@@ -91,7 +127,7 @@ QDataStream& iRail::operator>>(QDataStream& iStream, Connection& iConnection)
     for (int i = 0; i < tLines; i++)
     {
         Connection::Line tLine;
-        tLine.operator >>(iStream);
+        iStream >> tLine;
         iConnection.mLines << tLine;
     }
 

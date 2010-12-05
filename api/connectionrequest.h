@@ -44,31 +44,9 @@ namespace iRail
             TimeType type;
             QDateTime datetime;
 
-            QDataStream &operator<<(QDataStream& iStream) const
-            {
-                const QMetaObject& tMetaObject = ConnectionRequest::staticMetaObject;
-                int tEnumIndex = tMetaObject.indexOfEnumerator("TimeType");
-                QMetaEnum tMetaEnum = tMetaObject.enumerator(tEnumIndex);
-
-                iStream << tMetaEnum.valueToKey(type);
-                iStream << datetime;
-
-                return iStream;
-            }
-            QDataStream &operator>>(QDataStream& iStream)
-            {
-                const QMetaObject& tMetaObject = ConnectionRequest::staticMetaObject;
-                int tEnumIndex = tMetaObject.indexOfEnumerator("TimeType");
-                QMetaEnum tMetaEnum = tMetaObject.enumerator(tEnumIndex);
-
-                char* tEnumValue;
-                iStream >> tEnumValue;
-                type = static_cast<TimeType>(tMetaEnum.keyToValue(tEnumValue));
-
-                iStream >> datetime;
-
-                return iStream;
-            }
+            // Operators
+            friend QDataStream &operator<<(QDataStream& iStream, const Time& iTime);
+            friend QDataStream &operator>>(QDataStream& iStream, Time& iTime);
         };
 
         // Basic I/O
@@ -93,6 +71,8 @@ namespace iRail
     typedef QSharedPointer<ConnectionRequest> ConnectionRequestPointer;
 
     QDebug &operator<<(QDebug dbg, const ConnectionRequest& iConnectionRequest);
+    QDataStream &operator<<(QDataStream& iStream, const ConnectionRequest::Time& iTime);
+    QDataStream &operator>>(QDataStream& iStream, ConnectionRequest::Time& iTime);
     QDataStream &operator<<(QDataStream& iStream, const ConnectionRequest& iConnectionRequest);
     QDataStream &operator>>(QDataStream& iStream, ConnectionRequest& iConnectionRequest);
     QDataStream &operator<<(QDataStream& iStream, const ConnectionRequestPointer& iConnectionRequest);

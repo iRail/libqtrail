@@ -40,24 +40,9 @@ namespace iRail
             QDateTime datetime;
             int platform;
 
-            QDataStream &operator<<(QDataStream& iStream) const
-            {
-                iStream << station;
-                iStream << delay;
-                iStream << datetime;
-                iStream << platform;
-
-                return iStream;
-            }
-            QDataStream &operator>>(QDataStream& iStream)
-            {
-                iStream >> station;
-                iStream >> delay;
-                iStream >> datetime;
-                iStream >> platform;
-
-                return iStream;
-            }
+            // Operators
+            friend QDataStream &operator<<(QDataStream& iStream, const Stop& iStop);
+            friend QDataStream &operator>>(QDataStream& iStream, Stop& iStop);
         };
 
         // Construction and destruction

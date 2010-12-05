@@ -53,13 +53,34 @@ QDebug& iRail::operator<<(QDebug dbg, const Liveboard& iLiveboard)
     return dbg.maybeSpace();
 }
 
+QDataStream &iRail::operator<<(QDataStream& iStream, const Liveboard::Departure& iDeparture)
+{
+    iStream << iDeparture.station;
+    iStream << iDeparture.vehicle;
+    iStream << iDeparture.delay;
+    iStream << iDeparture.datetime;
+    iStream << iDeparture.platform;
+
+    return iStream;
+}
+QDataStream &iRail::operator>>(QDataStream& iStream, Liveboard::Departure& iDeparture)
+{
+    iStream >> iDeparture.station;
+    iStream >> iDeparture.vehicle;
+    iStream >> iDeparture.delay;
+    iStream >> iDeparture.datetime;
+    iStream >> iDeparture.platform;
+
+    return iStream;
+}
+
 QDataStream& iRail::operator<<(QDataStream& iStream, const Liveboard& iLiveboard)
 {
     iStream << iLiveboard.mStation;
 
     iStream << iLiveboard.mDepartures.size();
     foreach (Liveboard::Departure tDeparture, iLiveboard.mDepartures)
-        tDeparture.operator <<(iStream);
+        iStream << tDeparture;
 
     return iStream;
 }
@@ -74,7 +95,7 @@ QDataStream& iRail::operator>>(QDataStream& iStream, Liveboard& iLiveboard)
     for (int i = 0; i < tDepartures; i++)
     {
         Liveboard::Departure tDeparture;
-        tDeparture.operator >>(iStream);
+        iStream >> tDeparture;
         iLiveboard.mDepartures << tDeparture;
     }
 

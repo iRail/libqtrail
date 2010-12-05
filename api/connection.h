@@ -35,24 +35,9 @@ namespace iRail
             QDateTime datetime;
             unsigned int platform;
 
-            QDataStream &operator<<(QDataStream& iStream) const
-            {
-                iStream << station;
-                iStream << delay;
-                iStream << datetime;
-                iStream << platform;
-
-                return iStream;
-            }
-            QDataStream &operator>>(QDataStream& iStream)
-            {
-                iStream >> station;
-                iStream >> delay;
-                iStream >> datetime;
-                iStream >> platform;
-
-                return iStream;
-            }
+            // Operators
+            friend QDataStream &operator<<(QDataStream& iStream, const POI& iPOI);
+            friend QDataStream &operator>>(QDataStream& iStream, POI& iPOI);
         };
         struct Line
         {
@@ -60,22 +45,9 @@ namespace iRail
             POI arrival;
             QString vehicle;
 
-            QDataStream &operator<<(QDataStream& iStream) const
-            {
-                departure.operator <<(iStream);
-                arrival.operator <<(iStream);
-                iStream << vehicle;
-
-                return iStream;
-            }
-            QDataStream &operator>>(QDataStream& iStream)
-            {
-                departure.operator >>(iStream);
-                arrival.operator >>(iStream);
-                iStream >> vehicle;
-
-                return iStream;
-            }
+            // Operators
+            friend QDataStream &operator<<(QDataStream& iStream, const Line& iLine);
+            friend QDataStream &operator>>(QDataStream& iStream, Line& iLine);
         };
 
         // Construction and destruction
@@ -101,6 +73,8 @@ namespace iRail
     typedef QSharedPointer<Connection> ConnectionPointer;
 
     QDebug &operator<<(QDebug dbg, const Connection& iRequest);
+    QDataStream &operator<<(QDataStream& iStream, const Connection::POI& iPOI);
+    QDataStream &operator>>(QDataStream& iStream, Connection::POI& iPOI);
     QDataStream &operator<<(QDataStream& iStream, const Connection& iRequest);
     QDataStream &operator>>(QDataStream& iStream, Connection& iRequest);
     QDataStream &operator<<(QDataStream& iStream, const ConnectionPointer& iRequest);

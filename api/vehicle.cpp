@@ -84,6 +84,25 @@ QDebug &iRail::operator<<(QDebug dbg, const Vehicle& iVehicle)
     return dbg.maybeSpace();
 }
 
+QDataStream &iRail::operator<<(QDataStream& iStream, const Vehicle::Stop& iStop)
+{
+    iStream << iStop.station;
+    iStream << iStop.delay;
+    iStream << iStop.datetime;
+    iStream << iStop.platform;
+
+    return iStream;
+}
+QDataStream &iRail::operator>>(QDataStream& iStream, Vehicle::Stop& iStop)
+{
+    iStream >> iStop.station;
+    iStream >> iStop.delay;
+    iStream >> iStop.datetime;
+    iStream >> iStop.platform;
+
+    return iStream;
+}
+
 QDataStream& iRail::operator<<(QDataStream& iStream, const Vehicle& iVehicle)
 {
     iStream << iVehicle.mId;
@@ -94,7 +113,7 @@ QDataStream& iRail::operator<<(QDataStream& iStream, const Vehicle& iVehicle)
 
     iStream << iVehicle.mStops.size();
     foreach (Vehicle::Stop tStop, iVehicle.mStops)
-        tStop.operator <<(iStream);
+        iStream << tStop;
 
     return iStream;
 }
@@ -113,7 +132,7 @@ QDataStream& iRail::operator>>(QDataStream& iStream, Vehicle& iVehicle)
     for (int i = 0; i < tStops; i++)
     {
         Vehicle::Stop tStop;
-        tStop.operator >>(iStream);
+        iStream >> tStop;
         iVehicle.mStops << tStop;
     }
 

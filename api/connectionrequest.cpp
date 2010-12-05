@@ -90,13 +90,39 @@ QDebug &iRail::operator<<(QDebug dbg, const ConnectionRequest& iConnectionReques
     return dbg.maybeSpace();
 }
 
+QDataStream &iRail::operator<<(QDataStream& iStream, const ConnectionRequest::Time& iTime)
+{
+    const QMetaObject& tMetaObject = ConnectionRequest::staticMetaObject;
+    int tEnumIndex = tMetaObject.indexOfEnumerator("TimeType");
+    QMetaEnum tMetaEnum = tMetaObject.enumerator(tEnumIndex);
+
+    iStream << tMetaEnum.valueToKey(iTime.type);
+    iStream << iTime.datetime;
+
+    return iStream;
+}
+QDataStream &iRail::operator>>(QDataStream& iStream, ConnectionRequest::Time& iTime)
+{
+    const QMetaObject& tMetaObject = ConnectionRequest::staticMetaObject;
+    int tEnumIndex = tMetaObject.indexOfEnumerator("TimeType");
+    QMetaEnum tMetaEnum = tMetaObject.enumerator(tEnumIndex);
+
+    char* tEnumValue;
+    iStream >> tEnumValue;
+    iTime.type = static_cast<ConnectionRequest::TimeType>(tMetaEnum.keyToValue(tEnumValue));
+
+    iStream >> iTime.datetime;
+
+    return iStream;
+}
+
 QDataStream &iRail::operator<<(QDataStream& iStream, const ConnectionRequest& iConnectionRequest)
 {
     iStream << iConnectionRequest.mOrigin;
     iStream << iConnectionRequest.mDestination;
     iStream << iConnectionRequest.mTimed;
     if (iConnectionRequest.mTimed)
-        iConnectionRequest.mTime->operator <<(iStream);
+        iStream << *iConnectionRequest.mTime;
 
     return iStream;
 }
@@ -109,7 +135,7 @@ QDataStream &iRail::operator>>(QDataStream& iStream, ConnectionRequest& iConnect
     if (iConnectionRequest.mTimed)
     {
         iConnectionRequest.mTime = new ConnectionRequest::Time();
-        iConnectionRequest.mTime->operator >>(iStream);
+        iStream >> *iConnectionRequest.mTime;
     }
 
     return iStream;
