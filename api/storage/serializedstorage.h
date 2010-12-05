@@ -23,18 +23,17 @@ namespace iRail
         // Construction and destruction
         SerializedStorage();
 
+        // Data I/O
+        void serialize(QDataStream& iStream);
+        void deserialize(QDataStream& iSteam);
+
         // Auxiliary types
-    private:
         enum VariantType
         {
             LiveboardRequestType,
             ConnectionRequestType
         };
         Q_ENUMS(VariantType)
-
-        // Data I/O
-        void serialize(QDataStream& iStream);
-        void deserialize(QDataStream& iSteam);
     };
 }
 
