@@ -80,9 +80,9 @@ namespace iRail
         void setTime(const TimeType& iTimeType, const QDate& iDate, const QTime& iTime);
 
         // Operators
-        friend QDebug &operator<<(QDebug dbg, const ConnectionRequest& iRequest);
-        friend QDataStream &operator<<(QDataStream& iStream, const ConnectionRequest& iRequest);
-        friend QDataStream &operator>>(QDataStream& iStream, ConnectionRequest& iRequest);
+        friend QDebug &operator<<(QDebug dbg, const ConnectionRequest& iConnectionRequest);
+        friend QDataStream &operator<<(QDataStream& iStream, const ConnectionRequest& iConnectionRequest);
+        friend QDataStream &operator>>(QDataStream& iStream, ConnectionRequest& iConnectionRequest);
 
     private:
         QString mOrigin, mDestination;
@@ -92,11 +92,11 @@ namespace iRail
 
     typedef QSharedPointer<ConnectionRequest> ConnectionRequestPointer;
 
-    QDebug &operator<<(QDebug dbg, const ConnectionRequest& iRequest);
-    QDataStream &operator<<(QDataStream& iStream, const ConnectionRequest& iRequest);
-    QDataStream &operator>>(QDataStream& iStream, ConnectionRequest& iRequest);
-    QDataStream &operator<<(QDataStream& iStream, const ConnectionRequestPointer& iRequest);
-    QDataStream &operator>>(QDataStream& iStream, ConnectionRequestPointer& iRequest);
+    QDebug &operator<<(QDebug dbg, const ConnectionRequest& iConnectionRequest);
+    QDataStream &operator<<(QDataStream& iStream, const ConnectionRequest& iConnectionRequest);
+    QDataStream &operator>>(QDataStream& iStream, ConnectionRequest& iConnectionRequest);
+    QDataStream &operator<<(QDataStream& iStream, const ConnectionRequestPointer& iConnectionRequest);
+    QDataStream &operator>>(QDataStream& iStream, ConnectionRequestPointer& iConnectionRequest);
 }
 
 Q_DECLARE_METATYPE(iRail::ConnectionRequestPointer)

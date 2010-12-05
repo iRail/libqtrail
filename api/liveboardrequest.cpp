@@ -74,48 +74,48 @@ void LiveboardRequest::setTime(const QDate& iDate, const QTime& iTime)
 // Operators
 //
 
-QDebug& iRail::operator<<(QDebug dbg, const LiveboardRequest& iRequest)
+QDebug& iRail::operator<<(QDebug dbg, const LiveboardRequest& iLiveboardRequest)
 {
-    dbg << "LiveboardRequest(in='" << iRequest.station() << "'";
-    if (iRequest.timed())
-        dbg << ", at='" << iRequest.time()->toString(Qt::DefaultLocaleShortDate) << "'";
+    dbg << "LiveboardRequest(in='" << iLiveboardRequest.station() << "'";
+    if (iLiveboardRequest.timed())
+        dbg << ", at='" << iLiveboardRequest.time()->toString(Qt::DefaultLocaleShortDate) << "'";
     dbg << ")";
 
     return dbg.maybeSpace();
 }
 
-QDataStream& iRail::operator<<(QDataStream& iStream, const LiveboardRequest& iRequest)
+QDataStream& iRail::operator<<(QDataStream& iStream, const LiveboardRequest& iLiveboardRequest)
 {
-    iStream << iRequest.mStation;
-    iStream << iRequest.mTimed;
-    if (iRequest.mTimed)
-        iStream << *iRequest.mTime;
+    iStream << iLiveboardRequest.mStation;
+    iStream << iLiveboardRequest.mTimed;
+    if (iLiveboardRequest.mTimed)
+        iStream << *iLiveboardRequest.mTime;
 
     return iStream;
 }
 
-QDataStream& iRail::operator>>(QDataStream& iStream, LiveboardRequest& iRequest)
+QDataStream& iRail::operator>>(QDataStream& iStream, LiveboardRequest& iLiveboardRequest)
 {
-    iStream >> iRequest.mStation;
-    iStream >> iRequest.mTimed;
-    if (iRequest.mTimed)
-        iStream >> *iRequest.mTime;
+    iStream >> iLiveboardRequest.mStation;
+    iStream >> iLiveboardRequest.mTimed;
+    if (iLiveboardRequest.mTimed)
+        iStream >> *iLiveboardRequest.mTime;
 
     return iStream;
 }
 
-QDataStream &iRail::operator<<(QDataStream& iStream, const LiveboardRequestPointer& iRequest)
+QDataStream &iRail::operator<<(QDataStream& iStream, const LiveboardRequestPointer& iLiveboardRequest)
 {
-    iStream << (*iRequest);
+    iStream << (*iLiveboardRequest);
 
     return iStream;
 }
 
-QDataStream &iRail::operator>>(QDataStream& iStream, LiveboardRequestPointer& iRequest)
+QDataStream &iRail::operator>>(QDataStream& iStream, LiveboardRequestPointer& iLiveboardRequest)
 {
     LiveboardRequest *tLiveboardRequest = new LiveboardRequest("dummy");
     iStream >> *tLiveboardRequest;
-    iRequest = LiveboardRequestPointer(tLiveboardRequest);
+    iLiveboardRequest = LiveboardRequestPointer(tLiveboardRequest);
 
     return iStream;
 }

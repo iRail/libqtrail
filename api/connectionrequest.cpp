@@ -80,57 +80,53 @@ void ConnectionRequest::setTime(const TimeType& iTimeType, const QDate& iDate, c
 // Operators
 //
 
-QDebug &iRail::operator<<(QDebug dbg, const ConnectionRequest& iRequest)
+QDebug &iRail::operator<<(QDebug dbg, const ConnectionRequest& iConnectionRequest)
 {
-    dbg << "ConnectionRequest(from='" << iRequest.origin() << "', to='" << iRequest.destination() << "'";
-    if (iRequest.timed())
-        dbg << ", at='" << iRequest.time()->datetime.toString(Qt::DefaultLocaleShortDate) << " (" << iRequest.time()->type << ")'";
+    dbg << "ConnectionRequest(from='" << iConnectionRequest.origin() << "', to='" << iConnectionRequest.destination() << "'";
+    if (iConnectionRequest.timed())
+        dbg << ", at='" << iConnectionRequest.time()->datetime.toString(Qt::DefaultLocaleShortDate) << " (" << iConnectionRequest.time()->type << ")'";
     dbg << ")";
 
     return dbg.maybeSpace();
 }
 
-QDataStream &iRail::operator<<(QDataStream& iStream, const ConnectionRequest& iRequest)
+QDataStream &iRail::operator<<(QDataStream& iStream, const ConnectionRequest& iConnectionRequest)
 {
-    qDebug() << "Saving connectionrequest";
-    iStream << iRequest.mOrigin;
-    iStream << iRequest.mDestination;
-    iStream << iRequest.mTimed;
-    if (iRequest.mTimed)
-        iRequest.mTime->operator <<(iStream);
+    iStream << iConnectionRequest.mOrigin;
+    iStream << iConnectionRequest.mDestination;
+    iStream << iConnectionRequest.mTimed;
+    if (iConnectionRequest.mTimed)
+        iConnectionRequest.mTime->operator <<(iStream);
 
     return iStream;
 }
 
-QDataStream &iRail::operator>>(QDataStream& iStream, ConnectionRequest& iRequest)
+QDataStream &iRail::operator>>(QDataStream& iStream, ConnectionRequest& iConnectionRequest)
 {
-    qDebug() << "Reading connectionrequest";
-    iStream >> iRequest.mOrigin;
-    iStream >> iRequest.mDestination;
-    iStream >> iRequest.mTimed;
-    if (iRequest.mTimed)
+    iStream >> iConnectionRequest.mOrigin;
+    iStream >> iConnectionRequest.mDestination;
+    iStream >> iConnectionRequest.mTimed;
+    if (iConnectionRequest.mTimed)
     {
-        iRequest.mTime = new ConnectionRequest::Time();
-        iRequest.mTime->operator >>(iStream);
+        iConnectionRequest.mTime = new ConnectionRequest::Time();
+        iConnectionRequest.mTime->operator >>(iStream);
     }
 
     return iStream;
 }
 
-QDataStream &iRail::operator<<(QDataStream& iStream, const ConnectionRequestPointer& iRequest)
+QDataStream &iRail::operator<<(QDataStream& iStream, const ConnectionRequestPointer& iConnectionRequest)
 {
-    qDebug() << "Saving connectionrequestpointer for" << iRequest->origin();
-    iStream << (*iRequest);
+    iStream << (*iConnectionRequest);
 
     return iStream;
 }
 
-QDataStream &iRail::operator>>(QDataStream& iStream, ConnectionRequestPointer& iRequest)
+QDataStream &iRail::operator>>(QDataStream& iStream, ConnectionRequestPointer& iConnectionRequest)
 {
-    qDebug() << "Reading connectionrequestpointer";
     ConnectionRequest *tConnectionRequest = new ConnectionRequest("dummy", "dummy");
     iStream >> *tConnectionRequest;
-    iRequest = ConnectionRequestPointer(tConnectionRequest);
+    iConnectionRequest = ConnectionRequestPointer(tConnectionRequest);
 
     return iStream;
 }
