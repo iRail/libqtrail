@@ -17,6 +17,7 @@ using namespace iRail;
 Connection::Connection(const POI& iDeparture, const POI& iArrival) : mDeparture(iDeparture), mArrival(iArrival)
 {
     qRegisterMetaType<ConnectionPointer>("ConnectionPointer");
+    qRegisterMetaTypeStreamOperators<ConnectionPointer>("ConnectionPointer");
     qRegisterMetaType<Connection::Line>("Connection::Line");
     qRegisterMetaType<Connection::POI>("Connection::POI");
 }
@@ -57,42 +58,58 @@ void Connection::setLines(const QList<Connection::Line>& iLines)
 // Operators
 //
 
-QDebug Connection::operator<<(QDebug dbg) const
+QDebug& iRail::operator<<(QDebug dbg, const Connection& iConnection)
 {
-    dbg << "Connection('" << departure().station << "', platform " << departure().platform << " → ";
-    for (int i = 0; i < lines().size(); i++)
-        dbg << "Connection('" << lines().at(i).arrival.station << "', platform " << lines().at(i).arrival.platform << " to " << lines().at(i).departure.platform << " → ";
-    dbg << arrival().station << "', platform " << arrival().platform << ")";
+    dbg << "Connection('" << iConnection.departure().station << "', platform " << iConnection.departure().platform << " → ";
+    for (int i = 0; i < iConnection.lines().size(); i++)
+        dbg << "Connection('" << iConnection.lines().at(i).arrival.station << "', platform " << iConnection.lines().at(i).arrival.platform << " to " << iConnection.lines().at(i).departure.platform << " → ";
+    dbg << iConnection.arrival().station << "', platform " << iConnection.arrival().platform << ")";
 
     return dbg.maybeSpace();
 }
 
-QDataStream& Connection::operator<<(QDataStream& iStream) const
+QDataStream& iRail::operator<<(QDataStream& iStream, const Connection& iConnection)
 {
-    mDeparture.operator <<(iStream);
-    mArrival.operator <<(iStream);
+    iConnection.mDeparture.operator <<(iStream);
+    iConnection.mArrival.operator <<(iStream);
 
-    iStream << mLines.size();
-    foreach (Line tLine, mLines)
+    iStream << iConnection.mLines.size();
+    foreach (Connection::Line tLine, iConnection.mLines)
         tLine.operator <<(iStream);
 
     return iStream;
 }
 
-QDataStream& Connection::operator>>(QDataStream& iStream)
+QDataStream& iRail::operator>>(QDataStream& iStream, Connection& iConnection)
 {
-    mDeparture.operator >>(iStream);
-    mArrival.operator >>(iStream);
+    iConnection.mDeparture.operator >>(iStream);
+    iConnection.mArrival.operator >>(iStream);
 
     int tLines;
     iStream >> tLines;
-    mLines = QList<Line>();
+    iConnection.mLines = QList<Connection::Line>();
     for (int i = 0; i < tLines; i++)
     {
-        Line tLine;
+        Connection::Line tLine;
         tLine.operator >>(iStream);
-        mLines << tLine;
+        iConnection.mLines << tLine;
     }
+
+    return iStream;
+}
+
+QDataStream &iRail::operator<<(QDataStream& iStream, const ConnectionPointer& iConnection)
+{
+    iStream << (*iConnection);
+
+    return iStream;
+}
+
+QDataStream &iRail::operator>>(QDataStream& iStream, ConnectionPointer& iConnection)
+{
+    Connection *tConnection = new Connection(Connection::POI(), Connection::POI());
+    iStream >> *tConnection;
+    iConnection = ConnectionPointer(tConnection);
 
     return iStream;
 }

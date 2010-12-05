@@ -89,9 +89,9 @@ namespace iRail
         void setLines(const QList<Line>& iLines);
 
         // Operators
-        QDebug operator<<(QDebug dbg) const;
-        QDataStream &operator<<(QDataStream& iStream) const;
-        QDataStream &operator>>(QDataStream& iStream);
+        friend QDebug &operator<<(QDebug dbg, const Connection& iRequest);
+        friend QDataStream &operator<<(QDataStream& iStream, const Connection& iRequest);
+        friend QDataStream &operator>>(QDataStream& iStream, Connection& iRequest);
 
     private:
         POI mDeparture, mArrival;
@@ -99,6 +99,12 @@ namespace iRail
     };
 
     typedef QSharedPointer<Connection> ConnectionPointer;
+
+    QDebug &operator<<(QDebug dbg, const Connection& iRequest);
+    QDataStream &operator<<(QDataStream& iStream, const Connection& iRequest);
+    QDataStream &operator>>(QDataStream& iStream, Connection& iRequest);
+    QDataStream &operator<<(QDataStream& iStream, const ConnectionPointer& iRequest);
+    QDataStream &operator>>(QDataStream& iStream, ConnectionPointer& iRequest);
 }
 
 Q_DECLARE_METATYPE(iRail::ConnectionPointer)
