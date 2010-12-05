@@ -73,9 +73,9 @@ namespace iRail
         void setStops(const QList<Stop>& iStops);
 
         // Operators
-        QDebug operator<<(QDebug dbg) const;
-        QDataStream &operator<<(QDataStream& iStream) const;
-        QDataStream &operator>>(QDataStream& iStream);
+        friend QDebug &operator<<(QDebug dbg, const Vehicle& iVehicle);
+        friend QDataStream &operator<<(QDataStream& iStream, const Vehicle& iVehicle);
+        friend QDataStream &operator>>(QDataStream& iStream, Vehicle& iVehicle);
 
     private:
         QString mId;
@@ -85,6 +85,12 @@ namespace iRail
     };
 
     typedef QSharedPointer<Vehicle> VehiclePointer;
+
+    QDebug &operator<<(QDebug dbg, const Vehicle& iVehicle);
+    QDataStream &operator<<(QDataStream& iStream, const Vehicle& iVehicle);
+    QDataStream &operator>>(QDataStream& iStream, Vehicle& iVehicle);
+    QDataStream &operator<<(QDataStream& iStream, const VehiclePointer& iVehicle);
+    QDataStream &operator>>(QDataStream& iStream, VehiclePointer& iVehicle);
 }
 
 Q_DECLARE_METATYPE(iRail::VehiclePointer)

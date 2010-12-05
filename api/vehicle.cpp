@@ -17,6 +17,7 @@ using namespace iRail;
 Vehicle::Vehicle(QString iId) : mId(iId)
 {
     qRegisterMetaType<VehiclePointer>("VehiclePointer");
+    qRegisterMetaTypeStreamOperators<VehiclePointer>("VehiclePointer");
     qRegisterMetaType<Vehicle::Stop>("Vehicle::Stop");
     mLocatable = false;
     mLocation = 0;
@@ -73,48 +74,64 @@ void Vehicle::setStops(const QList<Vehicle::Stop>& iStop)
 // Operators
 //
 
-QDebug Vehicle::operator<<(QDebug dbg) const
+QDebug &iRail::operator<<(QDebug dbg, const Vehicle& iVehicle)
 {
-    dbg << "Vehicle(id=" << id() << ",stops=" << stops().size() << "";
-    if (locatable())
-        dbg << ", location='" << location()->first << " x " << location()->second << "'";
+    dbg << "Vehicle(id=" << iVehicle.id() << ",stops=" << iVehicle.stops().size() << "";
+    if (iVehicle.locatable())
+        dbg << ", location='" << iVehicle.location()->first << " x " << iVehicle.location()->second << "'";
     dbg << ")";
 
     return dbg.maybeSpace();
 }
 
-QDataStream& Vehicle::operator<<(QDataStream& iStream) const
+QDataStream& iRail::operator<<(QDataStream& iStream, const Vehicle& iVehicle)
 {
-    iStream << mId;
+    iStream << iVehicle.mId;
 
-    iStream << mLocatable;
-    if (locatable())
-        iStream << *mLocation;
+    iStream << iVehicle.mLocatable;
+    if (iVehicle.locatable())
+        iStream << *iVehicle.mLocation;
 
-    iStream << mStops.size();
-    foreach (Stop tStop, mStops)
+    iStream << iVehicle.mStops.size();
+    foreach (Vehicle::Stop tStop, iVehicle.mStops)
         tStop.operator <<(iStream);
 
     return iStream;
 }
 
-QDataStream& Vehicle::operator>>(QDataStream& iStream)
+QDataStream& iRail::operator>>(QDataStream& iStream, Vehicle& iVehicle)
 {
-    iStream >> mId;
+    iStream >> iVehicle.mId;
 
-    iStream >> mLocatable;
-    if (locatable())
-        iStream << *mLocation;
+    iStream >> iVehicle.mLocatable;
+    if (iVehicle.locatable())
+        iStream << *iVehicle.mLocation;
 
     int tStops;
     iStream >> tStops;
-    mStops = QList<Stop>();
+    iVehicle.mStops = QList<Vehicle::Stop>();
     for (int i = 0; i < tStops; i++)
     {
-        Stop tStop;
+        Vehicle::Stop tStop;
         tStop.operator >>(iStream);
-        mStops << tStop;
+        iVehicle.mStops << tStop;
     }
+
+    return iStream;
+}
+
+QDataStream &iRail::operator<<(QDataStream& iStream, const VehiclePointer &iVehicle)
+{
+    iStream << (*iVehicle);
+
+    return iStream;
+}
+
+QDataStream &iRail::operator>>(QDataStream& iStream, VehiclePointer &iVehicle)
+{
+    Vehicle *tVehicle = new Vehicle("dummy");
+    iStream >> *tVehicle;
+    iVehicle = VehiclePointer(tVehicle);
 
     return iStream;
 }
