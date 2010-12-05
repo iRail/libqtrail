@@ -5,6 +5,7 @@
 // Includes
 #include "stationreader.h"
 #include <QStringRef>
+#include "api/auxiliary.h"
 
 // Namespaces
 using namespace iRail;

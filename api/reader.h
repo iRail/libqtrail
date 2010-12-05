@@ -31,9 +31,6 @@ namespace iRail
         virtual void allocate() = 0;
         void readError();
         void skipUnknownElement();
-
-        // Auxiliary
-        QString capitalize(const QString& iString);
     };
 }
 

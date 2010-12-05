@@ -99,7 +99,10 @@ QDataStream& iRail::operator>>(QDataStream& iStream, LiveboardRequest& iLiveboar
     iStream >> iLiveboardRequest.mStation;
     iStream >> iLiveboardRequest.mTimed;
     if (iLiveboardRequest.mTimed)
+    {
+        iLiveboardRequest.mTime = new QDateTime();
         iStream >> *iLiveboardRequest.mTime;
+    }
 
     return iStream;
 }

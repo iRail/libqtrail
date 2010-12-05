@@ -49,4 +49,5 @@ HEADERS += \
     api/liveboard.h \
     api/reader/liveboardreader.h \
     api/storage/serializedstorage.h \
-    api/liveboardrequest.h
+    api/liveboardrequest.h \
+    api/auxiliary.h
