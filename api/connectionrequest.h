@@ -14,6 +14,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QMetaEnum>
+#include <QDataStream>
 
 namespace iRail
 {
@@ -79,9 +80,9 @@ namespace iRail
         void setTime(const TimeType& iTimeType, const QDate& iDate, const QTime& iTime);
 
         // Operators
-        QDebug operator<<(QDebug dbg) const;
-        QDataStream &operator<<(QDataStream& iStream) const;
-        QDataStream &operator>>(QDataStream& iStream);
+        friend QDebug &operator<<(QDebug dbg, const ConnectionRequest& iRequest);
+        friend QDataStream &operator<<(QDataStream& iStream, const ConnectionRequest& iRequest);
+        friend QDataStream &operator>>(QDataStream& iStream, ConnectionRequest& iRequest);
 
     private:
         QString mOrigin, mDestination;
@@ -90,8 +91,13 @@ namespace iRail
     };
 
     typedef QSharedPointer<ConnectionRequest> ConnectionRequestPointer;
+
+    QDebug &operator<<(QDebug dbg, const ConnectionRequest& iRequest);
+    QDataStream &operator<<(QDataStream& iStream, const ConnectionRequest& iRequest);
+    QDataStream &operator>>(QDataStream& iStream, ConnectionRequest& iRequest);
+    QDataStream &operator<<(QDataStream& iStream, const ConnectionRequestPointer& iRequest);
+    QDataStream &operator>>(QDataStream& iStream, ConnectionRequestPointer& iRequest);
 }
 
 Q_DECLARE_METATYPE(iRail::ConnectionRequestPointer)
-
 #endif // CONNECTIONREQUEST_H

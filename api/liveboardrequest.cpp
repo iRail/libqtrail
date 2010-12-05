@@ -16,6 +16,7 @@ using namespace iRail;
 LiveboardRequest::LiveboardRequest(const QString& iStation) : mStation(iStation)
 {
     qRegisterMetaType<LiveboardRequestPointer>("LiveboardRequestPointer");
+    qRegisterMetaTypeStreamOperators<LiveboardRequestPointer>("LiveboardRequestPointer");
     mTimed = false;
     mTime = 0;
 }
@@ -73,32 +74,48 @@ void LiveboardRequest::setTime(const QDate& iDate, const QTime& iTime)
 // Operators
 //
 
-QDebug LiveboardRequest::operator<<(QDebug dbg) const
+QDebug& iRail::operator<<(QDebug dbg, const LiveboardRequest& iRequest)
 {
-    dbg << "LiveboardRequest(in='" << station() << "'";
-    if (timed())
-        dbg << ", at='" << time()->toString(Qt::DefaultLocaleShortDate) << "'";
+    dbg << "LiveboardRequest(in='" << iRequest.station() << "'";
+    if (iRequest.timed())
+        dbg << ", at='" << iRequest.time()->toString(Qt::DefaultLocaleShortDate) << "'";
     dbg << ")";
 
     return dbg.maybeSpace();
 }
 
-QDataStream& LiveboardRequest::operator<<(QDataStream& iStream) const
+QDataStream& iRail::operator<<(QDataStream& iStream, const LiveboardRequest& iRequest)
 {
-    iStream << mStation;
-    iStream << mTimed;
-    if (mTimed)
-        iStream << *mTime;
+    iStream << iRequest.mStation;
+    iStream << iRequest.mTimed;
+    if (iRequest.mTimed)
+        iStream << *iRequest.mTime;
 
     return iStream;
 }
 
-QDataStream& LiveboardRequest::operator>>(QDataStream& iStream)
+QDataStream& iRail::operator>>(QDataStream& iStream, LiveboardRequest& iRequest)
 {
-    iStream >> mStation;
-    iStream >> mTimed;
-    if (mTimed)
-        iStream >> *mTime;
+    iStream >> iRequest.mStation;
+    iStream >> iRequest.mTimed;
+    if (iRequest.mTimed)
+        iStream >> *iRequest.mTime;
+
+    return iStream;
+}
+
+QDataStream &iRail::operator<<(QDataStream& iStream, const LiveboardRequestPointer& iRequest)
+{
+    iStream << (*iRequest);
+
+    return iStream;
+}
+
+QDataStream &iRail::operator>>(QDataStream& iStream, LiveboardRequestPointer& iRequest)
+{
+    LiveboardRequest *tLiveboardRequest = new LiveboardRequest("dummy");
+    iStream >> *tLiveboardRequest;
+    iRequest = LiveboardRequestPointer(tLiveboardRequest);
 
     return iStream;
 }

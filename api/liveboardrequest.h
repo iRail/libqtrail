@@ -37,9 +37,9 @@ namespace iRail
         void setTime(const QDate& iDate, const QTime& iTime);
 
         // Operators
-        QDebug operator<<(QDebug dbg) const;
-        QDataStream &operator<<(QDataStream& iStream) const;
-        QDataStream &operator>>(QDataStream& iStream);
+        friend QDebug &operator<<(QDebug dbg, const LiveboardRequest& iRequest);
+        friend QDataStream &operator<<(QDataStream& iStream, const LiveboardRequest& iRequest);
+        friend QDataStream &operator>>(QDataStream& iStream, LiveboardRequest& iRequest);
 
     private:
         QString mStation;
@@ -48,6 +48,12 @@ namespace iRail
     };
 
     typedef QSharedPointer<LiveboardRequest> LiveboardRequestPointer;
+
+    QDebug &operator<<(QDebug dbg, const LiveboardRequest& iRequest);
+    QDataStream &operator<<(QDataStream& iStream, const LiveboardRequest& iRequest);
+    QDataStream &operator<<(QDataStream& iStream, const LiveboardRequestPointer& iRequest);
+    QDataStream &operator>>(QDataStream& iStream, LiveboardRequest& iRequest);
+    QDataStream &operator>>(QDataStream& iStream, LiveboardRequestPointer& iRequest);
 }
 
 Q_DECLARE_METATYPE(iRail::LiveboardRequestPointer)
