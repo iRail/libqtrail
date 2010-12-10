@@ -26,6 +26,15 @@
 #include "api/liveboardrequest.h"
 #include "api/liveboard.h"
 
+/*!
+  \class AsyncAPI
+
+  \brief The AsyncAPI class is the main wrapper around the iRail API.
+  As its name indicates, it processes user request in an asynchronous
+  manner, returning all data through Qt signals.
+
+  */
+
 namespace iRail
 {
     class AsyncAPI : public QObject

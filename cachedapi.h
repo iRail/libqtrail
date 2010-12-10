@@ -14,6 +14,17 @@
 #include <QString>
 #include <QMap>
 
+/*!
+  \class CachedAPI
+
+  \brief The CachedAPI is a more higher-level API wrapper, in that
+  it provides a transparant and configurable caching layer. Essentially
+  it works the same as the regular AsyncAPI, all data is passed back
+  through signals, but all requesting methods are a tad different
+  so the callee knows whether the request results in a cache hit
+  or miss.
+  */
+
 // Definitions (TODO: move to Qt configuration objects)
 #define STATIONS_REFRESH 3600
 

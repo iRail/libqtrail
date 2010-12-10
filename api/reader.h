@@ -10,6 +10,17 @@
 #include <QXmlStreamReader>
 #include "exception/parserexception.h"
 
+/*!
+  \class Reader
+
+  \brief The virtual Reader class provides common functionality for
+  all specialized readers, used to convert a certain XML stream to
+  usable objects. It provides a main entrypoint for the parser to
+  use (the read(...) method), which sets up a pull-based XML reader
+  and passes it to the virtual readDocument() method.
+
+  */
+
 namespace iRail
 {
     class Reader : public QObject

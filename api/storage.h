@@ -12,6 +12,13 @@
 #include <QList>
 #include <QVariant>
 
+/*!
+  \class Storage
+
+  \brief This virtual class serves as the interface for all storage
+  classes.
+  */
+
 namespace iRail
 {
     class Storage : public QObject

@@ -19,10 +19,15 @@
 #include "liveboard.h"
 #include "exception/parserexception.h"
 
-/*
- This class provides the raw translation between the replies of the several API pages (trains.php, stations.php, etc)
- and their local counterpart.
- */
+/*!
+  \class Parser
+
+  \brief The Parser class serves as a a thin XML-parser agnostic
+  wrapper around the different readers. It contains a method
+  for each specialized reader, each accepting a device to read
+  from, and resulting in a set of objects the reader produces.
+
+  */
 
 namespace iRail
 {
