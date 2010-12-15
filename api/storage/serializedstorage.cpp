@@ -95,8 +95,6 @@ bool SerializedStorage::deserialize(QDataStream& iStream, const QString& iVersio
     // Version check
     QString tVersion;
     iStream >> tVersion;
-    qDebug() << "Given version" << iVersion;
-    qDebug() << "Read version" << tVersion;
     if (tVersion != iVersion)
         return false;
 
