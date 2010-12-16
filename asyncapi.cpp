@@ -251,8 +251,13 @@ void AsyncAPI::network_request(QNetworkRequest iRequest, QObject* iObject, const
         emit action("Performing network request");
         // TODO: this is a quite blocking request, we shouldn't wait for it!
         QApplication::processEvents();  // Temporary fix
-        mNetworkReply = mNetworkAccessManager.get(iRequest);        
-        // TODO: networkreply can be 0, when no connection could be established
+        mNetworkReply = mNetworkAccessManager.get(iRequest);
+
+        // TODO: this doesn't cach errors properly, e.g. when connection to a nonexisting url
+        if (mNetworkReply->error() != QNetworkReply::NoError)
+        {
+            qDebug() << mNetworkReply->errorString();
+        }
 
         emit action("Downloading and decoding network reply");
         connect(mNetworkReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(network_progress(qint64,qint64)));
