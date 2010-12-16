@@ -23,6 +23,12 @@ CachedAPI::CachedAPI(const QString& iClientID, const QString& iClientVersion, St
 // Request slots
 //
 
+void CachedAPI::requestStations()
+{
+    bool tDummy;
+    requestStations(tDummy);
+}
+
 void CachedAPI::requestStations(bool& oCached)
 {
     // Check the cache
@@ -41,11 +47,24 @@ void CachedAPI::requestStations(bool& oCached)
 
 }
 
+void CachedAPI::requestConnections(const ConnectionRequestPointer& iConnectionRequest)
+{
+    bool tDummy;
+    requestConnections(iConnectionRequest, tDummy);
+}
+
 void CachedAPI::requestConnections(const ConnectionRequestPointer& iConnectionRequest, bool& oCached)
 {
     // Request a new list
     oCached = false;
     AsyncAPI::requestConnections(iConnectionRequest);
+}
+
+
+void CachedAPI::requestVehicle(const QString& iVehicleId)
+{
+    bool tDummy;
+    requestVehicle(iVehicleId, tDummy);
 }
 
 void CachedAPI::requestVehicle(const QString& iVehicleId, bool& oCached)
@@ -55,6 +74,13 @@ void CachedAPI::requestVehicle(const QString& iVehicleId, bool& oCached)
     // Request a new list
     oCached = false;
     AsyncAPI::requestVehicle(iVehicleId);
+}
+
+
+void CachedAPI::requestLiveboard(const LiveboardRequestPointer& iLiveboardRequest)
+{
+    bool tDummy;
+    requestLiveboard(iLiveboardRequest, tDummy);
 }
 
 void CachedAPI::requestLiveboard(const LiveboardRequestPointer& iLiveboardRequest, bool& oCached)

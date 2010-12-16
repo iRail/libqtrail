@@ -39,9 +39,13 @@ namespace iRail
 
         // Request slots
     public slots:
+        void requestStations();
         void requestStations(bool& oCached);
+        void requestConnections(const ConnectionRequestPointer& iConnectionRequest);
         void requestConnections(const ConnectionRequestPointer& iConnectionRequest, bool& oCached);
+        void requestVehicle(const QString& iVehicleId);
         void requestVehicle(const QString& iVehicleId, bool& oCached);
+        void requestLiveboard(const LiveboardRequestPointer& iLiveboardRequest);
         void requestLiveboard(const LiveboardRequestPointer& iLiveboardRequest, bool& oCached);
 
         // Caching slots
