@@ -8,8 +8,11 @@ DEPENDPATH += $$PWD
 
 QT       += network xml
 
-RESOURCES += \
+RESOURCES += i18n_libirail.qrc \
     api/parser.qrc
+TRANSLATIONS += \
+    i18n_libirail/nl_BE.ts \
+    i18n_libirail/en_US.ts
 SOURCES += \
     asyncapi.cpp \
     cachedapi.cpp \
