@@ -26,7 +26,7 @@
   */
 
 // Definitions (TODO: move to Qt configuration objects)
-#define STATIONS_REFRESH 3600
+#define STATIONS_REFRESH 3600*24*7
 
 namespace iRail
 {
