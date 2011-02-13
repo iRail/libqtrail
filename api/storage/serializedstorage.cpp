@@ -25,7 +25,8 @@ SerializedStorage::SerializedStorage() : MemoryStorage()
 void SerializedStorage::serialize(QDataStream& iStream, const QString& iVersion)
 {
     // Version check
-    iStream << iVersion;
+    QString iVersionMajor = iVersion.section(".", 0, 0);
+    iStream << iVersionMajor;
 
     // Stations
     if (stations() != 0)
@@ -93,9 +94,10 @@ void SerializedStorage::serialize(QDataStream& iStream, const QString& iVersion)
 bool SerializedStorage::deserialize(QDataStream& iStream, const QString& iVersion)
 {
     // Version check
-    QString tVersion;
-    iStream >> tVersion;
-    if (tVersion != iVersion)
+    QString iVersionMajor = iVersion.section(".", 0, 0);
+    QString tVersionMajor;
+    iStream >> tVersionMajor;
+    if (tVersionMajor != iVersionMajor)
         return false;
 
     // Stations
