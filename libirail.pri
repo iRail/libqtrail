@@ -11,8 +11,10 @@ QT       += network xml
 RESOURCES += i18n_libirail.qrc \
     api/parser.qrc
 TRANSLATIONS += \
-    i18n_libirail/nl_BE.ts \
-    i18n_libirail/en_US.ts
+    i18n_libirail/nl.ts \
+    i18n_libirail/fr.ts \
+    i18n_libirail/de.ts \
+    i18n_libirail/en.ts
 SOURCES += \
     asyncapi.cpp \
     cachedapi.cpp \
