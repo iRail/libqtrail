@@ -326,9 +326,9 @@ Connection::Line ConnectionReader::readVia(QString& iVehicle)
         mReader.raiseError("could not find via id attribute");
 
     // Process the tags
-    Connection::POI tArrival, tDeparture;
+    Connection::POI tArrival, tDeparture, tTerminus;
     QString tVehicleDummy;
-    QString tStationId;
+    QString tStationId, tTerminusId;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -348,6 +348,8 @@ Connection::Line ConnectionReader::readVia(QString& iVehicle)
                 iVehicle = readVehicle();
             else if (mReader.name() == "station")
                 tStationId = readStation();
+            else if (mReader.name() == "direction")
+                tTerminusId = readStation();
             else
                 skipUnknownElement();
         }
@@ -358,9 +360,11 @@ Connection::Line ConnectionReader::readVia(QString& iVehicle)
     // Construct the object
     tArrival.station = tStationId;
     tDeparture.station = tStationId;
+    tTerminus.station = tTerminusId;
     Connection::Line oLine;
     oLine.departure = tDeparture;
     oLine.arrival = tArrival;
+    oLine.terminus = tTerminus;
     return oLine;
 }
 

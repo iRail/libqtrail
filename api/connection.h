@@ -43,6 +43,7 @@ namespace iRail
         {
             POI departure;
             POI arrival;
+            POI terminus;
             QString vehicle;
 
             // Operators
