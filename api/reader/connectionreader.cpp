@@ -109,8 +109,10 @@ Connection* ConnectionReader::readConnection()
     Connection::POI tDeparture, tArrival;
     QList<Connection::Line> tLines;
     tLines << Connection::Line();
-    QString tVehicleDeparture, tVehicleArrival;   //  NOTE TO READER: the iRail API _really_ sucks
-    QList<QString> tVehicles;                     //  when it comes to connections and via's...
+    QString tVehicleDeparture, tVehicleArrival;     //  NOTE TO READER: the iRail API _really_ sucks
+    QList<QString> tVehicles;                       //  when it comes to connections and via's...
+    QString tDirectionDeparture, tDirectionArrival; //  Same applies to the directions.
+    QList<QString> tDirections;                     //  Please bug Pieter about this.
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -123,11 +125,11 @@ Connection* ConnectionReader::readConnection()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-                tDeparture = readPOI(tVehicleDeparture);
+                tDeparture = readPOI(tVehicleDeparture, tDirectionDeparture);
             else if (mReader.name() == "arrival")
-                tArrival = readPOI(tVehicleArrival);
+                tArrival = readPOI(tVehicleArrival, tDirectionArrival);
             else if (mReader.name() == "vias")
-                tLines = readVias(tVehicles);
+                tLines = readVias(tVehicles, tDirections);
             else
                 skipUnknownElement();
         }
@@ -137,9 +139,14 @@ Connection* ConnectionReader::readConnection()
 
     // Fix the via/connection vehicle counterintuitiveness
     tVehicles << tVehicleArrival;
+    tDirections << tDirectionArrival;
     Q_ASSERT(tVehicles.size() == tLines.size());
+    Q_ASSERT(tDirections.size() == tLines.size());
     for (int i = 0; i < tLines.size(); i++)
-        tLines[i].vehicle = tVehicles.at(i);
+    {
+        tLines[i].vehicle = tVehicles.at(i);        // Did I say I really
+        tLines[i].terminus = tDirections.at(i);     // hate this mess?
+    }
 
     // Construct the object
     Connection *oConnection = new Connection(tDeparture, tArrival);
@@ -149,7 +156,7 @@ Connection* ConnectionReader::readConnection()
     return oConnection;
 }
 
-Connection::POI ConnectionReader::readPOI(QString& iVehicle)
+Connection::POI ConnectionReader::readPOI(QString& iVehicle, QString& iTerminus)
 {
     // Process the attributes
     int tDelay = 0;
@@ -175,8 +182,10 @@ Connection::POI ConnectionReader::readPOI(QString& iVehicle)
 
         if (mReader.isStartElement())
         {
-            if (mReader.name() == "vehicle")
-                iVehicle = readVehicle();
+            if (mReader.name() == "vehicle")            // These fields should _not_
+                iVehicle = readVehicle();               // be present in a POI.
+            else if (mReader.name() == "direction")     // Please bug Pieter as frequently
+                iTerminus = readStation();              // ase possible about this.
             else if (mReader.name() == "platform")
                 tPlatform = readPlatform();
             else if (mReader.name() == "time")
@@ -264,7 +273,7 @@ QString ConnectionReader::readStation()
     return oStationId;
 }
 
-QList<Connection::Line> ConnectionReader::readVias(QList<QString>& iVehicles)
+QList<Connection::Line> ConnectionReader::readVias(QList<QString>& iVehicles, QList<QString>& iDirections)
 {
     // Process the attributes
     int tNumber;
@@ -279,7 +288,7 @@ QList<Connection::Line> ConnectionReader::readVias(QList<QString>& iVehicles)
 
     // Process the tags
     QList<Connection::Line> tLines;
-    QString tVehicle;
+    QString tVehicle, tDirection;
     tLines << Connection::Line();
     mReader.readNext();
     while (!mReader.atEnd())
@@ -294,8 +303,9 @@ QList<Connection::Line> ConnectionReader::readVias(QList<QString>& iVehicles)
         {
             if (mReader.name() == "via")
             {
-                Connection::Line tLine = readVia(tVehicle);
+                Connection::Line tLine = readVia(tVehicle, tDirection);
                 iVehicles << tVehicle;
+                iDirections << tDirection;
                 tLines.last().arrival = tLine.arrival;
                 tLine.arrival = Connection::POI();
                 tLines << tLine;
@@ -312,7 +322,7 @@ QList<Connection::Line> ConnectionReader::readVias(QList<QString>& iVehicles)
     return tLines;
 }
 
-Connection::Line ConnectionReader::readVia(QString& iVehicle)
+Connection::Line ConnectionReader::readVia(QString& iVehicle, QString& iDirection)
 {
     // Process the attributes
     unsigned int tId;   // TODO: do something with this
@@ -327,7 +337,7 @@ Connection::Line ConnectionReader::readVia(QString& iVehicle)
 
     // Process the tags
     Connection::POI tArrival, tDeparture, tTerminus;
-    QString tVehicleDummy;
+    QString tVehicleDummy, tDepartureDummy;
     QString tStationId, tTerminusId;
     mReader.readNext();
     while (!mReader.atEnd())
@@ -341,15 +351,15 @@ Connection::Line ConnectionReader::readVia(QString& iVehicle)
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-                tDeparture = readPOI(tVehicleDummy);
+                tDeparture = readPOI(tVehicleDummy, tDepartureDummy);
             else if (mReader.name() == "arrival")
-                tArrival = readPOI(tVehicleDummy);
+                tArrival = readPOI(tVehicleDummy, tDepartureDummy);
             else if (mReader.name() == "vehicle")
                 iVehicle = readVehicle();
             else if (mReader.name() == "station")
                 tStationId = readStation();
             else if (mReader.name() == "direction")
-                tTerminusId = readStation();
+                iDirection = readStation();
             else
                 skipUnknownElement();
         }
@@ -364,7 +374,6 @@ Connection::Line ConnectionReader::readVia(QString& iVehicle)
     Connection::Line oLine;
     oLine.departure = tDeparture;
     oLine.arrival = tArrival;
-    oLine.terminus = tTerminus;
     return oLine;
 }
 

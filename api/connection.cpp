@@ -72,6 +72,7 @@ QDataStream &iRail::operator<<(QDataStream& iStream, const Connection::Line& iLi
 {
     iStream << iLine.departure;
     iStream << iLine.arrival;
+    iStream << iLine.terminus;
     iStream << iLine.vehicle;
 
     return iStream;
@@ -80,6 +81,7 @@ QDataStream &iRail::operator>>(QDataStream& iStream, Connection::Line& iLine)
 {
     iStream >> iLine.departure;
     iStream >> iLine.arrival;
+    iStream >> iLine.terminus;
     iStream >> iLine.vehicle;
 
     return iStream;
