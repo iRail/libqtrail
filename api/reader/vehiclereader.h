@@ -34,7 +34,6 @@ namespace iRail
         QList<Vehicle::Stop> readStops();
         Vehicle::Stop readStop();
         QString readStation();
-        double readDelay();
         QDateTime readDatetime();
     };
 }

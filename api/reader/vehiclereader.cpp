@@ -161,9 +161,17 @@ QList<Vehicle::Stop> VehicleReader::readStops()
 
 Vehicle::Stop VehicleReader::readStop()
 {
+    // Process the attributes
+    double tDelay;
+    if (mReader.attributes().hasAttribute("delay"))
+    {
+        tDelay = mReader.attributes().value("delay").toString().toDouble();
+    }
+    else
+        mReader.raiseError("stop without delay attribute");
+
     // Process the tags
     QString tStationId;
-    double tDelay;
     QDateTime tDateTime;
     mReader.readNext();
     while (!mReader.atEnd())
@@ -178,8 +186,6 @@ Vehicle::Stop VehicleReader::readStop()
         {
             if (mReader.name() == "station")
                 tStationId = readStation();
-            if (mReader.name() == "delay")
-                tDelay = readDelay();
             if (mReader.name() == "time")
                 tDateTime = readDatetime();
             else
@@ -215,16 +221,6 @@ QString VehicleReader::readStation()
 
     // Construct the object
     return oStationId;
-}
-
-double VehicleReader::readDelay()
-{
-    // Process the contents
-    QString tDelayString = mReader.readElementText();
-    if (mReader.isEndElement())
-        mReader.readNext();
-
-    return tDelayString.toDouble();
 }
 
 QDateTime VehicleReader::readDatetime()
