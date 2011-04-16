@@ -53,9 +53,9 @@ namespace iRail
         // Request slots
     public slots:
         virtual void requestStations();
-        virtual void requestConnections(ConnectionRequestPointer iConnectionRequest);
+        virtual void requestConnections(const ConnectionRequestPointer& iConnectionRequest);
         virtual void requestVehicle(const QString& iVehicleId);
-        virtual void requestLiveboard(LiveboardRequestPointer iLiveboardRequest);
+        virtual void requestLiveboard(const LiveboardRequestPointer& iLiveboardRequest);
 
         // Processing methods
     private slots:

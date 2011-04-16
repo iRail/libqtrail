@@ -82,7 +82,7 @@ void AsyncAPI::requestStations()
     network_request(getRequest(tURL), this, SLOT(processStations()));
 }
 
-void AsyncAPI::requestConnections(ConnectionRequestPointer iConnectionRequest)
+void AsyncAPI::requestConnections(const ConnectionRequestPointer& iConnectionRequest)
 {
     // Setup
     mHasError = false;
@@ -124,7 +124,7 @@ void AsyncAPI::requestVehicle(const QString& iVehicleId)
     network_request(getRequest(tURL), this, SLOT(processVehicle()));
 }
 
-void AsyncAPI::requestLiveboard(LiveboardRequestPointer iLiveboardRequest)
+void AsyncAPI::requestLiveboard(const LiveboardRequestPointer& iLiveboardRequest)
 {
     // Setup
     mHasError = false;
