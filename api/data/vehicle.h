@@ -15,6 +15,7 @@
 #include <QDebug>
 #include <QDateTime>
 #include "station.h"
+#include "location.h"
 
 namespace iRail
 {
@@ -25,13 +26,9 @@ namespace iRail
     Q_PROPERTY(bool locatable READ locatable)
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
-        // Auxiliary types
-        typedef QPair<qreal, qreal> Location;
-
         // Auxiliary structures
         enum Roles {
           IdRole = Qt::UserRole+1,
-          LocatableRole,
           LocationRole
         };
 
@@ -41,8 +38,7 @@ namespace iRail
 
         // Basic I/O
         QString id() const;
-        const Location* location() const;
-        bool locatable() const;
+        const Location location() const;
         void setLocation(const Location& iLocation);
 
         // Operators
@@ -54,8 +50,7 @@ namespace iRail
     private:
         Q_DISABLE_COPY(Vehicle);
         QString mId;
-        bool mLocatable;
-        Location* mLocation;
+        Location mLocation;
     };
 
     bool operator==(const Vehicle& lhs, const Vehicle& rhs);

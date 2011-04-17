@@ -19,15 +19,11 @@ Station::Station(QString iId) : mId(iId)
     qRegisterMetaType<Station>("Station");
 
     mName = "";
-    mLocatable = false;
-    mLocation = 0;
 }
 
 
 Station::~Station()
 {
-    if (mLocatable)
-        delete mLocation;
 }
 
 
@@ -55,18 +51,14 @@ bool Station::locatable() const
     return mLocatable;
 }
 
-const Station::Location* Station::location() const
+const Location Station::location() const
 {
     return mLocation;
 }
 
 void Station::setLocation(const Location& iLocation)
 {
-    if (mLocatable)
-        delete mLocation;
-    else
-        mLocatable = true;
-    mLocation = new Location(iLocation);
+    mLocation = iLocation;
 }
 
 
@@ -79,7 +71,7 @@ bool iRail::operator==(const Station& lhs, const Station& rhs)
     return  (lhs.id() == rhs.id() &&
              lhs.name() == rhs.name() &&
              lhs.locatable() == rhs.locatable() &&
-             (!lhs.locatable() || (lhs.location() == rhs.location())));
+             lhs.location() == rhs.location());
 }
 
 bool iRail::operator||(const Station& lhs, const Station& rhs)
@@ -91,9 +83,7 @@ QDataStream& iRail::operator<<(QDataStream& iStream, const Station& iStation)
 {
     iStream << iStation.mId;
     iStream << iStation.mName;
-    iStream << iStation.mLocatable;
-    if (iStation.locatable())
-        iStream << *iStation.mLocation;
+    iStream << iStation.mLocation;
 
     return iStream;
 }
@@ -102,12 +92,7 @@ QDataStream& iRail::operator>>(QDataStream& iStream, Station& iStation)
 {
     iStream >> iStation.mId;
     iStream >> iStation.mName;
-    iStream >> iStation.mLocatable;
-    if (iStation.locatable())
-    {
-        iStation.mLocation = new Station::Location();
-        iStream >> *iStation.mLocation;
-    }
+    iStream >> iStation.mLocation;
 
     return iStream;
 }

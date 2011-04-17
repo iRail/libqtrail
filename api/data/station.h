@@ -2,12 +2,6 @@
 // Configuration
 //
 
-/*
- TODO: thread safety. When moving from QSharedDataPointer to
-       QSharedPointer to conserve QObject idioms, we lost
-       thread safety...
- */
-
 // Include guard
 #ifndef STATION_H
 #define STATION_H
@@ -17,6 +11,7 @@
 #include <QMetaType>
 #include <QString>
 #include <QPair>
+#include "location.h"
 
 namespace iRail
 {
@@ -28,14 +23,10 @@ namespace iRail
     Q_PROPERTY(bool locatable READ locatable)
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
-        // Auxiliary types
-        typedef QPair<qreal, qreal> Location;
-
         // Auxiliary structures
         enum Roles {
           IdRole = Qt::UserRole+1,
           NameRole,
-          LocatableRole,
           LocationRole
         };
 
@@ -47,8 +38,7 @@ namespace iRail
         QString id() const;
         QString name() const;
         void setName(const QString& iName);
-        const Location* location() const;
-        bool locatable() const;
+        const Location location() const;
         void setLocation(const Location& iLocation);
 
         // Operators
@@ -61,8 +51,7 @@ namespace iRail
         Q_DISABLE_COPY(Station);
         QString mId;
         QString mName;
-        bool mLocatable;
-        Location* mLocation;
+        Location mLocation;
     };
 
     bool operator==(const Station& lhs, const Station& rhs);
