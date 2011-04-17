@@ -27,23 +27,6 @@ namespace iRail
     public:
         // Auxiliary types
         typedef QPair<qreal, qreal> Location;
-        struct Stop
-        {
-            Stop()
-            {
-                delay = 0;
-                platform = 0;
-            }
-
-            QString station;
-            unsigned int delay;
-            QDateTime datetime;
-            int platform;
-
-            // Operators
-            friend QDataStream &operator<<(QDataStream& iStream, const Stop& iStop);
-            friend QDataStream &operator>>(QDataStream& iStream, Stop& iStop);
-        };
 
         // Construction and destruction
         Vehicle(QString iId);
@@ -54,11 +37,8 @@ namespace iRail
         const Location* location() const;
         bool locatable() const;
         void setLocation(const Location& iLocation);
-        QList<Stop> stops() const;
-        void setStops(const QList<Stop>& iStops);
 
         // Operators
-        friend QDebug &operator<<(QDebug dbg, const Vehicle& iVehicle);
         friend QDataStream &operator<<(QDataStream& iStream, const Vehicle& iVehicle);
         friend QDataStream &operator>>(QDataStream& iStream, Vehicle& iVehicle);
 
@@ -66,19 +46,12 @@ namespace iRail
         QString mId;
         bool mLocatable;
         Location* mLocation;
-        QList<Stop> mStops;
     };
 
-    typedef QSharedPointer<Vehicle> VehiclePointer;
-
-    QDebug &operator<<(QDebug dbg, const Vehicle& iVehicle);
     QDataStream &operator<<(QDataStream& iStream, const Vehicle& iVehicle);
     QDataStream &operator>>(QDataStream& iStream, Vehicle& iVehicle);
-    QDataStream &operator<<(QDataStream& iStream, const VehiclePointer& iVehicle);
-    QDataStream &operator>>(QDataStream& iStream, VehiclePointer& iVehicle);
 }
 
-Q_DECLARE_METATYPE(iRail::VehiclePointer)
-Q_DECLARE_METATYPE(iRail::Vehicle::Stop)
+Q_DECLARE_METATYPE(iRail::Vehicle)
 
 #endif // STATION_H

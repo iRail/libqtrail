@@ -18,41 +18,51 @@ TRANSLATIONS += \
 SOURCES += \
     asyncapi.cpp \
     cachedapi.cpp \
-    api/station.cpp \
-    api/connectionrequest.cpp \
-    api/parser.cpp \
-    api/connection.cpp \
+    api/progressindicator.cpp \
     api/storage/memorystorage.cpp \
+    api/storage/serializedstorage.cpp \
+    api/parser.cpp \
     api/reader.cpp \
     api/reader/stationreader.cpp \
     api/reader/connectionreader.cpp \
-    api/vehicle.cpp \
     api/reader/vehiclereader.cpp \
-    api/liveboard.cpp \
     api/reader/liveboardreader.cpp \
-    api/storage/serializedstorage.cpp \
-    api/liveboardrequest.cpp
+    api/data/station.cpp \
+    api/data/vehicle.cpp \
+    api/data/departure.cpp \
+    api/data/poi.cpp \
+    api/data/connection.cpp \
+    api/data/journey.cpp \
+    api/container/journeylist.cpp \
+    api/container/departurelist.cpp \
+    api/container/stationlist.cpp \
+    api/container/stoplist.cpp
 HEADERS += \
     asyncapi.h \
     cachedapi.h \
-    api/station.h \
-    api/connectionrequest.h \
-    api/parser.h \
+    api/auxiliary.h \
+    api/progresshandler.h \
+    api/progressindicator.h \
     api/exception.h \
     api/exception/parserexception.h \
     api/exception/networkexception.h \
     api/exception/interruptedexception.h \
-    api/connection.h \
     api/storage.h \
     api/storage/memorystorage.h \
+    api/storage/serializedstorage.h \
+    api/parser.h \
     api/reader.h \
     api/reader/stationreader.h \
     api/reader/connectionreader.h \
-    api/progresshandler.h \
-    api/vehicle.h \
     api/reader/vehiclereader.h \
-    api/liveboard.h \
     api/reader/liveboardreader.h \
-    api/storage/serializedstorage.h \
-    api/liveboardrequest.h \
-    api/auxiliary.h
+    api/data/station.h \
+    api/data/vehicle.h \
+    api/data/departure.h \
+    api/data/poi.h \
+    api/data/connection.h \
+    api/data/journey.h \
+    api/container/journeylist.h \
+    api/container/departurelist.h \
+    api/container/stationlist.h \
+    api/container/stoplist.h

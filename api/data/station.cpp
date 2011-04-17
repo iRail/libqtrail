@@ -16,8 +16,8 @@ using namespace iRail;
 
 Station::Station(QString iId) : mId(iId)
 {
-    qRegisterMetaType<StationPointer>("StationPointer");
-    qRegisterMetaTypeStreamOperators<StationPointer>("StationPointer");
+    qRegisterMetaType<Station>("Station");
+
     mName = "";
     mLocatable = false;
     mLocation = 0;
@@ -74,16 +74,6 @@ void Station::setLocation(const Location& iLocation)
 // Operators
 //
 
-QDebug &iRail::operator<<(QDebug dbg, const Station& iStation)
-{
-    dbg << "Station(id=" << iStation.id() << ",name='" << iStation.name() << "'";
-    if (iStation.locatable())
-        dbg << ", location='" << iStation.location()->first << " x " << iStation.location()->second << "'";
-    dbg << ")";
-
-    return dbg.maybeSpace();
-}
-
 QDataStream& iRail::operator<<(QDataStream& iStream, const Station& iStation)
 {
     iStream << iStation.mId;
@@ -109,18 +99,3 @@ QDataStream& iRail::operator>>(QDataStream& iStream, Station& iStation)
     return iStream;
 }
 
-QDataStream &iRail::operator<<(QDataStream& iStream, const StationPointer& iStation)
-{
-    iStream << (*iStation);
-
-    return iStream;
-}
-
-QDataStream &iRail::operator>>(QDataStream& iStream, StationPointer& iStation)
-{
-    Station *tStation = new Station("dummy");
-    iStream >> *tStation;
-    iStation = StationPointer(tStation);
-
-    return iStream;
-}
