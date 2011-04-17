@@ -9,6 +9,7 @@
 // Includes
 #include <QObject>
 #include <QMetaType>
+#include <QSharedPointer>
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
@@ -54,10 +55,13 @@ namespace iRail
         QList<Journey*> mJourneys;
     };
 
+    typedef QSharedPointer<JourneyList> JourneyListPointer;
+
     QDataStream &operator<<(QDataStream& iStream, const JourneyList& iJourneyList);
     QDataStream &operator>>(QDataStream& iStream, JourneyList& iJourneyList);
 }
 
 Q_DECLARE_METATYPE(iRail::JourneyList)
+Q_DECLARE_METATYPE(iRail::JourneyListPointer)
 
 #endif // JOURNEYLIST_H

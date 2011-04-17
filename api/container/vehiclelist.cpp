@@ -17,6 +17,7 @@ using namespace iRail;
 VehicleList::VehicleList(QObject* iParent) : QAbstractListModel(iParent)
 {
     qRegisterMetaType<VehicleList>("VehicleList");
+    qRegisterMetaType<VehicleListPointer>("VehicleListPointer");
 
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Station::IdRole] = "id";

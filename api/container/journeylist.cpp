@@ -17,6 +17,7 @@ using namespace iRail;
 JourneyList::JourneyList(const POI& iDeparture, const POI& iArrival, QObject* iParent) : mDeparture(iDeparture), mArrival(iArrival), QAbstractListModel(iParent)
 {
     qRegisterMetaType<JourneyList>("JourneyList");
+    qRegisterMetaType<JourneyListPointer>("JourneyListPointer");
 
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Journey::DepartureRole] = "departure";

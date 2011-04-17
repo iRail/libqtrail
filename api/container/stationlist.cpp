@@ -17,6 +17,7 @@ using namespace iRail;
 StationList::StationList(QObject* iParent) : QAbstractListModel(iParent)
 {
     qRegisterMetaType<StationList>("StationList");
+    qRegisterMetaType<StationListPointer>("StationListPointer");
 
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Station::IdRole] = "id";

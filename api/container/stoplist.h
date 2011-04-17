@@ -9,6 +9,7 @@
 // Includes
 #include <QObject>
 #include <QMetaType>
+#include <QSharedPointer>
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
@@ -52,10 +53,13 @@ namespace iRail
         QList<POI*> mStops;
     };
 
+    typedef QSharedPointer<StopList> StopListPointer;
+
     QDataStream &operator<<(QDataStream& iStream, const StopList& iStopList);
     QDataStream &operator>>(QDataStream& iStream, StopList& iStopList);
 }
 
 Q_DECLARE_METATYPE(iRail::StopList)
+Q_DECLARE_METATYPE(iRail::StopListPointer)
 
 #endif // STOPLIST_H

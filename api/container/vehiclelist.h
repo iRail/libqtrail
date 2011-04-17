@@ -9,6 +9,7 @@
 // Includes
 #include <QObject>
 #include <QMetaType>
+#include <QSharedPointer>
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
@@ -41,10 +42,13 @@ namespace iRail
         QList<Vehicle*> mVehicles;
     };
 
+    typedef QSharedPointer<VehicleList> VehicleListPointer;
+
     QDataStream &operator<<(QDataStream& iStream, const VehicleList& iVehicleList);
     QDataStream &operator>>(QDataStream& iStream, VehicleList& iVehicleList);
 }
 
 Q_DECLARE_METATYPE(iRail::VehicleList)
+Q_DECLARE_METATYPE(iRail::VehicleListPointer)
 
 #endif // VEHICLELIST_H

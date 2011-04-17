@@ -40,7 +40,8 @@ SOURCES += \
     api/requesthelper.cpp \
     ../libirail/api/data/location.cpp \
     ../libirail/api/container/vehiclelist.cpp \
-    ../libirail/api/container/connectionlist.cpp
+    ../libirail/api/container/connectionlist.cpp \
+    ../libirail/api/containercache.cpp
 HEADERS += \
     asyncapi.h \
     cachedapi.h \
@@ -73,4 +74,5 @@ HEADERS += \
     api/requesthelper.h \
     ../libirail/api/data/location.h \
     ../libirail/api/container/vehiclelist.h \
-    ../libirail/api/container/connectionlist.h
+    ../libirail/api/container/connectionlist.h \
+    ../libirail/api/containercache.h

@@ -18,6 +18,7 @@ using namespace iRail;
 DepartureList::DepartureList(const Station& iStation, QObject* iParent) : mStation(iStation), QAbstractListModel(iParent)
 {
     qRegisterMetaType<DepartureList>("DepartureList");
+    qRegisterMetaType<DepartureListPointer>("DepartureListPointer");
 
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Departure::VehicleRole] = "vehicle";
@@ -166,4 +167,3 @@ QDataStream& iRail::operator>>(QDataStream& iStream, DepartureList& iDepartureLi
 
     return iStream;
 }
-

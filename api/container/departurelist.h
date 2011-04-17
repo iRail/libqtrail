@@ -9,6 +9,7 @@
 // Includes
 #include <QObject>
 #include <QMetaType>
+#include <QSharedPointer>
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
@@ -60,10 +61,13 @@ namespace iRail
         QList<Departure*> mDepartures;
     };
 
+    typedef QSharedPointer<DepartureList> DepartureListPointer;
+
     QDataStream &operator<<(QDataStream& iStream, const DepartureList& iDepartureList);
     QDataStream &operator>>(QDataStream& iStream, DepartureList& iDepartureList);
 }
 
 Q_DECLARE_METATYPE(iRail::DepartureList)
+Q_DECLARE_METATYPE(iRail::DepartureListPointer)
 
 #endif // LIVEBOARD_H

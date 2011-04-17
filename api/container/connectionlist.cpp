@@ -17,6 +17,7 @@ using namespace iRail;
 ConnectionList::ConnectionList(const Journey& iJourney, QObject* iParent) : mJourney(iJourney), QAbstractListModel(iParent)
 {
     qRegisterMetaType<ConnectionList>("ConnectionList");
+    qRegisterMetaType<ConnectionListPointer>("ConnectionListPointer");
 
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Connection::DepartureRole] = "departure";
@@ -102,4 +103,3 @@ QDataStream& iRail::operator>>(QDataStream& iStream, ConnectionList& iConnection
 
     return iStream;
 }
-
