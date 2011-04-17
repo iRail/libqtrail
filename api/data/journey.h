@@ -37,13 +37,18 @@ namespace iRail
         POI arrival() const;
 
         // Operators
+        friend bool operator==(const Journey& lhs, const Journey& rhs);
+        friend bool operator||(const Journey& lhs, const Journey& rhs);
         friend QDataStream &operator<<(QDataStream& iStream, const Journey& iJourney);
         friend QDataStream &operator>>(QDataStream& iStream, Journey& iJourney);
 
     private:
+        Q_DISABLE_COPY(Journey);
         POI mDeparture, mArrival;
     };
 
+    bool operator==(const Journey& lhs, const Journey& rhs);
+    bool operator||(const Journey& lhs, const Journey& rhs);
     QDataStream &operator<<(QDataStream& iStream, const Journey& iJourney);
     QDataStream &operator>>(QDataStream& iStream, Journey& iJourney);
 }

@@ -63,6 +63,18 @@ void Vehicle::setLocation(const Location& iLocation)
 // Operators
 //
 
+bool iRail::operator==(const Connection& lhs, const Connection& rhs)
+{
+    return  (lhs.id() == rhs.departure() &&
+             lhs.locatable() == rhs.arrival() &&
+             (!lhs.locatable() || (lhs.location() == rhs.terminus())));
+}
+
+bool iRail::operator||(const Connection& lhs, const Connection& rhs)
+{
+    return  (lhs.id() == rhs.departure());
+}
+
 QDataStream& iRail::operator<<(QDataStream& iStream, const Vehicle& iVehicle)
 {
     iStream << iVehicle.mId;

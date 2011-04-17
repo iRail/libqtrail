@@ -44,17 +44,22 @@ namespace iRail
         void setVehicle(const Vehicl& iVehicle);
 
         // Operators
-        friend QDataStream &operator<<(QDataStream& iStream, const Connection& iConnection);
-        friend QDataStream &operator>>(QDataStream& iStream, Connection& iConnection);
+        friend bool operator==(const Connection& lhs, const Connection& rhs);
+        friend bool operator||(const Connection& lhs, const Connection& rhs);
+        friend QDataStream& operator<<(QDataStream& iStream, const Connection& iConnection);
+        friend QDataStream& operator>>(QDataStream& iStream, Connection& iConnection);
 
     private:
+        Q_DISABLE_COPY(Connection);
         POI mDeparture, mArrival;
         Station mTerminus;
         Vehicle mVehicle;
     };
 
-    QDataStream &operator<<(QDataStream& iStream, const Connection& iConnection);
-    QDataStream &operator>>(QDataStream& iStream, Connection& iConnection);
+    bool operator==(const Connection& lhs, const Connection& rhs);
+    bool operator||(const Connection& lhs, const Connection& rhs);
+    QDataStream& operator<<(QDataStream& iStream, const Connection& iConnection);
+    QDataStream& operator>>(QDataStream& iStream, Connection& iConnection);
 }
 
 Q_DECLARE_METATYPE(iRail::Connection)

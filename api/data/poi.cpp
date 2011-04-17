@@ -64,7 +64,21 @@ void POI::setPlatform(unsigned int iPlatform)
 // Operators
 //
 
-QDataStream &iRail::operator<<(QDataStream& iStream, const POI& iPOI)
+bool iRail::operator==(const POI& lhs, const POI& rhs)
+{
+    return  (lhs.station() == rhs.station() &&
+             lhs.datetime() == rhs.datetime() &&
+             lhs.delay() == rhs.delay() &&
+             lhs.platform() == rhs.platform());
+}
+
+bool iRail::operator||(const POI& lhs, const POI& rhs)
+{
+    return  (lhs.station() || rhs.station() &&
+             lhs.datetime() == rhs.datetime());
+}
+
+QDataStream& iRail::operator<<(QDataStream& iStream, const POI& iPOI)
 {
     iStream << iPOI.mStation;
     iStream << iPOI.mDatetime;
@@ -73,7 +87,7 @@ QDataStream &iRail::operator<<(QDataStream& iStream, const POI& iPOI)
 
     return iStream;
 }
-QDataStream &iRail::operator>>(QDataStream& iStream, POI& iPOI)
+QDataStream& iRail::operator>>(QDataStream& iStream, POI& iPOI)
 {
     iStream >> iPOI.mStation;
     iStream >> iPOI.mDatetime;

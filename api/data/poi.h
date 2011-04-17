@@ -43,18 +43,23 @@ namespace iRail
         void setPlatform(unsigned int iPlatform);
 
         // Operators
-        friend QDataStream &operator<<(QDataStream& iStream, const POI& iPOI);
-        friend QDataStream &operator>>(QDataStream& iStream, POI& iPOI);
+        friend bool operator==(const POI& lhs, const POI& rhs);
+        friend bool operator||(const POI& lhs, const POI& rhs);
+        friend QDataStream& operator<<(QDataStream& iStream, const POI& iPOI);
+        friend QDataStream& operator>>(QDataStream& iStream, POI& iPOI);
 
     private:
+        Q_DISABLE_COPY(POI);
         QString mStation;
         QDateTime mDatetime;
         unsigned int mDelay;
         unsigned int mPlatform;
     };
 
-    QDataStream &operator<<(QDataStream& iStream, const POI& iPOI);
-    QDataStream &operator>>(QDataStream& iStream, POI& iPOI);
+    bool operator==(const POI& lhs, const POI& rhs);
+    bool operator||(const POI& lhs, const POI& rhs);
+    QDataStream& operator<<(QDataStream& iStream, const POI& iPOI);
+    QDataStream& operator>>(QDataStream& iStream, POI& iPOI);
 }
 
 Q_DECLARE_METATYPE(iRail::POI)

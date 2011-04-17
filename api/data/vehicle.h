@@ -46,17 +46,22 @@ namespace iRail
         void setLocation(const Location& iLocation);
 
         // Operators
-        friend QDataStream &operator<<(QDataStream& iStream, const Vehicle& iVehicle);
-        friend QDataStream &operator>>(QDataStream& iStream, Vehicle& iVehicle);
+        friend bool operator==(const Vehicle& lhs, const Vehicle& rhs);
+        friend bool operator||(const Vehicle& lhs, const Vehicle& rhs);
+        friend QDataStream& operator<<(QDataStream& iStream, const Vehicle& iVehicle);
+        friend QDataStream& operator>>(QDataStream& iStream, Vehicle& iVehicle);
 
     private:
+        Q_DISABLE_COPY(Vehicle);
         QString mId;
         bool mLocatable;
         Location* mLocation;
     };
 
-    QDataStream &operator<<(QDataStream& iStream, const Vehicle& iVehicle);
-    QDataStream &operator>>(QDataStream& iStream, Vehicle& iVehicle);
+    bool operator==(const Vehicle& lhs, const Vehicle& rhs);
+    bool operator||(const Vehicle& lhs, const Vehicle& rhs);
+    QDataStream& operator<<(QDataStream& iStream, const Vehicle& iVehicle);
+    QDataStream& operator>>(QDataStream& iStream, Vehicle& iVehicle);
 }
 
 Q_DECLARE_METATYPE(iRail::Vehicle)

@@ -74,6 +74,19 @@ void Station::setLocation(const Location& iLocation)
 // Operators
 //
 
+bool iRail::operator==(const Station& lhs, const Station& rhs)
+{
+    return  (lhs.id() == rhs.id() &&
+             lhs.name() == rhs.name() &&
+             lhs.locatable() == rhs.locatable() &&
+             (!lhs.locatable() || (lhs.location() == rhs.location())));
+}
+
+bool iRail::operator||(const Station& lhs, const Station& rhs)
+{
+    return  (lhs.id() == rhs.id());
+}
+
 QDataStream& iRail::operator<<(QDataStream& iStream, const Station& iStation)
 {
     iStream << iStation.mId;

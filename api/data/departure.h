@@ -35,16 +35,21 @@ namespace iRail
         POI poi() const;
 
         // Operators
-        friend QDataStream &operator<<(QDataStream& iStream, const Departure& iDeparture);
-        friend QDataStream &operator>>(QDataStream& iStream, Departure& iDeparture);
+        friend bool operator==(const Departure& lhs, const Departure& rhs);
+        friend bool operator||(const Departure& lhs, const Departure& rhs);
+        friend QDataStream& operator<<(QDataStream& iStream, const Departure& iDeparture);
+        friend QDataStream& operator>>(QDataStream& iStream, Departure& iDeparture);
 
     private:
+        Q_DISABLE_COPY(Departure);
         QString mVehicle;
         POI mPOI;
     };
 
-    QDataStream &operator<<(QDataStream& iStream, const Departure& iDeparture);
-    QDataStream &operator>>(QDataStream& iStream, Departure& iDeparture);
+    bool operator==(const Departure& lhs, const Departure& rhs);
+    bool operator||(const Departure& lhs, const Departure& rhs);
+    QDataStream& operator<<(QDataStream& iStream, const Departure& iDeparture);
+    QDataStream& operator>>(QDataStream& iStream, Departure& iDeparture);
 }
 
 Q_DECLARE_METATYPE(iRail::Departure)

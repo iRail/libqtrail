@@ -52,18 +52,23 @@ namespace iRail
         void setLocation(const Location& iLocation);
 
         // Operators
-        friend QDataStream &operator<<(QDataStream& iStream, const Station& iStation);
-        friend QDataStream &operator>>(QDataStream& iStream, Station& iStation);
+        friend bool operator==(const Station& lhs, const Station& rhs);
+        friend bool operator||(const Station& lhs, const Station& rhs);
+        friend QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
+        friend QDataStream& operator>>(QDataStream& iStream, Station& iStation);
 
     private:
+        Q_DISABLE_COPY(Station);
         QString mId;
         QString mName;
         bool mLocatable;
         Location* mLocation;
     };
 
-    QDataStream &operator<<(QDataStream& iStream, const Station& iStation);
-    QDataStream &operator>>(QDataStream& iStream, Station& iStation);
+    bool operator==(const Station& lhs, const Station& rhs);
+    bool operator||(const Station& lhs, const Station& rhs);
+    QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
+    QDataStream& operator>>(QDataStream& iStream, Station& iStation);
 }
 
 Q_DECLARE_METATYPE(iRail::Station)

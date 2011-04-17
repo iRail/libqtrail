@@ -39,14 +39,26 @@ POI Departure::poi() const
 // Operators
 //
 
-QDataStream &iRail::operator<<(QDataStream& iStream, const Departure& iDeparture)
+bool iRail::operator==(const Departure& lhs, const Departure& rhs)
+{
+    return  (lhs.vehicle() == rhs.vehicle() &&
+             lhs.poi() == rhs.poi());
+}
+
+bool iRail::operator||(const Departure& lhs, const Departure& rhs)
+{
+    return  (lhs.vehicle() || rhs.vehicle() &&
+             lhs.poi() || rhs.poi());
+}
+
+QDataStream& iRail::operator<<(QDataStream& iStream, const Departure& iDeparture)
 {
     iStream << iDeparture.mVehicle;
     iStream << iDeparture.mPOI;
 
     return iStream;
 }
-QDataStream &iRail::operator>>(QDataStream& iStream, Departure& iDeparture)
+QDataStream& iRail::operator>>(QDataStream& iStream, Departure& iDeparture)
 {
     iStream >> iDeparture.mVehicle;
     iStream >> iDeparture.mPOI;

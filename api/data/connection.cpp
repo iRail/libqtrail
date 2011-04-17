@@ -59,7 +59,21 @@ void Connection::setVehicle(const Vehicl& iVehicle)
 // Operators
 //
 
-QDataStream &iRail::operator<<(QDataStream& iStream, const Connection& iConnection)
+bool iRail::operator==(const Connection& lhs, const Connection& rhs)
+{
+    return  (lhs.departure() == rhs.departure() &&
+             lhs.arrival() == rhs.arrival() &&
+             lhs.terminus() == rhs.terminus() &&
+             lhs.vehicle() == rhs.vehicle());
+}
+
+bool iRail::operator||(const Connection& lhs, const Connection& rhs)
+{
+    return  (lhs.departure() || rhs.departure() &&
+             lhs.arrival() || rhs.arrival());
+}
+
+QDataStream& iRail::operator<<(QDataStream& iStream, const Connection& iConnection)
 {
     iStream << iConnection.mDeparture;
     iStream << iConnection.mArrival;
@@ -68,7 +82,7 @@ QDataStream &iRail::operator<<(QDataStream& iStream, const Connection& iConnecti
 
     return iStream;
 }
-QDataStream &iRail::operator>>(QDataStream& iStream, Connection& iConnection)
+QDataStream& iRail::operator>>(QDataStream& iStream, Connection& iConnection)
 {
     iStream >> iConnection.mDeparture;
     iStream >> iConnection.mArrival;
