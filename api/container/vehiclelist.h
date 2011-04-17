@@ -39,7 +39,7 @@ namespace iRail
 
         // Member data
         QDateTime mTimestamp;
-        QList<Vehicle*> mVehicles;
+        QMap<QString, Vehicle*> mVehicles;
     };
 
     typedef QSharedPointer<VehicleList> VehicleListPointer;

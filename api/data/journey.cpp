@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Journey::Journey(const POI& iDeparture, const POI& iArrival) : mDeparture(iDeparture, mArrival(iArrival)
+Journey::Journey(POI const* iDeparture, POI const* iArrival) : mDeparture(iDeparture, mArrival(iArrival)
 {
     qRegisterMetaType<Departure>("Journey");
 }
@@ -24,12 +24,12 @@ Journey::Journey(const POI& iDeparture, const POI& iArrival) : mDeparture(iDepar
 // Basic I/O
 //
 
-POI Journey::departure() const
+POI const* Journey::departure() const
 {
     return mDeparture;
 }
 
-POI Journey::arrival() const
+POI const* Journey::arrival() const
 {
     return mArrival;
 }
@@ -56,15 +56,20 @@ bool iRail::operator==(const Journey& lhs, const Journey& rhs)
 
 QDataStream& iRail::operator<<(QDataStream& iStream, const Journey& iJourney)
 {
-    iStream << iConnection.mDeparture;
-    iStream << iConnection.mArrival;
+    iStream << iJourney.mDeparture;
+    iStream << iJourney.mArrival;
 
     return iStream;
 }
 QDataStream& iRail::operator>>(QDataStream& iStream, Journey& iJourney)
 {
-    iStream >> iConnection.mDeparture;
-    iStream >> iConnection.mArrival;
+    POI* tDeparture = new POI(new Station("dummy"), QDateTime());
+    iStream >> tDeparture;
+    iJourney.mDeparture = tDeparture;
+
+    POI* tArrival = new POI(new Station("dummy"), QDateTime());
+    iStream >> tDeparture;
+    iJourney.mArrival = tArrival;
 
     return iStream;
 }

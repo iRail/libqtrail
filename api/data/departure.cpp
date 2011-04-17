@@ -59,9 +59,14 @@ QDataStream& iRail::operator<<(QDataStream& iStream, const Departure& iDeparture
     return iStream;
 }
 QDataStream& iRail::operator>>(QDataStream& iStream, Departure& iDeparture)
-{
-    iStream >> iDeparture.mVehicle;
-    iStream >> iDeparture.mPOI;
+{    
+    Vehicle* tVehicle = new Vehicle("dummy");
+    iStream >> tVehicle;
+    iDeparture.mVehicle = tVehicle;
+
+    POI* tPOI = new POI(new Station("dummy"), QDateTime());
+    iStream >> tDeparture;
+    iConnection.mPOI = tPOI;
 
     return iStream;
 }

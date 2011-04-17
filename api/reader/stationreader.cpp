@@ -59,7 +59,7 @@ QDateTime StationReader::timestamp() const
     return mTimestamp;
 }
 
-QList<Station> StationReader::stations() const
+QMap<QString, Station*> StationReader::stations() const
 {
     return mStations;
 }
@@ -102,7 +102,10 @@ void StationReader::readStations()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "station")
-                mStations << readStation();
+            {
+                Station tStation = readStation();
+                mStations.insert(tStation.id(), tStation);
+            }
             else
                 skipUnknownElement();
         }
@@ -112,7 +115,7 @@ void StationReader::readStations()
 
 }
 
-Station StationReader::readStation()
+Station* StationReader::readStation()
 {
     // Process the attributes
     if (! mReader.attributes().hasAttribute("id"))
@@ -141,8 +144,8 @@ Station StationReader::readStation()
         mReader.readNext();
 
     // Construct the object
-    Station oStation(tId);
-    oStation.setName(tName);
-    oStation.setLocation(tLocation);
+    Station* oStation = new Station(tId);
+    oStation->setName(tName);
+    oStation->setLocation(tLocation);
     return oStation;
 }

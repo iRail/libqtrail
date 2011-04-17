@@ -58,12 +58,12 @@ QDateTime StopReader::timestamp() const
     return mTimestamp;
 }
 
-Vehicle StopReader::vehicle() const
+Vehicle* StopReader::vehicle() const
 {
     return mVehicle;
 }
 
-QList<POI> StopReader::stops() const
+QList<POI*> StopReader::stops() const
 {
     return mStops;
 }
@@ -88,7 +88,7 @@ void StopReader::readVehicleInformation()
     {
         QStringRef tVersionString = mReader.attributes().value("version");
 
-       mVersion = tVersionString.toString().toDouble();
+        mVersion = tVersionString.toString().toDouble();
     }
     else
         mReader.raiseError("could not find vehicles version attribute");
@@ -117,7 +117,7 @@ void StopReader::readVehicleInformation()
     }
 }
 
-Vehicle StopReader::readVehicle()
+Vehicle* StopReader::readVehicle()
 {
     // Process the attributes
     Location tLocation;
@@ -143,15 +143,15 @@ Vehicle StopReader::readVehicle()
         mReader.readNext();
 
     // Construct the object
-    Vehicle oVehicle(tVehicleId);
-    oVehicle.setLocation(tLocation);
+    Vehicle* oVehicle = new Vehicle(tVehicleId);
+    oVehicle->setLocation(tLocation);
     return oVehicle;
 }
 
-QList<POI> StopReader::readStops()
+QList<POI*> StopReader::readStops()
 {
     // Process the tags
-    QList<POI> oStops;
+    QList<POI*> oStops;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -176,7 +176,7 @@ QList<POI> StopReader::readStops()
     return oStops;
 }
 
-POI StopReader::readStop()
+POI* StopReader::readStop()
 {
     // Process the attributes
     double tDelay;
@@ -188,7 +188,7 @@ POI StopReader::readStop()
         mReader.raiseError("stop without delay attribute");
 
     // Process the tags
-    Station tStation;
+    Station* tStation;
     QDateTime tDateTime;
     mReader.readNext();
     while (!mReader.atEnd())
@@ -213,8 +213,8 @@ POI StopReader::readStop()
     }
 
     // Construct the object
-    POI oStop(tStation, tDatetime);
-    oStop.setDelay(tDelay);
+    POI* oStop = new POI(tStation, tDatetime);
+    oStop->setDelay(tDelay);
     return oStop;
 }
 

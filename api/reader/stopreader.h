@@ -28,22 +28,22 @@ namespace iRail
         // Basic I/O
         double version() const;
         QDateTime timestamp() const;
-        Vehicle mVehicle() const;
-        QList<POI> stops() const;
+        Vehicle* mVehicle() const;
+        QList<POI*> stops() const;
     private:
         // Member data
         double mVersion;
         QDateTime mTimestamp;
-        Vehicle mVehicle;
-        QList<POI> mStops;
+        Vehicle* mVehicle;
+        QList<POI*> mStops;
 
         // Tag readers
         void allocate();
         void readVehicleInformation();
-        Vehicle readVehicle();
-        QList<POI> readStops();
-        POI readStop();
-        Station readStation();
+        Vehicle* readVehicle();
+        QList<POI*> readStops();
+        POI* readStop();
+        Station* readStation();
         QDateTime readDatetime();
     };
 }

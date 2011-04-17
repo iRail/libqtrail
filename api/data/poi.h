@@ -11,19 +11,20 @@
 #include <QMetaType>
 #include <QString>
 #include <QDateTime>
+#include "api/data/station.h"
 
 namespace iRail
 {
     class POI : public QObject
     {
     Q_OBJECT
-    Q_PROPERTY(QString station READ station CONSTANT)
+    Q_PROPERTY(Station station READ station CONSTANT)
     Q_PROPERTY(QDateTime datetime READ datetime CONSTANT)
     Q_PROPERTY(uint delay READ relay WRITE setDelay)
     Q_PROPERTY(uint platform READ platform WRITE setPlatform)
     public:
         // Construction and destruction
-        POI(const QString& iStation, const QDateTime& iDatetime);
+        POI(Station const* iStation, const QDateTime& iDatetime);
         ~POI();
 
         // Auxiliary structures
@@ -35,7 +36,7 @@ namespace iRail
         };
 
         // Basic I/O
-        QString station() const;
+        Station const* station() const;
         QDateTime datetime() const;
         unsigned int delay() const;
         void setDelay(unsigned int iDelay);
@@ -50,7 +51,7 @@ namespace iRail
 
     private:
         Q_DISABLE_COPY(POI);
-        QString mStation;
+        Station const* mStation;
         QDateTime mDatetime;
         unsigned int mDelay;
         unsigned int mPlatform;

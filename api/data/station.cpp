@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Station::Station(QString iId) : mId(iId)
+Station::Station(QString iId) : mId(iId), mLocation(Location())
 {
     qRegisterMetaType<Station>("Station");
 
@@ -51,12 +51,12 @@ bool Station::locatable() const
     return mLocatable;
 }
 
-const Location Station::location() const
+Location const* Station::location() const
 {
     return mLocation;
 }
 
-void Station::setLocation(const Location& iLocation)
+void Station::setLocation(Location const* iLocation)
 {
     mLocation = iLocation;
 }
@@ -92,7 +92,10 @@ QDataStream& iRail::operator>>(QDataStream& iStream, Station& iStation)
 {
     iStream >> iStation.mId;
     iStream >> iStation.mName;
-    iStream >> iStation.mLocation;
+
+    Location* tLocation = new Location();
+    iStream << *tLocation;
+    iStation.mLocation = tLocation;
 
     return iStream;
 }

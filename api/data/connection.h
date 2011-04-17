@@ -25,7 +25,7 @@ namespace iRail
     Q_PROPERTY(Vehicle vehicle READ vehicle WRITE setVehicle)
     public:
         // Construction and destruction
-        Connection(const POI& iDeparture, const POI& iArrival);
+        Connection(POI const* iDeparture, POI const* iArrival);
 
         // Auxiliary structures
         enum Roles {
@@ -36,12 +36,12 @@ namespace iRail
         };
 
         // Basic I/O
-        POI departure() const;
-        POI arrival() const;
-        Station terminus() const;
-        void setTerminus(const Station& iTerminus);
-        Vehicle vehicle() const;
-        void setVehicle(const Vehicl& iVehicle);
+        POI const* departure() const;
+        POI const* arrival() const;
+        Station const* terminus() const;
+        void setTerminus(Station const* iTerminus);
+        Vehicle const* vehicle() const;
+        void setVehicle(Vehicle const* iVehicle);
 
         // Operators
         friend bool operator==(const Connection& lhs, const Connection& rhs);
@@ -51,9 +51,10 @@ namespace iRail
 
     private:
         Q_DISABLE_COPY(Connection);
-        POI mDeparture, mArrival;
-        Station mTerminus;
-        Vehicle mVehicle;
+        POI const* mDeparture;
+        POI const* mArrival;
+        Station const* mTerminus;
+        Vehicle const* mVehicle;
     };
 
     bool operator==(const Connection& lhs, const Connection& rhs);

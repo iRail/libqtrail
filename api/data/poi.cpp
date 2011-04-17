@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-POI::POI(const QString& iStation, const QDateTime& iDatetime) : mStation(iStation), mDatetime(iDatetime)
+POI::POI(Station const* iStation, const QDateTime& iDatetime) : mStation(iStation), mDatetime(iDatetime)
 {
     qRegisterMetaType<POI>("POI");
 }
@@ -29,7 +29,7 @@ POI::~POI()
 // Basic I/O
 //
 
-QString POI::station() const
+Station const* POI::station() const
 {
     return mStation;
 }
@@ -89,7 +89,10 @@ QDataStream& iRail::operator<<(QDataStream& iStream, const POI& iPOI)
 }
 QDataStream& iRail::operator>>(QDataStream& iStream, POI& iPOI)
 {
-    iStream >> iPOI.mStation;
+    Station* tStation = new Station("dumme");
+    iStream >> *tStation;
+    iPOI.mStation = tStation;
+
     iStream >> iPOI.mDatetime;
     iStream >> iPOI.mDelay;
     iStream >> iPOI.mPlatform;

@@ -12,6 +12,7 @@
 #include <QString>
 #include <QDebug>
 #include "poi.h"
+#include "vehicle.h"
 
 namespace iRail
 {
@@ -22,7 +23,7 @@ namespace iRail
     Q_PROPERTY(POI poi READ poi CONSTANT)
     public:
         // Construction and destruction
-        Departure(const QString& iVehicle, const POI& iPOI);
+        Departure(Vehicle const* iVehicle, POI const* iPOI);
 
         // Auxiliary structures
         enum Roles {
@@ -31,8 +32,8 @@ namespace iRail
         };
 
         // Basic I/O
-        QString vehicle() const;
-        POI poi() const;
+        Vehicle const* vehicle() const;
+        POI const* poi() const;
 
         // Operators
         friend bool operator==(const Departure& lhs, const Departure& rhs);
@@ -42,8 +43,8 @@ namespace iRail
 
     private:
         Q_DISABLE_COPY(Departure);
-        QString mVehicle;
-        POI mPOI;
+        Vehicle const* mVehicle;
+        POI const* mPOI;
     };
 
     bool operator==(const Departure& lhs, const Departure& rhs);

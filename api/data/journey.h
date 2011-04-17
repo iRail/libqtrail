@@ -24,7 +24,7 @@ namespace iRail
     Q_PROPERTY(uint connections READ connections CONSTANT)
     public:
         // Construction and destruction
-        Journey(const POI& iDeparture, const POI& iArrival);
+        Journey(POI const* iDeparture, POI const* iArrival);
 
         // Auxiliary structures
         enum Roles {
@@ -33,8 +33,8 @@ namespace iRail
         };
 
         // Basic I/O
-        POI departure() const;
-        POI arrival() const;
+        POI const* departure() const;
+        POI const* arrival() const;
 
         // Operators
         friend bool operator==(const Journey& lhs, const Journey& rhs);
@@ -44,7 +44,8 @@ namespace iRail
 
     private:
         Q_DISABLE_COPY(Journey);
-        POI mDeparture, mArrival;
+        POI const* mDeparture;
+        POI const* mArrival;
     };
 
     bool operator==(const Journey& lhs, const Journey& rhs);
