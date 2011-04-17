@@ -3,7 +3,7 @@
 //
 
 // Includes
-#include "vehiclereader.h"
+#include "stopreader.h"
 #include <QStringRef>
 
 // Namespaces
@@ -14,23 +14,16 @@ using namespace iRail;
 // Construction and destruction
 //
 
-VehicleReader::VehicleReader()
+StopReader::StopReader()
 {
-    mVehicle = 0;
-}
-
-VehiclePointer* VehicleReader::vehicle(QDateTime& oTimestamp)
-{
-    oTimestamp = mTimestamp;
-    return mVehicle;
 }
 
 
 //
-// Tag readers
+// Reader interface
 //
 
-void VehicleReader::readDocument()
+void StopReader::readDocument()
 {
     mReader.readNext();
     while (!mReader.atEnd())
@@ -49,7 +42,38 @@ void VehicleReader::readDocument()
     }
 }
 
-Vehicle* VehicleReader::readVehicleInformation()
+
+//
+// Basic I/O
+//
+
+
+double StopReader::version() const
+{
+    return mVersion;
+}
+
+QDateTime StopReader::timestamp() const
+{
+    return mTimestamp;
+}
+
+Vehicle StopReader::vehicle() const
+{
+    return mVehicle;
+}
+
+QList<POI> StopReader::stops() const
+{
+    return mStops;
+}
+
+
+//
+// Tag readers
+//
+
+void StopReader::readVehicleInformation()
 {
     // Process the attributes
     if (mReader.attributes().hasAttribute("timestamp"))
@@ -70,8 +94,6 @@ Vehicle* VehicleReader::readVehicleInformation()
         mReader.raiseError("could not find vehicles version attribute");
 
     // Process the tags
-    Vehicle* tVehicle;
-    QList<Vehicle::Stop> tStops;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -84,41 +106,36 @@ Vehicle* VehicleReader::readVehicleInformation()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "vehicle")
-                tVehicle = readVehicle();
+                mVehicle = readVehicle();
             else if (mReader.name() == "stops")
-                tStops = readStops();
+                mStops = readStops();
             else
                 skipUnknownElement();
         }
         else
             mReader.readNext();
     }
-
-    // Construct the object
-    tVehicle->setStops(tStops);
-    return tVehicle;
 }
 
-Vehicle* VehicleReader::readVehicle()
+Vehicle StopReader::readVehicle()
 {
     // Process the attributes
-    double tLocationX, tLocationY;
-    if (mReader.attributes().hasAttribute("locationX"))
+    Location tLocation;
+    if (mReader.attributes().hasAttribute("location"))
     {
-        QStringRef tLocationXString = mReader.attributes().value("locationX");
+        QStringRef tLocationString = mReader.attributes().value("location");
 
-        tLocationX = tLocationXString.toString().toDouble();
-    }
-    else
-        mReader.raiseError("could not find vehicle x-location attribute");
-    if (mReader.attributes().hasAttribute("locationY"))
-    {
-        QStringRef tLocationYString = mReader.attributes().value("locationY");
+        int tSeparator = tLocationString.toString().indexOf(" ");
 
-        tLocationY = tLocationYString.toString().toDouble();
+        // TODO: when Qt 4.8 gets released, QStringRef
+        //       will natively implement these
+        //       convenience functionality
+        //       http://qt.gitorious.org/qt/qt/merge_requests/625
+        qreal tLongitude = tLocationString.toString().midRef(0, tSeparator).toString().toDouble();
+        qreal tLatitude = tLocationString.toString().midRef(tSeparator+1).toString().toDouble();
+        tLocation.setLongitude(tLongitude);
+        tLocation.setLatitude(tLatitude);
     }
-    else
-        mReader.raiseError("could not find vehicle y-location attribute");
 
     // Process the contents
     QString tVehicleId = mReader.readElementText();
@@ -126,15 +143,15 @@ Vehicle* VehicleReader::readVehicle()
         mReader.readNext();
 
     // Construct the object
-    Vehicle* oVehicle = new Vehicle(tVehicleId);
-    oVehicle->setLocation(Vehicle::Location(tLocationX, tLocationY));
+    Vehicle oVehicle(tVehicleId);
+    oVehicle.setLocation(tLocation);
     return oVehicle;
 }
 
-QList<Vehicle::Stop> VehicleReader::readStops()
+QList<POI> StopReader::readStops()
 {
     // Process the tags
-    QList<Vehicle::Stop> oStops;
+    QList<POI> oStops;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -159,7 +176,7 @@ QList<Vehicle::Stop> VehicleReader::readStops()
     return oStops;
 }
 
-Vehicle::Stop VehicleReader::readStop()
+POI StopReader::readStop()
 {
     // Process the attributes
     double tDelay;
@@ -171,7 +188,7 @@ Vehicle::Stop VehicleReader::readStop()
         mReader.raiseError("stop without delay attribute");
 
     // Process the tags
-    QString tStationId;
+    Station tStation;
     QDateTime tDateTime;
     mReader.readNext();
     while (!mReader.atEnd())
@@ -185,7 +202,7 @@ Vehicle::Stop VehicleReader::readStop()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "station")
-                tStationId = readStation();
+                tStation = readStation();
             if (mReader.name() == "time")
                 tDateTime = readDatetime();
             else
@@ -196,14 +213,12 @@ Vehicle::Stop VehicleReader::readStop()
     }
 
     // Construct the object
-    Vehicle::Stop oStop;
-    oStop.datetime = tDateTime;
-    oStop.station = tStationId;
-    oStop.delay = tDelay;
+    POI oStop(tStation, tDatetime);
+    oStop.setDelay(tDelay);
     return oStop;
 }
 
-QString VehicleReader::readStation()
+Station StopReader::readStation()   // TODO: fill station object
 {
     // Process the attributes
     QString oStationId;
@@ -220,10 +235,10 @@ QString VehicleReader::readStation()
         mReader.readNext();
 
     // Construct the object
-    return oStationId;
+    return Station(oStationId);
 }
 
-QDateTime VehicleReader::readDatetime()
+QDateTime StopReader::readDatetime()
 {
     // Process the contents
     QString tUnixtime = mReader.readElementText();
@@ -231,14 +246,4 @@ QDateTime VehicleReader::readDatetime()
         mReader.readNext();
 
     return QDateTime::fromTime_t(tUnixtime.toUInt());
-}
-
-
-
-//
-// Auxiliary
-//
-
-void VehicleReader::allocate()
-{
 }

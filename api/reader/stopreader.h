@@ -3,39 +3,49 @@
 //
 
 // Include guard
-#ifndef VEHICLEREADER_H
-#define VEHICLEREADER_H
+#ifndef STOPREADER_H
+#define STOPREADER_H
 
 // Includes
-#include "api/reader.h"
-#include "api/vehicle.h"
 #include <QList>
 #include <QDateTime>
+#include "api/reader.h"
+#include "api/data/poi.h"
+#include "api/data/vehicle.h"
 
 namespace iRail
 {
-    class VehicleReader : public Reader
+    class StopReader : public Reader
     {
     Q_OBJECT
     public:
-        VehicleReader();
+        // Construction and destruction
+        StopReader();
+
+        // Reader interface
         void readDocument();
-        VehiclePointer* vehicle(QDateTime& oTimestamp);
+
+        // Basic I/O
+        double version() const;
+        QDateTime timestamp() const;
+        Vehicle mVehicle() const;
+        QList<POI> stops() const;
     private:
         // Member data
-        VehiclePointer* mVehicle;
-        QDateTime mTimestamp;
         double mVersion;
+        QDateTime mTimestamp;
+        Vehicle mVehicle;
+        QList<POI> mStops;
 
         // Tag readers
         void allocate();
-        Vehicle* readVehicleInformation();
-        Vehicle* readVehicle();
-        QList<Vehicle::Stop> readStops();
-        Vehicle::Stop readStop();
-        QString readStation();
+        void readVehicleInformation();
+        Vehicle readVehicle();
+        QList<POI> readStops();
+        POI readStop();
+        Station readStation();
         QDateTime readDatetime();
     };
 }
 
-#endif // STATIONREADER_H
+#endif // STOPREADER_H

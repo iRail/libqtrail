@@ -3,36 +3,46 @@
 //
 
 // Include guard
-#ifndef LIVEBOARDREADER_H
-#define LIVEBOARDREADER_H
+#ifndef DEPARTUREREADER_H
+#define DEPARTUREREADER_H
 
 // Includes
-#include "api/reader.h"
-#include "api/liveboard.h"
 #include <QList>
 #include <QDateTime>
+#include "api/reader.h"
+#include "api/data/departure.h"
+#include "api/data/station.h"
 
 namespace iRail
 {
-    class LiveboardReader : public Reader
+    class DepartureReader : public Reader
     {
     Q_OBJECT
     public:
-        LiveboardReader();
+        // Construction and destruction
+        DepartureReader();
+
+        // Reader interface
         void readDocument();
-        LiveboardPointer* liveboard(QDateTime& oTimestamp);
+
+        // Basic I/O
+        double version() const;
+        QDateTime timestamp() const;
+        Station station() const;
+        QList<Departure> departures() const;
     private:
         // Member data
-        LiveboardPointer* mLiveboard;
-        QDateTime mTimestamp;
         double mVersion;
+        QDateTime mTimestamp;
+        Station mStation;
+        QList<Departure> mDepartures;
 
         // Tag readers
         void allocate();
-        Liveboard* readLiveboard();
+        void readLiveboard();
         QString readStation();
-        QList<Liveboard::Departure> readDepartures();
-        Liveboard::Departure readDeparture();
+        QList<Departure> readDepartures();
+        Departure readDeparture();
         QString readVehicle();
         QDateTime readDatetime();
         double readDelay();
@@ -40,4 +50,4 @@ namespace iRail
     };
 }
 
-#endif // STATIONREADER_H
+#endif // DEPARTUREREADER_H

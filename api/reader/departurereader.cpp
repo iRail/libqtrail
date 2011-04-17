@@ -3,7 +3,7 @@
 //
 
 // Includes
-#include "liveboardreader.h"
+#include "departurereader.h"
 #include <QStringRef>
 
 // Namespaces
@@ -14,23 +14,16 @@ using namespace iRail;
 // Construction and destruction
 //
 
-LiveboardReader::LiveboardReader()
+DepartureReader::DepartureReader()
 {
-    mLiveboard = 0;
-}
-
-LiveboardPointer* LiveboardReader::liveboard(QDateTime& oTimestamp)
-{
-    oTimestamp = mTimestamp;
-    return mLiveboard;
 }
 
 
 //
-// Tag readers
+// Reader interface
 //
 
-void LiveboardReader::readDocument()
+void DepartureReader::readDocument()
 {
     mReader.readNext();
     while (!mReader.atEnd())
@@ -49,7 +42,38 @@ void LiveboardReader::readDocument()
     }
 }
 
-Liveboard* LiveboardReader::readLiveboard()
+
+//
+// Basic I/O
+//
+
+
+double DepartureReader::version() const
+{
+    return mVersion;
+}
+
+QDateTime DepartureReader::timestamp() const
+{
+    return mTimestamp;
+}
+
+Station DepartureReader::station() const
+{
+    return mStation;
+}
+
+QList<Departure> DepartureReader::departures() const
+{
+    return mDepartures;
+}
+
+
+//
+// Tag readers
+//
+
+void DepartureReader::readLiveboard()
 {
     // Process the attributes
     if (mReader.attributes().hasAttribute("timestamp"))
@@ -70,8 +94,6 @@ Liveboard* LiveboardReader::readLiveboard()
         mReader.raiseError("could not find vehicles version attribute");
 
     // Process the tags
-    QString tStation;
-    QList<Liveboard::Departure> tDepartures;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -84,23 +106,18 @@ Liveboard* LiveboardReader::readLiveboard()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "station")
-                tStation = readStation();
+                mStation = readStation();
             else if (mReader.name() == "departures")
-                tDepartures = readDepartures();
+                mDepartures = readDepartures();
             else
                 skipUnknownElement();
         }
         else
             mReader.readNext();
     }
-
-    // Construct the object
-    Liveboard* tLiveboard = new Liveboard(tStation);
-    tLiveboard->setDepartures(tDepartures);
-    return tLiveboard;
 }
 
-QString LiveboardReader::readStation()
+Station DepartureReader::readStation()
 {
     // Process the attributes
     QString oStationId;
@@ -117,10 +134,11 @@ QString LiveboardReader::readStation()
         mReader.readNext();
 
     // Construct the object
-    return oStationId;
+    return Station(oStationId);
+    // TODO: load from cache? do request? hmm
 }
 
-QList<Liveboard::Departure> LiveboardReader::readDepartures()
+QList<Liveboard::Departure> DepartureReader::readDepartures()
 {
     // Process the attributes
     int tNumber;
@@ -160,7 +178,7 @@ QList<Liveboard::Departure> LiveboardReader::readDepartures()
     return oDepartures;
 }
 
-Liveboard::Departure LiveboardReader::readDeparture()
+Liveboard::Departure DepartureReader::readDeparture()
 {
     // Process the attributes
     unsigned int tDelay = 0;
@@ -209,7 +227,7 @@ Liveboard::Departure LiveboardReader::readDeparture()
     return tDeparture;
 }
 
-QString LiveboardReader::readVehicle()
+QString DepartureReader::readVehicle()
 {
     // Process the contents
     QString oVehicle = mReader.readElementText();
@@ -219,7 +237,7 @@ QString LiveboardReader::readVehicle()
     return oVehicle;
 }
 
-QDateTime LiveboardReader::readDatetime()
+QDateTime DepartureReader::readDatetime()
 {
     // Process the contents
     QString tUnixtime = mReader.readElementText();
@@ -229,7 +247,7 @@ QDateTime LiveboardReader::readDatetime()
     return QDateTime::fromTime_t(tUnixtime.toUInt());
 }
 
-int LiveboardReader::readPlatform()
+int DepartureReader::readPlatform()
 {
     // Process the contents
     QString tPlatformString = mReader.readElementText();
@@ -245,6 +263,6 @@ int LiveboardReader::readPlatform()
 // Auxiliary
 //
 
-void LiveboardReader::allocate()
+void DepartureReader::allocate()
 {
 }

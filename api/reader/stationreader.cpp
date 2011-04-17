@@ -17,18 +17,11 @@ using namespace iRail;
 
 StationReader::StationReader()
 {
-    mStations = 0;
-}
-
-QMap<QString, StationPointer>* StationReader::stations(QDateTime& oTimestamp)
-{
-    oTimestamp = mTimestamp;
-    return mStations;
 }
 
 
 //
-// Tag readers
+// Reader interface
 //
 
 void StationReader::readDocument()
@@ -49,6 +42,32 @@ void StationReader::readDocument()
             mReader.readNext();
     }
 }
+
+
+//
+// Basic I/O
+//
+
+
+double StationReader::version() const
+{
+    return mVersion;
+}
+
+QDateTime StationReader::timestamp() const
+{
+    return mTimestamp;
+}
+
+QList<Station> StationReader::stations() const
+{
+    return mStations;
+}
+
+
+//
+// Tag readers
+//
 
 void StationReader::readStations()
 {
@@ -83,10 +102,7 @@ void StationReader::readStations()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "station")
-            {
-                Station* tStation = readStation();
-                mStations->insert(tStation->id(), StationPointer(tStation));
-            }
+                mStations << readStation();
             else
                 skipUnknownElement();
         }
@@ -96,10 +112,13 @@ void StationReader::readStations()
 
 }
 
-Station* StationReader::readStation()
+Station StationReader::readStation()
 {
     // Process the attributes
-    Station::Location* tLocation = 0;
+    if (! mReader.attributes().hasAttribute("id"))
+        mReader.raiseError("station without id");
+    QString tId = mReader.attributes().value("id").toString();
+    Location tLocation;
     if (mReader.attributes().hasAttribute("location"))
     {
         QStringRef tLocationString = mReader.attributes().value("location");
@@ -112,11 +131,9 @@ Station* StationReader::readStation()
         //       http://qt.gitorious.org/qt/qt/merge_requests/625
         qreal tLongitude = tLocationString.toString().midRef(0, tSeparator).toString().toDouble();
         qreal tLatitude = tLocationString.toString().midRef(tSeparator+1).toString().toDouble();
-        tLocation = new Station::Location(tLongitude, tLatitude);
+        tLocation.setLongitude(tLongitude);
+        tLocation.setLatitude(tLatitude);
     }
-    if (! mReader.attributes().hasAttribute("id"))
-        mReader.raiseError("station without id");
-    QString tId = mReader.attributes().value("id").toString();
 
     // Process the contents
     QString tName = capitalize(mReader.readElementText());
@@ -124,22 +141,8 @@ Station* StationReader::readStation()
         mReader.readNext();
 
     // Construct the object
-    Station *oStation = new Station(tId);
-    oStation->setName(tName);
-    if (tLocation != 0)
-    {
-        oStation->setLocation(*tLocation);
-        delete tLocation;
-    }
+    Station oStation(tId);
+    oStation.setName(tName);
+    oStation.setLocation(tLocation);
     return oStation;
-}
-
-
-//
-// Auxiliary
-//
-
-void StationReader::allocate()
-{
-    mStations = new QMap<QString, StationPointer>();
 }

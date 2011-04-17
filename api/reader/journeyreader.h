@@ -3,42 +3,53 @@
 //
 
 // Include guard
-#ifndef CONNECTIONREADER_H
-#define CONNECTIONREADER_H
+#ifndef JOURNEYREADER_H
+#define JOURNEYREADER_H
 
 // Includes
-#include "api/reader.h"
-#include "api/connection.h"
 #include <QList>
 #include <QDateTime>
+#include "api/reader.h"
+#include "api/data/journey.h"
+#include "api/data/poi.h"
+#include "api/data/connection.h"
+#include "api/data/vehicle.h"
+#include "api/data/station.h"
 
 namespace iRail
 {
-    class ConnectionReader : public Reader
+    class JourneyReader : public Reader
     {
     Q_OBJECT
     public:
-        ConnectionReader();
+        // Construction and destruction
+        JourneyReader();
+
+        // Reader interface
         void readDocument();
-        QList<ConnectionPointer>* connections(QDateTime& oTimestamp);
+
+        // Basic I/O
+        double version() const;
+        QDateTime timestamp() const;
+        QList<Journey> journeys() const;
     private:
         // Member data
-        QList<ConnectionPointer>* mConnections;
-        QDateTime mTimestamp;
         double mVersion;
+        QDateTime mTimestamp;
+        QList<Journey> mJourneys;
 
         // Tag readers
         void allocate();
         void readConnections();
-        Connection* readConnection();
-        Connection::POI readPOI(QString& iVehicle, QString& iDirection);
-        QString readVehicle();
+        Journey* readConnection();
+        POI readPOI(QString& iVehicle, QString& iDirection);
+        Vehicle readVehicle();
         int readPlatform();
         QDateTime readDatetime();
-        QString readStation();
-        QList<Connection::Line> readVias(QList<QString>& iVehicles, QList<QString>& iDirections);
-        Connection::Line readVia(QString& iVehicle, QString& iDirection);
+        Station readStation();
+        QList<Connection> readVias(QList<QString>& iVehicles, QList<QString>& iDirections);
+        Connection readVia(QString& iVehicle, QString& iDirection);
     };
 }
 
-#endif // CONNECTIONREADER_H
+#endif // JOURNEYREADER_H
