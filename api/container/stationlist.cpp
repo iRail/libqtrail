@@ -21,13 +21,12 @@ StationList::StationList(QObject* iParent) : QAbstractListModel(iParent)
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Station::IdRole] = "id";
     tRoleNames[Station::NameRole] = "name";
-    tRoleNames[Station::LocatableRole] = "locatable";
     tRoleNames[Station::LocationRole] = "location";
     setRoleNames(tRoleNames);
 }
 
 
-StationList::~Connection()
+StationList::~VehicleList()
 {
 }
 
@@ -56,8 +55,6 @@ QVariant StationList::data(const QModelIndex& iIndex, int iRole) const
     case Qt::DisplayRole:
     case Station::NameRole:
         return QVariant::fromValue(oStation->name());
-    case Station::LocatableRole:
-        return QVariant::fromValue(oStation->locatable());
     case Station::LocationRole:
         return QVariant::fromValue(oStation->location());
     default:
@@ -72,10 +69,24 @@ QVariant StationList::data(const QModelIndex& iIndex, int iRole) const
 
 QDataStream& iRail::operator<<(QDataStream& iStream, const StationList& iStationList)
 {
+    iStream << iStationList.mStations.size();
+    foreach (Station* tStation, iStationList.mStations)
+        iStream << *tStation;
+
     return iStream;
 }
 
 QDataStream& iRail::operator>>(QDataStream& iStream, StationList& iStationList)
 {
+    int tStationCount;
+    iStream >> tStationCount;
+    Q_ASSERT(iStationList.mStations.size() == 0);
+    for (int i = 0; i < tStationCount; i++)
+    {
+        Station* tStation;
+        iStream >> *tStation;
+        iJourneyList.mStations << tStation;
+    }
+
     return iStream;
 }

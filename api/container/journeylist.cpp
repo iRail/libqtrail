@@ -35,12 +35,12 @@ JourneyList::~Connection()
 //
 
 
-POI JourneyList::departure() const
+const POI& JourneyList::departure() const
 {
     return mDeparture;
 }
 
-POI JourneyList::arrival() const
+const POI& JourneyList::arrival() const
 {
     return mArrival;
 }
@@ -86,8 +86,8 @@ QDataStream& iRail::operator<<(QDataStream& iStream, const JourneyList& iJourney
     iStream << iJourneyList.mArrival;
 
     iStream << iJourneyList.mJourneys.size();
-    foreach (Connection tConnection, iJourneyList.mJourneys)
-        iStream << tConnection;
+    foreach (Journey* tJourney, iJourneyList.mJourneys)
+        iStream << *tJourney;
 
     return iStream;
 }
@@ -97,14 +97,14 @@ QDataStream& iRail::operator>>(QDataStream& iStream, JourneyList& iJourneyList)
     iStream >> iJourneyList.mDeparture;
     iStream >> iJourneyList.mArrival;
 
-    int tConnectionCount;
-    iStream >> tConnectionCount;
-    iJourneyList.mJourneys = QList<Connection>();
-    for (int i = 0; i < tConnectionCount; i++)
+    int tJourneyCount;
+    iStream >> tJourneyCount;
+    Q_ASSERT(iJourneyList.mJourneys.size() == 0);
+    for (int i = 0; i < tJourneyCount; i++)
     {
-        Connection tConnection;
-        iStream >> tConnection;
-        iJourneyList.mJourneys << tConnection;
+        Journey* tJourney;
+        iStream >> *tJourney;
+        iJourneyList.mJourneys << tJourney;
     }
 
     return iStream;

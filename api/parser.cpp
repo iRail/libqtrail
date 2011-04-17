@@ -38,7 +38,7 @@ QMap<QString, StationPointer>* Parser::parseStations(QIODevice *iDevice, QDateTi
 QList<ConnectionPointer>* Parser::parseConnections(QIODevice *iDevice, QDateTime& oTimestamp) throw(ParserException)
 {
     // Parse the document
-    ConnectionReader tReader;
+    JourneyReader tReader;
     tReader.read(iDevice);
 
     return tReader.connections(oTimestamp);
@@ -47,7 +47,7 @@ QList<ConnectionPointer>* Parser::parseConnections(QIODevice *iDevice, QDateTime
 VehiclePointer* Parser::parseVehicle(QIODevice *iDevice, QDateTime& oTimestamp) throw(ParserException)
 {
     // Parse the document
-    VehicleReader tReader;
+    StopReader tReader;
     tReader.read(iDevice);
 
     return tReader.vehicle(oTimestamp);
@@ -56,7 +56,7 @@ VehiclePointer* Parser::parseVehicle(QIODevice *iDevice, QDateTime& oTimestamp) 
 LiveboardPointer* Parser::parseLiveboard(QIODevice *iDevice, QDateTime& oTimestamp) throw(ParserException)
 {
     // Parse the document
-    LiveboardReader tReader;
+    DepartureReader tReader;
     tReader.read(iDevice);
 
     return tReader.liveboard(oTimestamp);

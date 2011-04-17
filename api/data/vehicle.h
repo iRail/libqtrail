@@ -23,7 +23,6 @@ namespace iRail
     {
     Q_OBJECT
     Q_PROPERTY(QString id READ id CONSTANT)
-    Q_PROPERTY(bool locatable READ locatable)
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Auxiliary structures

@@ -12,6 +12,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
+#include "api/exception.h"
 #include "api/data/vehicle.h"
 #include "api/data/connection.h"
 #include "api/data/poi.h"
@@ -24,7 +25,6 @@ namespace iRail
     public:
         // Construction and destruction
         StopList(const Vehicle& iVehicle, QObject* iParent = 0);
-        StopList(const Connection& iConnection, QObject* iParent = 0);
         ~StopList();
 
         // Basic I/O
@@ -38,11 +38,17 @@ namespace iRail
         friend QDataStream &operator<<(QDataStream& iStream, const StopList& iStopList);
         friend QDataStream &operator>>(QDataStream& iStream, StopList& iStopList);
 
+    signals:
+        // Data reply signals
+
+        // Data processing methods
+    private slots:
+
     private:
         Q_DISABLE_COPY(StopList);
-        Vehicle mVehicle;
-        Station mDeparture, mArrival;
-        bool mLimited;
+
+        // Member data
+        const Vehicle& mVehicle;
         QList<POI*> mStops;
     };
 

@@ -5,6 +5,7 @@
 // Includes
 #include "departurelist.h"
 #include <QString>
+#include "api/reader/departurereader.h"
 
 // Namespaces
 using namespace iRail;
@@ -29,7 +30,7 @@ DepartureList::DepartureList(const Station& iStation, QObject* iParent) : mStati
 // Basic I/O
 //
 
-Station DepartureList::station() const
+const Station& DepartureList::station() const
 {
     return mStation;
 }
@@ -66,6 +67,75 @@ QVariant DepartureList::data(const QModelIndex& iIndex, int iRole) const
 
 
 //
+// Data request methods
+//
+
+void DepartureList::fetch()
+{
+    // Construct URL
+    QUrl tURL = mRequestHelper.createBaseURL();
+    tURL.setPath("liveboard/");
+
+    // Set the parameters
+    tURL.addQueryItem("id", station().id());
+
+    // Create a request
+    try
+    {
+        network_request(getRequest(tURL), this, SLOT(process()));
+    }
+    catch (NetworkException& iException)
+    {
+        emit failure(iException);
+    }
+}
+
+void DepartureList::fetch(const QDateTime& iDatetime)
+{
+    // Construct URL
+    QUrl tURL = mRequestHelper.createBaseURL();
+    tURL.setPath("liveboard/");
+
+    // Set the parameters
+    tURL.addQueryItem("id", station().id());
+    tURL.addQueryItem("date", iDatetime.date().toString("ddMMyy"));
+    tURL.addQueryItem("time", iDatetime.time().toString("hhmm"));
+
+    // Create a request
+    try
+    {
+        network_request(getRequest(tURL), this, SLOT(process()));
+    }
+    catch (NetworkException& iException)
+        emit failure(iException);
+}
+
+
+//
+// Data processing methods
+//
+
+void DepartureList::process()
+{
+    // Parse the data
+    DepartureReader tReader;
+    try
+    {
+        tReader.read(mNetworkReply);
+    }
+    catch (ParserException& iException)
+            emit failure(iException);
+    QList<Departure> tDeparturesNew = tReader.departures();
+
+    // TODO
+
+    // Clean up
+    mRequestHelper.networkCleanup();
+    emit success();
+}
+
+
+//
 // Operators
 //
 
@@ -74,8 +144,8 @@ QDataStream& iRail::operator<<(QDataStream& iStream, const DepartureList& iDepar
     iStream << iDepartureList.mStation;
 
     iStream << iDepartureList.mDepartures.size();
-    foreach (DepartureList::Departure tDeparture, iDepartureList.mDepartures)
-        iStream << tDeparture;
+    foreach (Departure* tDeparture, iDepartureList.mDepartures)
+        iStream << *tDeparture;
 
     return iStream;
 }
@@ -86,11 +156,11 @@ QDataStream& iRail::operator>>(QDataStream& iStream, DepartureList& iDepartureLi
 
     int tDepartures;
     iStream >> tDepartures;
-    iDepartureList.mDepartures = QList<DepartureList::Departure>();
+    Q_ASSERT(iDepartureList.mDepartures.size() == 0);
     for (int i = 0; i < tDepartures; i++)
     {
-        DepartureList::Departure tDeparture;
-        iStream >> tDeparture;
+        Departure* tDeparture;
+        iStream >> *tDeparture;
         iDepartureList.mDepartures << tDeparture;
     }
 

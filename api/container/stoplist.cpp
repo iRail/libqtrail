@@ -18,23 +18,12 @@ StopList::StopList(const Vehicle& iVehicle, QObject* iParent) : mVehicle(iVehicl
 {
     qRegisterMetaType<StopList>("StopList");
 
-    mLimited = false;
-
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[POI::StationRole] = "station";
     tRoleNames[POI::DatetimeRole] = "datetime";
     tRoleNames[POI::DelayRole] = "delay";
     tRoleNames[POI::PlatformRole] = "platform";
     setRoleNames(tRoleNames);
-}
-
-StopList::StopList(const Connection& iConnection, QObject* iParent)
-{
-    this(iConnection.vehicle(), iParent);
-
-    mLimited = true;
-    mDeparture = iConnection.departure();
-    mArrival = iConnection.arrival();
 }
 
 StopList::~Connection()
@@ -46,7 +35,7 @@ StopList::~Connection()
 // Basic I/O
 //
 
-Vehicle StopList::vehicle() const
+const Vehicle& StopList::vehicle() const
 {
     return mVehicle;
 }
@@ -94,12 +83,9 @@ QDataStream& iRail::operator<<(QDataStream& iStream, const StopList& iStopList)
 {
     iStream << iStopList.mVehicle;
 
-    iStream << iStopList.mLimited;
-    if (iStopList.mLimited)
-    {
-        iStream << iStopList.mArrival;
-        iStream << iStopList.mDeparture;
-    }
+    iStream << iStopList.mStops.size();
+    foreach (POI* tStop, iStopList.mStops)
+        iStream << *tStop;
 
     return iStream;
 }
@@ -108,11 +94,14 @@ QDataStream& iRail::operator>>(QDataStream& iStream, StopList& iStopList)
 {
     iStream >> iStopList.mVehicle;
 
-    iStream >> iStopList.mLimited;
-    if (iStopList.mLimited)
+    int tStopCount;
+    iStream >> tStopCount;
+    Q_ASSERT(iStopList.mStops.size() == 0);
+    for (int i = 0; i < tStopCount; i++)
     {
-        iStream >> iStopList.mArrival;
-        iStream >> iStopList.mDeparture;
+        POI* tStop;
+        iStream >> *tStop;
+        iStopList.mStops << tStop;
     }
 
     return iStream;

@@ -24,9 +24,9 @@ SOURCES += \
     api/parser.cpp \
     api/reader.cpp \
     api/reader/stationreader.cpp \
-    api/reader/connectionreader.cpp \
-    api/reader/vehiclereader.cpp \
-    api/reader/liveboardreader.cpp \
+    api/reader/journeyreader.cpp \
+    api/reader/stopreader.cpp \
+    api/reader/departurereader.cpp \
     api/data/station.cpp \
     api/data/vehicle.cpp \
     api/data/departure.cpp \
@@ -36,7 +36,11 @@ SOURCES += \
     api/container/journeylist.cpp \
     api/container/departurelist.cpp \
     api/container/stationlist.cpp \
-    api/container/stoplist.cpp
+    api/container/stoplist.cpp \
+    api/requesthelper.cpp \
+    ../libirail/api/data/location.cpp \
+    ../libirail/api/container/vehiclelist.cpp \
+    ../libirail/api/container/connectionlist.cpp
 HEADERS += \
     asyncapi.h \
     cachedapi.h \
@@ -53,9 +57,9 @@ HEADERS += \
     api/parser.h \
     api/reader.h \
     api/reader/stationreader.h \
-    api/reader/connectionreader.h \
-    api/reader/vehiclereader.h \
-    api/reader/liveboardreader.h \
+    api/reader/journeyreader.h \
+    api/reader/stopreader.h \
+    api/reader/departurereader.h \
     api/data/station.h \
     api/data/vehicle.h \
     api/data/departure.h \
@@ -65,4 +69,8 @@ HEADERS += \
     api/container/journeylist.h \
     api/container/departurelist.h \
     api/container/stationlist.h \
-    api/container/stoplist.h
+    api/container/stoplist.h \
+    api/requesthelper.h \
+    ../libirail/api/data/location.h \
+    ../libirail/api/container/vehiclelist.h \
+    ../libirail/api/container/connectionlist.h

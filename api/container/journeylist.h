@@ -12,6 +12,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
+#include "api/exception.h"
 #include "api/data/poi.h"
 #include "api/data/journey.h"
 
@@ -26,8 +27,8 @@ namespace iRail
         ~Connection();
 
         // Basic I/O
-        POI departure() const;
-        POI arrival() const;
+        const POI& departure() const;
+        const POI& arrival() const;
 
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
@@ -37,10 +38,19 @@ namespace iRail
         friend QDataStream &operator<<(QDataStream& iStream, const JourneyList& iJourneyList);
         friend QDataStream &operator>>(QDataStream& iStream, JourneyList& iJourneyList);
 
+    signals:
+        // Data reply signals
+
+        // Data processing methods
+    private slots:
+
     private:
         Q_DISABLE_COPY(JourneyList);
+
+        // Member data
         QDateTime mTimestamp;
-        POI mDeparture, mArrival;
+        const POI& mDeparture;
+        const POI& mArrival;
         QList<Journey*> mJourneys;
     };
 

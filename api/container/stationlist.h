@@ -12,6 +12,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
+#include "api/exception.h"
 #include "api/data/station.h"
 
 namespace iRail
@@ -32,10 +33,17 @@ namespace iRail
         friend QDataStream &operator<<(QDataStream& iStream, const StationList& iStationList);
         friend QDataStream &operator>>(QDataStream& iStream, StationList& iStationList);
 
+    signals:
+        // Data reply signals
+
+        // Data processing methods
+    private slots:
+
     private:
         Q_DISABLE_COPY(StationList);
+
+        // Member data
         QDateTime mTimestamp;
-        POI mDeparture, mArrival;
         QList<Station*> mStations;
     };
 
