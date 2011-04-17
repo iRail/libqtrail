@@ -26,6 +26,12 @@ namespace iRail
         // Construction and destruction
         Journey(const POI& iDeparture, const POI& iArrival);
 
+        // Auxiliary structures
+        enum Roles {
+          DepartureRole = Qt::UserRole+1,
+          ArrivalRole
+        };
+
         // Basic I/O
         POI departure() const;
         POI arrival() const;

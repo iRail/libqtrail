@@ -11,27 +11,32 @@
 #include <QMetaType>
 #include <QString>
 #include <QDateTime>
-#include <QAbstractItemModel>
+#include <QAbstractListModel>
 #include "api/data/station.h"
 
 namespace iRail
 {
-    class StationList : public QAbstractItemModel
+    class StationList : public QAbstractListModel
     {
     Q_OBJECT
     public:
         // Construction and destruction
-        StationList();
+        StationList(QObject* iParent = 0);
         ~StationList();
+
+        // Model interface
+        int rowCount(const QModelIndex& iParent = QModelIndex()) const;
+        QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const;
 
         // Operators
         friend QDataStream &operator<<(QDataStream& iStream, const StationList& iStationList);
         friend QDataStream &operator>>(QDataStream& iStream, StationList& iStationList);
 
     private:
+        Q_DISABLE_COPY(StationList);
         QDateTime mTimestamp;
         POI mDeparture, mArrival;
-        QList<Journey> mConnections;
+        QList<Station*> mStations;
     };
 
     QDataStream &operator<<(QDataStream& iStream, const StationList& iStationList);

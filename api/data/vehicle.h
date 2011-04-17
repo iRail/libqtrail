@@ -28,6 +28,13 @@ namespace iRail
         // Auxiliary types
         typedef QPair<qreal, qreal> Location;
 
+        // Auxiliary structures
+        enum Roles {
+          IdRole = Qt::UserRole+1,
+          LocatableRole,
+          LocationRole
+        };
+
         // Construction and destruction
         Vehicle(QString iId);
         ~Vehicle();

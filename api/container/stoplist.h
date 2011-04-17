@@ -11,33 +11,39 @@
 #include <QMetaType>
 #include <QString>
 #include <QDateTime>
-#include <QAbstractItemModel>
+#include <QAbstractListModel>
 #include "api/data/vehicle.h"
 #include "api/data/connection.h"
 #include "api/data/poi.h"
 
 namespace iRail
 {
-    class StopList : public QAbstractItemModel
+    class StopList : public QAbstractListModel
     {
     Q_OBJECT
     public:
         // Construction and destruction
-        StopList(const Vehicle& iVehicle);
-        StopList(const Connection& iConnection);
+        StopList(const Vehicle& iVehicle, QObject* iParent = 0);
+        StopList(const Connection& iConnection, QObject* iParent = 0);
         ~StopList();
 
         // Basic I/O
         Vehicle vehicle() const;
+
+        // Model interface
+        int rowCount(const QModelIndex& iParent = QModelIndex()) const;
+        QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const;
 
         // Operators
         friend QDataStream &operator<<(QDataStream& iStream, const StopList& iStopList);
         friend QDataStream &operator>>(QDataStream& iStream, StopList& iStopList);
 
     private:
+        Q_DISABLE_COPY(StopList);
         Vehicle mVehicle;
         Station mDeparture, mArrival;
         bool mLimited;
+        QList<POI*> mStops;
     };
 
     QDataStream &operator<<(QDataStream& iStream, const StopList& iStopList);

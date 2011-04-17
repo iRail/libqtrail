@@ -26,6 +26,14 @@ namespace iRail
         POI(const QString& iStation, const QDateTime& iDatetime);
         ~POI();
 
+        // Auxiliary structures
+        enum Roles {
+          StationRole = Qt::UserRole+1,
+          DatetimeRole,
+          DelayRole,
+          PlatformRole
+        };
+
         // Basic I/O
         QString station() const;
         QDateTime datetime() const;

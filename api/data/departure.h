@@ -24,6 +24,12 @@ namespace iRail
         // Construction and destruction
         Departure(const QString& iVehicle, const POI& iPOI);
 
+        // Auxiliary structures
+        enum Roles {
+          VehicleRole = Qt::UserRole+1,
+          POIRole
+        };
+
         // Basic I/O
         QString vehicle() const;
         POI poi() const;
