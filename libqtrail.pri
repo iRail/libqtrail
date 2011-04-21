@@ -2,19 +2,9 @@
 # Base configuration
 #
 
-# Path configuration
-INCLUDEPATH += $$PWD
-DEPENDPATH += $$PWD
-
 QT       += network xml
 
-RESOURCES += i18n_libirail.qrc \
-    api/parser.qrc
-TRANSLATIONS += \
-    i18n_libirail/nl.ts \
-    i18n_libirail/fr.ts \
-    i18n_libirail/de.ts \
-    i18n_libirail/en.ts
+RESOURCES += api/parser.qrc
 SOURCES += \
     asyncapi.cpp \
     cachedapi.cpp \
