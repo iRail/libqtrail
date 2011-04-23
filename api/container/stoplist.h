@@ -27,13 +27,13 @@ namespace iRail
     Q_OBJECT
     private:
         // Construction and destruction
-        StopList(const Vehicle& iVehicle, QObject* iParent = 0);
+        StopList(const Vehicle::Id& iVehicleId, QObject* iParent = 0);
         ~StopList();
         friend class ContainerCache;
 
         // Basic I/O
     public:
-        Vehicle vehicle() const;
+        Vehicle::Id vehicleId() const;
 
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
@@ -53,7 +53,7 @@ namespace iRail
         Q_DISABLE_COPY(StopList);
 
         // Member data
-        const Vehicle& mVehicle;
+        Vehicle::Id mVehicleId;
         QHash<Stop::Id, Stop*> mStops;
     };
 

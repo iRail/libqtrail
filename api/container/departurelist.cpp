@@ -15,7 +15,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-DepartureList::DepartureList(const Station& iStation, QObject* iParent) : mStation(iStation), QAbstractListModel(iParent)
+DepartureList::DepartureList(const Station::Id& iStationId, QObject* iParent) : mStationId(iStationId), QAbstractListModel(iParent)
 {
     qRegisterMetaType<DepartureList>("DepartureList");
     qRegisterMetaType<DepartureListPointer>("DepartureListPointer");
@@ -27,14 +27,20 @@ DepartureList::DepartureList(const Station& iStation, QObject* iParent) : mStati
     setRoleNames(tRoleNames);
 }
 
+DepartureList::~DepartureList()
+{
+    qDeleteAll(mDepartures.values());
+    mDepartures.clear();
+}
+
 
 //
 // Basic I/O
 //
 
-const Station& DepartureList::station() const
+const Station& DepartureList::stationId() const
 {
-    return mStation;
+    return mStationId;
 }
 
 
@@ -82,7 +88,7 @@ void DepartureList::fetch()
     tURL.setPath("liveboard/");
 
     // Set the parameters
-    tURL.addQueryItem("id", station().id());
+    tURL.addQueryItem("id", stationId().id());
 
     // Create a request
     try
@@ -102,7 +108,7 @@ void DepartureList::fetch(const QDateTime& iDatetime)
     tURL.setPath("liveboard/");
 
     // Set the parameters
-    tURL.addQueryItem("id", station().id());
+    tURL.addQueryItem("id", stationId().id());
     tURL.addQueryItem("date", iDatetime.date().toString("ddMMyy"));
     tURL.addQueryItem("time", iDatetime.time().toString("hhmm"));
 

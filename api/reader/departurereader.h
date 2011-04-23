@@ -7,7 +7,7 @@
 #define DEPARTUREREADER_H
 
 // Includes
-#include <QList>
+#include <QHash>
 #include <QDateTime>
 #include "api/reader.h"
 #include "api/data/departure.h"
@@ -29,20 +29,20 @@ namespace iRail
         double version() const;
         QDateTime timestamp() const;
         Station station() const;
-        QList<Departure> departures() const;
+        QHash<Departure::Id, Departure*> departures() const;
     private:
         // Member data
         double mVersion;
         QDateTime mTimestamp;
         Station mStation;
-        QList<Departure> mDepartures;
+        QHash<Departure::Id, Departure*> mDepartures;
 
         // Tag readers
         void allocate();
         void readLiveboard();
         QString readStation();
-        QList<Departure> readDepartures();
-        Departure readDeparture();
+        QHash<Departure::Id, Departure*> readDepartures();
+        Departure* readDeparture();
         QString readVehicle();
         QDateTime readDatetime();
         double readDelay();

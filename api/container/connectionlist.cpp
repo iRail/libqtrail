@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-ConnectionList::ConnectionList(const Journey& iJourney, QObject* iParent) : mJourney(iJourney), QAbstractListModel(iParent)
+ConnectionList::ConnectionList(const Journey::Id& iJourneyId, QObject* iParent) : mJourneyId(iJourneyId), QAbstractListModel(iParent)
 {
     qRegisterMetaType<ConnectionList>("ConnectionList");
     qRegisterMetaType<ConnectionListPointer>("ConnectionListPointer");
@@ -28,14 +28,20 @@ ConnectionList::ConnectionList(const Journey& iJourney, QObject* iParent) : mJou
     setRoleNames(tRoleNames);
 }
 
+ConnectionList::~ConnectionList()
+{
+    qDeleteAll(mConnections.values());
+    mConnections.clear();
+}
+
 
 //
 // Basic I/O
 //
 
-const Journey& ConnectionList::journey() const
+const Journey& ConnectionList::journeyId() const
 {
-    return mJourney;
+    return mJourneyId;
 }
 
 

@@ -63,7 +63,7 @@ Station DepartureReader::station() const
     return mStation;
 }
 
-QList<Departure> DepartureReader::departures() const
+QHash<Departure::Id, Departure*> DepartureReader::departures() const
 {
     return mDepartures;
 }
@@ -138,7 +138,7 @@ Station DepartureReader::readStation()
     // TODO: load from cache? do request? hmm
 }
 
-QList<Liveboard::Departure> DepartureReader::readDepartures()
+QHash<Departure::Id, Departure*> DepartureReader::readDepartures()
 {
     // Process the attributes
     int tNumber;
@@ -152,7 +152,7 @@ QList<Liveboard::Departure> DepartureReader::readDepartures()
         mReader.raiseError("could not find departures count attribute");
 
     // Process the tags
-    QList<Liveboard::Departure> oDepartures;
+    QHash<Departure::Id, Departure*> oDepartures;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -165,7 +165,10 @@ QList<Liveboard::Departure> DepartureReader::readDepartures()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-                oDepartures << readDeparture();
+            {
+                Departure* tDeparture = readDeparture;
+                oDepartures.insert(tDeparture->id(), tDeparture);
+            }
             else
                 skipUnknownElement();
         }
@@ -178,7 +181,7 @@ QList<Liveboard::Departure> DepartureReader::readDepartures()
     return oDepartures;
 }
 
-Liveboard::Departure DepartureReader::readDeparture()
+Departure* DepartureReader::readDeparture()
 {
     // Process the attributes
     unsigned int tDelay = 0;
@@ -217,14 +220,22 @@ Liveboard::Departure DepartureReader::readDeparture()
             mReader.readNext();
     }
 
-    // Construct the object
-    Liveboard::Departure tDeparture;
-    tDeparture.station = tStation;
-    tDeparture.vehicle = tVehicle;
-    tDeparture.datetime = tDateTime;
-    tDeparture.delay = tDelay;
-    tDeparture.platform = tPlatform;
-    return tDeparture;
+    // Construct the stop
+    // TODO: put in anonymous StopList
+    Stop::Id tStopId;
+    tStopId.station = tStation;
+    tStopId.datetime = tDateTime;
+    Stop* tStop = new Stop(tStopId);
+    tStop->setPlatform(tPlatform);
+
+    // Construct the id
+    Departure::Id tDepartureId;
+    tDepartureId.origin = tStop;
+    tDepartureId.vehicle = tVehicle;
+    Departure* oDeparture = new Departure(tDepartureId);
+    oDeparture->setDelay(tDelay);
+
+    return oDeparture;
 }
 
 QString DepartureReader::readVehicle()

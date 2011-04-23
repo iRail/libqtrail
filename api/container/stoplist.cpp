@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-StopList::StopList(const Vehicle& iVehicle, QObject* iParent) : mVehicle(iVehicle), QAbstractListModel(iParent)
+StopList::StopList(const Vehicle::Id& iVehicleId, QObject* iParent) : mVehicleId(iVehicleId), QAbstractListModel(iParent)
 {
     qRegisterMetaType<StopList>("StopList");
     qRegisterMetaType<StopListPointer>("StopListPointer");
@@ -26,8 +26,10 @@ StopList::StopList(const Vehicle& iVehicle, QObject* iParent) : mVehicle(iVehicl
     setRoleNames(tRoleNames);
 }
 
-StopList::~Connection()
+StopList::~StopList()
 {
+    qDeleteAll(mStops.values());
+    mStops.clear();
 }
 
 
@@ -35,9 +37,9 @@ StopList::~Connection()
 // Basic I/O
 //
 
-const Vehicle& StopList::vehicle() const
+const Vehicle::Id& StopList::vehicleId() const
 {
-    return mVehicle;
+    return mVehicleId;
 }
 
 

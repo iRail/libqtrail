@@ -29,8 +29,10 @@ StationList::StationList(QObject* iParent) : QAbstractListModel(iParent)
 }
 
 
-StationList::~VehicleList()
+StationList::~StationList()
 {
+    qDeleteAll(mStations.values());
+    mStations.clear();
 }
 
 
@@ -124,6 +126,8 @@ void StationList::process()
         {
             if (mStations[tId] != tStationsNew[tId])
             {
+                // OPM: als een reader diepere wijzigingen kan veroorzaken (vb. een deel van de id()),
+                // moet die ook veranderd worden. Hoe? aangzien const...
                 (*mStations[tId]) = *(tStationsNew[tId]);
 
                 QModelIndex tIndex = indexFromItem(mStations[tId]);

@@ -28,6 +28,8 @@ VehicleList::VehicleList(QObject* iParent) : QAbstractListModel(iParent)
 
 VehicleList::~VehicleList()
 {
+    qDeleteAll(mVehicles.values());
+    mVehicles.clear();
 }
 
 
@@ -37,7 +39,7 @@ VehicleList::~VehicleList()
 
 int VehicleList::rowCount(const QModelIndex& iParent) const
 {
-    return mStations.size();
+    return mVehicles.size();
 }
 
 QVariant VehicleList::data(const QModelIndex& iIndex, int iRole) const

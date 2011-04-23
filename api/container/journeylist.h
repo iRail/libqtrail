@@ -26,14 +26,14 @@ namespace iRail
     Q_OBJECT
     private:
         // Construction and destruction
-        Connection(const Stop& iDeparture, const Stop& iArrival, QObject* iParent = 0);
-        ~Connection();
+        JourneyList(const Station::Id& iOrigin, const Station::Id& iDestination, QObject* iParent = 0);
+        ~JourneyList();
         friend class ContainerCache;
 
         // Basic I/O
     public:
-        const Stop& departure() const;
-        const Stop& arrival() const;
+        const Stop& origin() const;
+        const Stop& destination() const;
 
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
@@ -54,8 +54,7 @@ namespace iRail
 
         // Member data
         QDateTime mTimestamp;
-        const Stop& mDeparture;
-        const Stop& mArrival;
+        Station::Id mOrigin, mDestination;
         QHash<Journey::Id, Journey*> mJourneys;
     };
 

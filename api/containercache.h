@@ -31,6 +31,7 @@ namespace iRail
         // Container request methods
         StationListPointer stationList() const;
         VehicleListPointer vehicleList() const;
+        StopListPointer stopList() const;
         StopListPointer stopList(const Vehicle& iVehicle) const;
         DepartureListPointer departureList(const Station& iStation) const;
         JourneyListPointer journeyList(const Stop& iDeparture, const Stop& iArrival) const;
