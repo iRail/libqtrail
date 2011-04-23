@@ -1,8 +1,0 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-    <file>i18n_libirail/nl.qm</file>
-    <file>i18n_libirail/fr.qm</file>
-    <file>i18n_libirail/de.qm</file>
-    <file>i18n_libirail/en.qm</file>
-</qresource>
-</RCC>
