@@ -67,7 +67,7 @@ StopList* ContainerCache::stopList() const
     return mStopList;
 }
 
-StopList* ContainerCache::stopList(const Vehicle::Id& iVehicleId) const
+StopList* ContainerCache::stopList(const Vehicle::AbstractId& iVehicleId) const
 {
     if (mStopLists.contains(iVehicleId))
         return mStopLists[iVehicleId];
@@ -79,7 +79,7 @@ StopList* ContainerCache::stopList(const Vehicle::Id& iVehicleId) const
     }
 }
 
-DepartureList* ContainerCache::departureList(const Station::Id& iStationId) const
+DepartureList* ContainerCache::departureList(const Station::AbstractId& iStationId) const
 {
     if (mDepartureLists.contains(iStationId))
         return mDepartureLists[iStationId];
@@ -91,9 +91,9 @@ DepartureList* ContainerCache::departureList(const Station::Id& iStationId) cons
     }
 }
 
-JourneyList* ContainerCache::journeyList(const Station::Id& iOrigin, const Station::Id& iDestination) const
+JourneyList* ContainerCache::journeyList(const Station::AbstractId& iOrigin, const Station::AbstractId& iDestination) const
 {
-    (QPair<Station::Id, Station::Id> iIdPair(iOrigin, iDestination);
+    (QPair<Station::AbstractId, Station::AbstractId> iIdPair(iOrigin, iDestination);
     if (mJourneyLists.contains(iIdPair))
         return mJourneyLists[iIdPair];
     else
@@ -104,7 +104,7 @@ JourneyList* ContainerCache::journeyList(const Station::Id& iOrigin, const Stati
     }
 }
 
-ConnectionList* ContainerCache::connectionList(const Journey::Id& iJourneyId) const
+ConnectionList* ContainerCache::connectionList(const Journey::AbstractId& iJourneyId) const
 {
     if (mConnectionLists.contains(iJourneyId))
         return mConnectionLists[iJourneyId];

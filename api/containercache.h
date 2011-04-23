@@ -32,20 +32,20 @@ namespace iRail
         StationList* stationList() const;
         VehicleList* vehicleList() const;
         StopList* stopList() const;
-        StopList* stopList(const Vehicle::Id& iVehicleId) const;
-        DepartureList* departureList(const Station::Id& iStationId) const;
-        JourneyList* journeyList(const Station::Id& iOriginId, const Station::Id& iDestinationId) const;
-        ConnectionList* connectionList(const Journey::Id& iJourneyId) const;
+        StopList* stopList(const Vehicle::AbstractId& iVehicleId) const;
+        DepartureList* departureList(const Station::AbstractId& iStationId) const;
+        JourneyList* journeyList(const Station::AbstractId& iOriginId, const Station::AbstractId& iDestinationId) const;
+        ConnectionList* connectionList(const Journey::AbstractId& iJourneyId) const;
 
     private:
         // Member data
         StationList* mStationList;
         VehicleList* mVehicleList;
         StopList* mStopList;
-        QHash<Vehicle::Id, StopList*> mStopLists;
-        QHash<Station::Id, DepartureList*> mDepartureLists;
-        QHash<QPair<Station::Id, Station::Id>, JourneyList*> mJourneyLists;
-        QHash<Journey::Id, ConnectionList*> mConnectionLists;
+        QHash<Vehicle::AbstractId, StopList*> mStopLists;
+        QHash<Station::AbstractId, DepartureList*> mDepartureLists;
+        QHash<QPair<Station::AbstractId, Station::AbstractId>, JourneyList*> mJourneyLists;
+        QHash<Journey::AbstractId, ConnectionList*> mConnectionLists;
 
         // Singleton
         static ContainerCache* mInstance;

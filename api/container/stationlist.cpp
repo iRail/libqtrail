@@ -18,7 +18,7 @@ using namespace iRail;
 StationList::StationList(QObject* iParent) : QAbstractListModel(iParent)
 {
     QHash<int, QByteArray> tRoleNames;
-    tRoleNames[Station::IdRole] = "id";
+    tRoleNames[Station::IIdRole] = "id";
     tRoleNames[Station::NameRole] = "name";
     tRoleNames[Station::LocationRole] = "location";
     setRoleNames(tRoleNames);
@@ -50,7 +50,7 @@ QVariant StationList::data(const QModelIndex& iIndex, int iRole) const
     Station* oStation = mStations.value(tStationId);
     switch (iRole)
     {
-    case Station::IdRole:
+    case Station::IIdRole:
         return QVariant::fromValue(oStation->id());
     case Qt::DisplayRole:
     case Station::NameRole:

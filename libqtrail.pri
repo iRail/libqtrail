@@ -12,6 +12,7 @@ SOURCES += \
     api/reader/journeyreader.cpp \
     api/reader/stopreader.cpp \
     api/reader/departurereader.cpp \
+    api/data.cpp \
     api/data/station.cpp \
     api/data/vehicle.cpp \
     api/data/departure.cpp \

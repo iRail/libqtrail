@@ -17,7 +17,7 @@ using namespace iRail;
 VehicleList::VehicleList(QObject* iParent) : QAbstractListModel(iParent)
 {
     QHash<int, QByteArray> tRoleNames;
-    tRoleNames[Station::IdRole] = "id";
+    tRoleNames[Station::IIdRole] = "id";
     tRoleNames[Station::LocationRole] = "location";
     setRoleNames(tRoleNames);
 }
@@ -50,7 +50,7 @@ QVariant VehicleList::data(const QModelIndex& iIndex, int iRole) const
     switch (iRole)
     {
     case Qt::DisplayRole:
-    case Vehicle::IdRole:
+    case Vehicle::IIdRole:
         return QVariant::fromValue(oVehicle->id());
     case Vehicle::LocationRole:
         return QVariant::fromValue(oVehicle->location());

@@ -32,8 +32,8 @@ namespace iRail
 
         // Basic I/O
     public:
-        const Stop& origin() const;
-        const Stop& destination() const;
+        const Station::Id& origin() const;
+        const Station::Id& destination() const;
 
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
@@ -53,7 +53,7 @@ namespace iRail
         // Member data
         QDateTime mTimestamp;
         Station::Id mOrigin, mDestination;
-        QHash<Journey::Id, Journey*> mJourneys;
+        QHash<Journey::AbstractId, Journey*> mJourneys;
     };
 }
 

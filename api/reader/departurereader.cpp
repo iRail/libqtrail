@@ -63,7 +63,7 @@ Station DepartureReader::station() const
     return mStation;
 }
 
-QHash<Departure::Id, Departure*> DepartureReader::departures() const
+QHash<Departure::Id&, Departure*> DepartureReader::departures() const
 {
     return mDepartures;
 }
@@ -138,10 +138,10 @@ Station DepartureReader::readStation()
     // TODO: load from cache? do request? hmm
 }
 
-QHash<Departure::Id, Departure*> DepartureReader::readDepartures()
+QHash<Departure::Id&, Departure*> DepartureReader::readDepartures()
 {
     // Process the attributes
-    QHash<Departure::Id, Departure*> oDepartures;
+    QHash<Departure::Id&, Departure*> oDepartures;
     if (mReader.attributes().hasAttribute("number"))
     {
         QStringRef tCountString = mReader.attributes().value("number");
@@ -218,14 +218,14 @@ Departure* DepartureReader::readDeparture()
 
     // Construct the stop
     // TODO: put in anonymous StopList
-    Stop::Id tStopId;
+    Stop::Id& tStopId;
     tStopId.station = tStation;
     tStopId.datetime = tDateTime;
     Stop* tStop = new Stop(tStopId);
     tStop->setPlatform(tPlatform);
 
     // Construct the id
-    Departure::Id tDepartureId;
+    Departure::Id& tDepartureId;
     tDepartureId.origin = tStop;
     tDepartureId.vehicle = tVehicle;
     Departure* oDeparture = new Departure(tDepartureId);

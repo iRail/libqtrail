@@ -69,10 +69,10 @@ QMap<QString, Station*> StationReader::stations() const
 // Tag readers
 //
 
-QHash<Station::Id, Station*> StationReader::readStations()
+QHash<Station::Id&, Station*> StationReader::readStations()
 {
     // Process the attributes
-    QHash<Station::Id, Station*> oStations;
+    QHash<Station::Id&, Station*> oStations;
     if (mReader.attributes().hasAttribute("timestamp"))
     {
         QStringRef tTimestampString = mReader.attributes().value("timestamp");
