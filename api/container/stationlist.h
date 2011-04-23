@@ -14,6 +14,7 @@
 #include <QDateTime>
 #include <QAbstractListModel>
 #include <QHash>
+#include "api/requesthelper.h"
 #include "api/exception.h"
 #include "api/data/station.h"
 #include "api/containercache.h"
@@ -36,20 +37,27 @@ namespace iRail
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
         QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const;
 
+        // Data request methods
+        void fetch();
+
         // Operators
         friend QDataStream &operator<<(QDataStream& iStream, const StationList& iStationList);
         friend QDataStream &operator>>(QDataStream& iStream, StationList& iStationList);
 
     signals:
         // Data reply signals
+        void success();
+        void failure(const Exception& iException);
 
         // Data processing methods
     private slots:
+        void process();
 
     private:
         Q_DISABLE_COPY(StationList);
 
         // Member data
+        RequestHelper mRequestHelper;
         QDateTime mTimestamp;
         QHash<Station::Id, Station*> mStations;
     };

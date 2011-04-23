@@ -7,7 +7,7 @@
 #define STATIONREADER_H
 
 // Includes
-#include <QMap>
+#include <QHash>
 #include <QDateTime>
 #include "api/reader.h"
 #include "api/data/station.h"
@@ -27,12 +27,12 @@ namespace iRail
         // Basic I/O
         double version() const;
         QDateTime timestamp() const;
-        QMap<QString, Station*> stations() const;
+        QHash<Station::Id, Station*> stations() const;
     private:
         // Member data
         double mVersion;
         QDateTime mTimestamp;
-        QMap<QString, Station*> mStations;
+        QHash<Station::Id, Station*> mStations;
 
         // Tag readers
         void allocate();

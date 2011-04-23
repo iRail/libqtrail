@@ -4,6 +4,7 @@
 
 // Includes
 #include "stationlist.h"
+#include "api/reader/stationreader.h"
 #include <QString>
 
 // Namespaces
@@ -63,6 +64,89 @@ QVariant StationList::data(const QModelIndex& iIndex, int iRole) const
     default:
         return QVariant();
     }
+}
+
+QModelIndex StationList::indexFromItem(const Station* iStation) const
+{
+    Q_ASSERT(iStation);
+    for(int tRow = 0; tRow < mStations.size(); ++tRow)
+    {
+      if(mStations.values().at(tRow) == item)
+          return index(tRow);
+    }
+    return QModelIndex();
+}
+
+
+//
+// Data request methods
+//
+
+void StationList::fetch()
+{
+    // Construct URL
+    QUrl tURL = mRequestHelper.createBaseURL();
+    tURL.setPath("stations/");
+
+    // Create a request
+    try
+    {
+        network_request(getRequest(tURL), this, SLOT(process()));
+    }
+    catch (NetworkException& iException)
+    {
+        emit failure(iException);
+    }
+}
+
+
+//
+// Data processing methods
+//
+
+void StationList::process()
+{
+    // Parse the data
+    StationReader tReader;
+    try
+    {
+        tReader.read(mNetworkReply);
+    }
+    catch (ParserException& iException)
+            emit failure(iException);
+    QHash<Station::Id, Station*> tStationsNew = tReader.departures();
+
+    // Process the stations
+    QList<Station::Id> tStationsRemoved = mStations.keys();
+    foreach (Station::Id tId, tStationsNew.keys())
+    {
+        if (mStations.contains(tId))
+        {
+            if (mStations[tId] != tStationsNew[tId])
+            {
+                mStations[tId]->update(tStationsNew[tId]);
+                QModelIndex tIndex = indexFromItem(mStations[tId]);
+                if(tIndex.isValid())
+                  emit dataChanged(tIndex, tIndex);
+            }
+            tStationsRemoved.removeOne(tId);
+        }
+        else
+        {
+            mStations.insert(tId, tStationsNew[tId]);
+            tStationsNew.removeOne(tId);
+        }
+    }
+
+    // Remove redundant or removed data
+    foreach (Station::Id tId, tStationsNew.keys())
+        delete tStationsNew[tId];
+    foreach (Station::Id tId, tStationsRemoved.keys())
+        delete mStations.take(tId);
+
+    // Clean up
+    mRequestHelper.networkCleanup();
+    emit success();
 }
 
 

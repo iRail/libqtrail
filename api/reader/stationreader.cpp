@@ -103,8 +103,8 @@ void StationReader::readStations()
         {
             if (mReader.name() == "station")
             {
-                Station tStation = readStation();
-                mStations.insert(tStation.id(), tStation);
+                Station* tStation = readStation();
+                mStations.insert(tStation->id(), tStation);
             }
             else
                 skipUnknownElement();
