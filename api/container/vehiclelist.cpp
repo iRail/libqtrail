@@ -47,7 +47,8 @@ QVariant VehicleList::data(const QModelIndex& iIndex, int iRole) const
     if (iIndex.row() > (mVehicles.size()-1) )
         return QVariant();
 
-    Vehicle* oVehicle = mVehicles.at(iIndex.row());
+    // TODO: sort through virtual mapping structure
+    Vehicle* oVehicle = mVehicles.values().at(iIndex.row());
     switch (iRole)
     {
     case Qt::DisplayRole:
@@ -58,33 +59,4 @@ QVariant VehicleList::data(const QModelIndex& iIndex, int iRole) const
     default:
         return QVariant();
     }
-}
-
-
-//
-// Operators
-//
-
-QDataStream& iRail::operator<<(QDataStream& iStream, const VehicleList& iVehicleList)
-{
-    iStream << iVehicleList.mVehicles.size();
-    foreach (Vehicle* tVehicles, iVehicleList.mVehicles)
-        iStream << *tVehicles;
-
-    return iStream;
-}
-
-QDataStream& iRail::operator>>(QDataStream& iStream, VehicleList& iVehicleList)
-{
-    int tVehicleCount;
-    iStream >> tVehicleCount;
-    Q_ASSERT(iVehicleList.mVehicles.size() == 0);
-    for (int i = 0; i < tVehicleCount; i++)
-    {
-        Vehicle* tVehicle;
-        iStream >> *tVehicle;
-        iVehicleList.mVehicles << tVehicle;
-    }
-
-    return iStream;
 }

@@ -29,8 +29,8 @@ namespace iRail
         typedef QString Id;
         enum Roles
         {
-          IdRole = Qt::UserRole+1,
-          LocationRole
+            IdRole = Qt::UserRole+1,
+            LocationRole
         };
 
         // Construction and destruction

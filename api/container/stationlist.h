@@ -13,6 +13,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
+#include <QHash>
 #include "api/exception.h"
 #include "api/data/station.h"
 #include "api/containercache.h"
@@ -50,7 +51,7 @@ namespace iRail
 
         // Member data
         QDateTime mTimestamp;
-        QMap<QString, Station*> mStations;
+        QHash<Station::Id, Station*> mStations;
     };
 
     typedef QSharedPointer<StationList> StationListPointer;

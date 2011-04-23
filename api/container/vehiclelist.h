@@ -13,6 +13,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
+#include <QHash>
 #include "api/exception.h"
 #include "api/data/vehicle.h"
 #include "api/containercache.h"
@@ -44,13 +45,10 @@ namespace iRail
 
         // Member data
         QDateTime mTimestamp;
-        QMap<QString, Vehicle*> mVehicles;
+        QHash<Vehicle::Id, Vehicle*> mVehicles;
     };
 
     typedef QSharedPointer<VehicleList> VehicleListPointer;
-
-    QDataStream &operator<<(QDataStream& iStream, const VehicleList& iVehicleList);
-    QDataStream &operator>>(QDataStream& iStream, VehicleList& iVehicleList);
 }
 
 Q_DECLARE_METATYPE(iRail::VehicleList)

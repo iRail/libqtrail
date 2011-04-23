@@ -22,7 +22,8 @@ DepartureList::DepartureList(const Station& iStation, QObject* iParent) : mStati
 
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Departure::VehicleRole] = "vehicle";
-    tRoleNames[Departure::StopRole] = "poi";
+    tRoleNames[Departure::OriginRole] = "origin";
+    tRoleNames[Departure::DelayRole] = "delay";
     setRoleNames(tRoleNames);
 }
 
@@ -53,14 +54,17 @@ QVariant DepartureList::data(const QModelIndex& iIndex, int iRole) const
     if (iIndex.row() > (mDepartures.size()-1) )
         return QVariant();
 
-    Departure* oDeparture = mDepartures.at(iIndex.row());
+    // TODO: sort through virtual mapping structure
+    Departure* oDeparture = mDepartures.values().at(iIndex.row());
     switch (iRole)
     {
     case Qt::DisplayRole:
     case Departure::VehicleRole:
         return QVariant::fromValue(oDeparture->vehicle());
-    case Departure::StopRole:
+    case Departure::OriginRole:
         return QVariant::fromValue(oDeparture->stop());
+    case Departure::DelayRole:
+        return QVariant::fromValue(oDeparture->delay());
     default:
         return QVariant();
     }
@@ -133,37 +137,4 @@ void DepartureList::process()
     // Clean up
     mRequestHelper.networkCleanup();
     emit success();
-}
-
-
-//
-// Operators
-//
-
-QDataStream& iRail::operator<<(QDataStream& iStream, const DepartureList& iDepartureList)
-{
-    iStream << iDepartureList.mStation;
-
-    iStream << iDepartureList.mDepartures.size();
-    foreach (Departure* tDeparture, iDepartureList.mDepartures)
-        iStream << *tDeparture;
-
-    return iStream;
-}
-
-QDataStream& iRail::operator>>(QDataStream& iStream, DepartureList& iDepartureList)
-{
-    iStream >> iDepartureList.mStation;
-
-    int tDepartures;
-    iStream >> tDepartures;
-    Q_ASSERT(iDepartureList.mDepartures.size() == 0);
-    for (int i = 0; i < tDepartures; i++)
-    {
-        Departure* tDeparture;
-        iStream >> *tDeparture;
-        iDepartureList.mDepartures << tDeparture;
-    }
-
-    return iStream;
 }

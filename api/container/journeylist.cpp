@@ -20,8 +20,9 @@ JourneyList::JourneyList(const Stop& iDeparture, const Stop& iArrival, QObject* 
     qRegisterMetaType<JourneyListPointer>("JourneyListPointer");
 
     QHash<int, QByteArray> tRoleNames;
-    tRoleNames[Journey::DepartureRole] = "departure";
-    tRoleNames[Journey::ArrivalRole] = "arrival";
+    tRoleNames[Journey::OriginRole] = "origin";
+    tRoleNames[Journey::DestinationRole] = "destination";
+    tRoleNames[Journey::DelayRole] = "delay";
     setRoleNames(tRoleNames);
 }
 
@@ -63,50 +64,18 @@ QVariant JourneyList::data(const QModelIndex& iIndex, int iRole) const
     if (iIndex.row() > (mJourneys.size()-1) )
         return QVariant();
 
-    Journey* oJourney = mJourneys.at(iIndex.row());
+    // TODO: sort through virtual mapping structure
+    Journey* oJourney = mJourneys.values().at(iIndex.row());
     switch (iRole)
     {
     case Qt::DisplayRole:
-    case Journey::DepartureRole:
-        return QVariant::fromValue(oJourney->departure());
-    case Journey::ArrivalRole:
-        return QVariant::fromValue(oJourney->arrival());
+    case Journey::OriginRole:
+        return QVariant::fromValue(oJourney->origin());
+    case Journey::DestinationRole:
+        return QVariant::fromValue(oJourney->destination());
+    case Journey::DelayRole:
+        return QVariant::fromValue(oJourney->delay());
     default:
         return QVariant();
     }
-}
-
-
-//
-// Operators
-//
-
-QDataStream& iRail::operator<<(QDataStream& iStream, const JourneyList& iJourneyList)
-{
-    iStream << iJourneyList.mDeparture;
-    iStream << iJourneyList.mArrival;
-
-    iStream << iJourneyList.mJourneys.size();
-    foreach (Journey* tJourney, iJourneyList.mJourneys)
-        iStream << *tJourney;
-
-    return iStream;
-}
-
-QDataStream& iRail::operator>>(QDataStream& iStream, JourneyList& iJourneyList)
-{
-    iStream >> iJourneyList.mDeparture;
-    iStream >> iJourneyList.mArrival;
-
-    int tJourneyCount;
-    iStream >> tJourneyCount;
-    Q_ASSERT(iJourneyList.mJourneys.size() == 0);
-    for (int i = 0; i < tJourneyCount; i++)
-    {
-        Journey* tJourney;
-        iStream >> *tJourney;
-        iJourneyList.mJourneys << tJourney;
-    }
-
-    return iStream;
 }

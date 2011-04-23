@@ -22,7 +22,6 @@ StopList::StopList(const Vehicle& iVehicle, QObject* iParent) : mVehicle(iVehicl
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Stop::StationRole] = "station";
     tRoleNames[Stop::DatetimeRole] = "datetime";
-    tRoleNames[Stop::DelayRole] = "delay";
     tRoleNames[Stop::PlatformRole] = "platform";
     setRoleNames(tRoleNames);
 }
@@ -58,7 +57,8 @@ QVariant StopList::data(const QModelIndex& iIndex, int iRole) const
     if (iIndex.row() > (mStops.size()-1) )
         return QVariant();
 
-    Stop* oStop = mStops.at(iIndex.row());
+    // TODO: sort through virtual mapping structure
+    Stop* oStop = mStops.values().at(iIndex.row());
     switch (iRole)
     {
     case Qt::DisplayRole:
@@ -66,44 +66,9 @@ QVariant StopList::data(const QModelIndex& iIndex, int iRole) const
         return QVariant::fromValue(oStop->station());
     case Stop::DatetimeRole:
         return QVariant::fromValue(oStop->datetime());
-    case Stop::DelayRole:
-        return QVariant::fromValue(oStop->delay());
     case Stop::PlatformRole:
         return QVariant::fromValue(oStop->platform());
     default:
         return QVariant();
     }
-}
-
-
-//
-// Operators
-//
-
-QDataStream& iRail::operator<<(QDataStream& iStream, const StopList& iStopList)
-{
-    iStream << iStopList.mVehicle;
-
-    iStream << iStopList.mStops.size();
-    foreach (Stop* tStop, iStopList.mStops)
-        iStream << *tStop;
-
-    return iStream;
-}
-
-QDataStream& iRail::operator>>(QDataStream& iStream, StopList& iStopList)
-{
-    iStream >> iStopList.mVehicle;
-
-    int tStopCount;
-    iStream >> tStopCount;
-    Q_ASSERT(iStopList.mStops.size() == 0);
-    for (int i = 0; i < tStopCount; i++)
-    {
-        Stop* tStop;
-        iStream >> *tStop;
-        iStopList.mStops << tStop;
-    }
-
-    return iStream;
 }

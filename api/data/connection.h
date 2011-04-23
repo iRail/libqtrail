@@ -25,9 +25,6 @@ namespace iRail
     Q_PROPERTY(Vehicle vehicle READ vehicle WRITE setVehicle)
     Q_PROPERTY(uint delay READ relay WRITE setDelay)
     public:
-        // Construction and destruction
-        Connection(Id iId);
-
         // Auxiliary structures
         struct Id
         {
@@ -38,12 +35,15 @@ namespace iRail
         };
         enum Roles
         {
-            DepartureRole = Qt::UserRole+1,
-            ArrivalRole,
+            OriginRole = Qt::UserRole+1,
+            DestinationRole,
             TerminusRole,
             VehicleRole,
             DelayRole
         };
+
+        // Construction and destruction
+        Connection(Id iId);
 
         // Basic I/O
         Id id() const;

@@ -30,6 +30,16 @@ Journey::Id id() const
     return mId;
 }
 
+unsigned int Journey::delay() const
+{
+    return mDelay;
+}
+
+void Journey::setDelay(unsigned int iDelay)
+{
+    mDelay = iDelay;
+}
+
 
 //
 // Operators

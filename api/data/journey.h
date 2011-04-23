@@ -21,10 +21,8 @@ namespace iRail
     {
     Q_OBJECT
     Q_PROPERTY(Id id READ id CONSTANT)
+    Q_PROPERTY(uint delay READ relay WRITE setDelay)
     public:
-        // Construction and destruction
-        Journey(Stop const* iDeparture, Stop const* iArrival);
-
         // Auxiliary structures
         struct Id
         {
@@ -36,12 +34,18 @@ namespace iRail
 
         enum Roles
         {
-          DepartureRole = Qt::UserRole+1,
-          ArrivalRole
+            OriginRole = Qt::UserRole+1,
+            DestinationRole,
+            DelayRole
         };
+
+        // Construction and destruction
+        Journey(Stop const* iDeparture, Stop const* iArrival);
 
         // Basic I/O
         Id id() const;
+        unsigned int delay() const;
+        void setDelay(unsigned int iDelay);
 
         // Operators
         friend bool operator==(const Journey& lhs, const Journey& rhs);
@@ -49,6 +53,7 @@ namespace iRail
     private:
         Q_DISABLE_COPY(Journey);
         Id mId;
+        unsigned int mDelay;
     };
 
     bool operator==(const Journey& lhs, const Journey& rhs);

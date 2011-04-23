@@ -22,10 +22,6 @@ namespace iRail
     Q_PROPERTY(Id id READ id CONSTANT)
     Q_PROPERTY(uint platform READ platform WRITE setPlatform)
     public:
-        // Construction and destruction
-        Stop(Id iId);
-        ~Stop();
-
         // Auxiliary structures
         struct Id
         {
@@ -36,10 +32,14 @@ namespace iRail
         };
         enum Roles
         {
-          StationRole = Qt::UserRole+1,
-          DatetimeRole,
-          PlatformRole
+            StationRole = Qt::UserRole+1,
+            DatetimeRole,
+            PlatformRole
         };
+
+        // Construction and destruction
+        Stop(Id iId);
+        ~Stop();
 
         // Basic I/O
         Id id() const;

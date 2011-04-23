@@ -13,6 +13,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
+#include <QHash>
 #include "api/exception.h"
 #include "api/requesthelper.h"
 #include "api/data/station.h"
@@ -61,13 +62,10 @@ namespace iRail
         RequestHelper mRequestHelper;
         QDateTime mTimestamp;
         const Station& mStation;
-        QList<Departure*> mDepartures;
+        QHash<Departure::Id, Departure*> mDepartures;
     };
 
     typedef QSharedPointer<DepartureList> DepartureListPointer;
-
-    QDataStream &operator<<(QDataStream& iStream, const DepartureList& iDepartureList);
-    QDataStream &operator>>(QDataStream& iStream, DepartureList& iDepartureList);
 }
 
 Q_DECLARE_METATYPE(iRail::DepartureList)

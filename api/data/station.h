@@ -25,10 +25,11 @@ namespace iRail
     public:
         // Auxiliary structures
         typedef QString Id;
-        enum Roles {
-          IdRole = Qt::UserRole+1,
-          NameRole,
-          LocationRole
+        enum Roles
+        {
+            IdRole = Qt::UserRole+1,
+            NameRole,
+            LocationRole
         };
 
         // Construction and destruction

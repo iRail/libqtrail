@@ -13,6 +13,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
+#include <QHash>
 #include "api/exception.h"
 #include "api/data/connection.h"
 #include "api/data/journey.h"
@@ -45,13 +46,10 @@ namespace iRail
         // Member data
         QDateTime mTimestamp;
         const Journey& mJourney;
-        QList<Connection*> mConnections;
+        QHash<Connection::Id, Connection*> mConnections;
     };
 
     typedef QSharedPointer<ConnectionList> ConnectionListPointer;
-
-    QDataStream &operator<<(QDataStream& iStream, const ConnectionList& iVehicleList);
-    QDataStream &operator>>(QDataStream& iStream, ConnectionList& iVehicleList);
 }
 
 Q_DECLARE_METATYPE(iRail::ConnectionList)

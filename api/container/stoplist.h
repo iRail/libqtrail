@@ -13,6 +13,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
+#include <QHash>
 #include "api/exception.h"
 #include "api/data/vehicle.h"
 #include "api/data/connection.h"
@@ -53,13 +54,10 @@ namespace iRail
 
         // Member data
         const Vehicle& mVehicle;
-        QList<Stop*> mStops;
+        QHash<Stop::Id, Stop*> mStops;
     };
 
     typedef QSharedPointer<StopList> StopListPointer;
-
-    QDataStream &operator<<(QDataStream& iStream, const StopList& iStopList);
-    QDataStream &operator>>(QDataStream& iStream, StopList& iStopList);
 }
 
 Q_DECLARE_METATYPE(iRail::StopList)

@@ -18,6 +18,7 @@ StationList::StationList(QObject* iParent) : QAbstractListModel(iParent)
 {
     qRegisterMetaType<StationList>("StationList");
     qRegisterMetaType<StationListPointer>("StationListPointer");
+    qRegisterMetaTypeStreamOperators<StationListPointer>("StationListPointer");
 
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Station::IdRole] = "id";
@@ -48,7 +49,8 @@ QVariant StationList::data(const QModelIndex& iIndex, int iRole) const
     if (iIndex.row() > (mStations.size()-1) )
         return QVariant();
 
-    Station* oStation = mStations.at(iIndex.row());
+    // TODO: sort through virtual mapping structure
+    Station* oStation = mStations.values().at(iIndex.row());
     switch (iRole)
     {
     case Station::IdRole:

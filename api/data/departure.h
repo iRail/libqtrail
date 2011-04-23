@@ -23,9 +23,6 @@ namespace iRail
     Q_PROPERTY(Id id READ id CONSTANT)
     Q_PROPERTY(uint delay READ relay WRITE setDelay)
     public:
-        // Construction and destruction
-        Departure(Id iId);
-
         // Auxiliary structure
         struct Id
         {
@@ -37,9 +34,12 @@ namespace iRail
         enum Roles
         {
             VehicleRole = Qt::UserRole+1,
-            StopRole,
+            OriginRole,
             DelayRole
         };
+
+        // Construction and destruction
+        Departure(Id iId);
 
         // Basic I/O
         Id id() const;
