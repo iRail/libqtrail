@@ -124,7 +124,8 @@ void StationList::process()
         {
             if (mStations[tId] != tStationsNew[tId])
             {
-                mStations[tId]->update(tStationsNew[tId]);
+                (*mStations[tId]) = *(tStationsNew[tId]);
+
                 QModelIndex tIndex = indexFromItem(mStations[tId]);
                 if(tIndex.isValid())
                   emit dataChanged(tIndex, tIndex);

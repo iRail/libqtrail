@@ -73,6 +73,19 @@ bool iRail::operator==(const Connection& lhs, const Connection& rhs)
              lhs.vehicle() == rhs.vehicle());
 }
 
+iRail::Connection& iRail::operator=(const Connection& other)
+{
+    if (this != &other)
+    {
+        Q_ASSERT(this->id() == other.id());
+
+        setTerminus(other.terminus());
+        setVehicle(other.vehicle());
+        setDelay(other.delay());
+    }
+    return *this;
+}
+
 inline unsigned int qHash(const Connection::Id& iConnection)
 {
     return (3*qHash(iConnection.origin)) ^ (5*qHash(iConnection.destination));

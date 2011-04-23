@@ -55,9 +55,20 @@ void Vehicle::setLocation(Location const* iLocation)
 // Operators
 //
 
-bool iRail::operator==(const Connection& lhs, const Connection& rhs)
+bool iRail::operator==(const Vehicle& lhs, const Vehicle& rhs)
 {
     return  (lhs.id() == rhs.departure() &&
              lhs.locatable() == rhs.arrival() &&
              lhs.location() == rhs.terminus());
+}
+
+iRail::Vehicle& iRail::operator=(const Vehicle& other)
+{
+    if (this != &other)
+    {
+        Q_ASSERT(this->id() == other.id());
+
+        setLocation(other.location());
+    }
+    return *this;
 }

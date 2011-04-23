@@ -44,6 +44,7 @@ namespace iRail
 
         // Operators
         friend bool operator==(const Vehicle& lhs, const Vehicle& rhs);
+        friend Vehicle& operator=(const Vehicle& other);
 
     private:
         Q_DISABLE_COPY(Vehicle);
@@ -52,6 +53,7 @@ namespace iRail
     };
 
     bool operator==(const Vehicle& lhs, const Vehicle& rhs);
+    Vehicle& operator=(const Vehicle& other);
 }
 
 Q_DECLARE_METATYPE(iRail::Vehicle)

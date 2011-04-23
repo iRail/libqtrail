@@ -58,6 +58,17 @@ bool iRail::operator==(const Stop& lhs, const Stop& rhs)
              lhs.platform() == rhs.platform());
 }
 
+iRail::Stop& iRail::operator=(const Stop& other)
+{
+    if (this != &other)
+    {
+        Q_ASSERT(this->id() == other.id());
+
+        setPlatform(other.platform());
+    }
+    return *this;
+}
+
 inline unsigned int qHash(const Stop::Id& iStopId)
 {
     return qHash(iStopId.station) ^ qHash(iStopId.datetime);

@@ -45,6 +45,7 @@ namespace iRail
 
         // Operators
         friend bool operator==(const Station& lhs, const Station& rhs);
+        friend Station& operator=(const Station& other);
         friend QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
         friend QDataStream& operator>>(QDataStream& iStream, Station& iStation);
 
@@ -56,6 +57,7 @@ namespace iRail
     };
 
     bool operator==(const Station& lhs, const Station& rhs);
+    Station& operator=(const Station& other);
     QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
 }
 

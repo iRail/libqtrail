@@ -49,6 +49,7 @@ namespace iRail
 
         // Operators
         friend bool operator==(const Journey& lhs, const Journey& rhs);
+        friend Journey& operator=(const Journey& other);
 
     private:
         Q_DISABLE_COPY(Journey);
@@ -57,6 +58,7 @@ namespace iRail
     };
 
     bool operator==(const Journey& lhs, const Journey& rhs);
+    Journey& operator=(const Journey& other);
     inline unsigned int qHash(const Journey::Id& iJourneyId);
 }
 

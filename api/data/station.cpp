@@ -73,6 +73,18 @@ bool iRail::operator==(const Station& lhs, const Station& rhs)
              *(lhs.location()) == *(rhs.location()));
 }
 
+iRail::Station& iRail::operator=(const Station& other)
+{
+    if (this != &other)
+    {
+        Q_ASSERT(this->id() == other.id());
+
+        setName(other.name());
+        setLocation(other.location());
+    }
+    return *this;
+}
+
 QDataStream& iRail::operator<<(QDataStream& iStream, const Station& iStation)
 {
     iStream << iStation.mId;
