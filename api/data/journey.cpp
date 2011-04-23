@@ -14,10 +14,8 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Journey::Journey(Journey::Id iId) : mId(iId)
+Journey::Journey(IId iId) : mId(iId)
 {
-    qRegisterMetaType<Journey::Id>("Journey::Id");
-
     mDelay = 0;
 }
 
@@ -26,7 +24,7 @@ Journey::Journey(Journey::Id iId) : mId(iId)
 // Basic I/O
 //
 
-Journey::Id id() const
+Data::Id& id() const
 {
     return mId;
 }
@@ -65,14 +63,14 @@ Data& Journey::assign(const Data& data)
     return *this;
 }
 
-unsigned int Journey::Id::hash()
+unsigned int Journey::IId::hash() const
 {
     return (3*qHash(origin)) ^ (5*qHash(destination));
 }
 
-bool Journey::Id::equals(const Data::Id& data) const
+bool Journey::IId::equals(const Data::Id& data) const
 {
-    const Journey::Id& other = dynamic_cast<const Journey::Id&>(data);
+    const Journey::IId& other = dynamic_cast<const Journey::IId&>(data);
     return  (origin->id() == other.origin->id() &&
              destination->id() == other.destination->id());
 }

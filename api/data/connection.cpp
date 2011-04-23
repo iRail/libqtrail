@@ -14,10 +14,8 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Connection::Connection(Id iId) : mId(iId)
+Connection::Connection(IId iId) : mId(iId)
 {
-    qRegisterMetaType<Connection>("Connection::Id");
-
     mTerminus = 0;
     mVehicle = 0;
     mDelay = 0;
@@ -28,7 +26,7 @@ Connection::Connection(Id iId) : mId(iId)
 // Basic I/O
 //
 
-Id Connection::id() const
+Data::Id& Connection::id() const
 {
     return mId;
 }
@@ -91,14 +89,14 @@ Data& Connection::assign(const Data& data)
     return *this;
 }
 
-unsigned int Connection::Id::hash()
+unsigned int Connection::IId::hash() const
 {
     return (3*qHash(origin)) ^ (5*qHash(destination));
 }
 
-bool Connection::Id::equals(const Data::Id& data) const
+bool Connection::IId::equals(const Data::Id& data) const
 {
-    const Connection::Id& other = dynamic_cast<const Connection::Id&>(data);
+    const Connection::IId& other = dynamic_cast<const Connection::IId&>(data);
     return  (origin->id() == other.origin->id() &&
              destination->id() == other.destination->id());
 }

@@ -23,7 +23,7 @@ namespace iRail
     Q_PROPERTY(uint platform READ platform WRITE setPlatform)
     public:
         // Auxiliary structures
-        struct Id : Data::Id
+        struct IId : Data::Id
         {
             Station const* station;
             QDateTime datetime;
@@ -40,11 +40,11 @@ namespace iRail
         };
 
         // Construction and destruction
-        Stop(Id iId);
+        Stop(IId iId);
         ~Stop();
 
         // Basic I/O
-        Id& id() const;
+        Data::Id& id() const;
         unsigned int platform() const;
         void setPlatform(unsigned int iPlatform);
 
@@ -53,11 +53,9 @@ namespace iRail
         Data& assign(const Data& data);
 
     private:
-        Id mId;
+        IId mId;
         unsigned int mPlatform;
     };
 }
-
-Q_DECLARE_METATYPE(iRail::Stop::Id)
 
 #endif // STOP_H

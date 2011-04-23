@@ -26,7 +26,7 @@ namespace iRail
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Auxiliary structures
-        struct Id : Data::Id
+        struct IId : Data::Id
         {
             QString guid;
 
@@ -41,11 +41,11 @@ namespace iRail
         };
 
         // Construction and destruction
-        Vehicle(Id iId);
+        Vehicle(IId iId);
         ~Vehicle();
 
         // Basic I/O
-        Id& id() const;
+        Data::Id& id() const;
         const Location& location() const;
         void setLocation(const Location& iLocation);
 
@@ -54,11 +54,8 @@ namespace iRail
         Data& assign(const Data& data);
 
     private:
-        Id mId;
+        IId mId;
         Location mLocation;
     };
 }
-
-Q_DECLARE_METATYPE(iRail::Vehicle::Id)
-
 #endif // STATION_H

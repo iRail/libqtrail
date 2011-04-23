@@ -14,9 +14,8 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Vehicle::Vehicle(Vehicle::Id iId) : mId(iId)
+Vehicle::Vehicle(IId iId) : mId(iId)
 {
-    qRegisterMetaType<Vehicle::Id>("Vehicle::Id");
 }
 
 
@@ -29,7 +28,7 @@ Vehicle::~Vehicle()
 // Basic I/O
 //
 
-Vehicle::Id Vehicle::id() const
+Data::Id& Vehicle::id() const
 {
     return mId;
 }
@@ -69,13 +68,13 @@ Data& Vehicle::assign(const Data& data)
     return *this;
 }
 
-unsigned int Vehicle::Id::hash()
+unsigned int Vehicle::IId::hash() const
 {
     return qHash(guid);
 }
 
-bool Vehicle::Id::equals(const Data::Id& data) const
+bool Vehicle::IId::equals(const Data::Id& data) const
 {
-    const Vehicle::Id& other = dynamic_cast<const Vehicle::Id&>(data);
+    const Vehicle::IId& other = dynamic_cast<const Vehicle::IId&>(data);
     return  (guid == other.guid);
 }

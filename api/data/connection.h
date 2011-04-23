@@ -26,7 +26,7 @@ namespace iRail
     Q_PROPERTY(uint delay READ delay WRITE setDelay)
     public:
         // Auxiliary structures
-        struct Id : Data::Id
+        struct IId : Data::Id
         {
             Stop const* origin;
             Stop const* destination;
@@ -45,10 +45,10 @@ namespace iRail
         };
 
         // Construction and destruction
-        Connection(Id iId);
+        Connection(IId iId);
 
         // Basic I/O
-        Id& id() const;
+        Data::Id& id() const;
         Station const* terminus() const;
         void setTerminus(Station const* iTerminus);
         Vehicle const* vehicle() const;
@@ -61,13 +61,11 @@ namespace iRail
         Data& assign(const Data& data);
 
     private:
-        Id mId;
+        IId mId;
         Station const* mTerminus;
         Vehicle const* mVehicle;
         unsigned int mDelay;
     };
 }
-
-Q_DECLARE_METATYPE(iRail::Connection::Id)
 
 #endif // CONNECTION_H

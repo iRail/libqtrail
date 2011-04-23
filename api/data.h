@@ -37,28 +37,12 @@ namespace iRail
         virtual Data& assign(const Data& data) = 0;
 
         // Operators
-        virtual Data& operator=(const Data& data)
+        Data& operator=(const Data& data)
         {
             return assign(data);
         }
-
         friend bool operator==(const Data& lhs, const Data& rhs);
     };
-
-    unsigned int qHash(const Data::Id& id)
-    {
-        return id.hash();
-    }
-
-    bool operator==(const Data::Id& lhs, const Data::Id& rhs)
-    {
-        return lhs.equals(rhs);
-    }
-
-    bool operator==(const Data& lhs, const Data& rhs)
-    {
-        return lhs.equals(rhs);
-    }
 }
 
 #endif // DATA_H
