@@ -45,23 +45,20 @@ namespace iRail
 
         // Operators
         friend bool operator==(const Station& lhs, const Station& rhs);
-        friend Station& operator=(const Station& other);
+        Station& operator=(const Station& other);
         friend QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
         friend QDataStream& operator>>(QDataStream& iStream, Station& iStation);
 
     private:
-        Q_DISABLE_COPY(Station);
         Id mId;
         QString mName;
         Location mLocation;
     };
 
     bool operator==(const Station& lhs, const Station& rhs);
-    Station& operator=(const Station& other);
     QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
 }
 
-Q_DECLARE_METATYPE(iRail::Station)
 Q_DECLARE_METATYPE(iRail::Station::Id)
 
 #endif // STATION_H

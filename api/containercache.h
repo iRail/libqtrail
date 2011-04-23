@@ -20,7 +20,6 @@ namespace iRail
 {
     class ContainerCache
     {
-    Q_OBJECT
     public:
         // Construction and destruction
     private:

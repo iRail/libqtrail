@@ -16,7 +16,6 @@ using namespace iRail;
 
 Station::Station(Station::Id iId) : mId(iId)
 {
-    qRegisterMetaType<Station>("Station");
     qRegisterMetaType<Station>("Station::Id");
 
     mName = "";
@@ -69,7 +68,7 @@ bool iRail::operator==(const Station& lhs, const Station& rhs)
              *(lhs.location()) == *(rhs.location()));
 }
 
-iRail::Station& iRail::operator=(const Station& other)
+Station& Station::operator=(const Station& other)
 {
     if (this != &other)
     {

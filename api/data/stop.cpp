@@ -16,7 +16,6 @@ using namespace iRail;
 
 Stop::Stop(Stop::Id iId) : mId(iId)
 {
-    qRegisterMetaType<Stop>("Stop");
     qRegisterMetaType<Stop>("Stop::Id");
 
     mPlatform = 0;
@@ -60,7 +59,7 @@ bool iRail::operator==(const Stop& lhs, const Stop& rhs)
              lhs.platform() == rhs.platform());
 }
 
-iRail::Stop& iRail::operator=(const Stop& other)
+Stop& Stop::operator=(const Stop& other)
 {
     if (this != &other)
     {

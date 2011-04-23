@@ -6,12 +6,7 @@ QT       += network xml
 
 RESOURCES += api/parser.qrc
 SOURCES += \
-    asyncapi.cpp \
-    cachedapi.cpp \
     api/progressindicator.cpp \
-    api/storage/memorystorage.cpp \
-    api/storage/serializedstorage.cpp \
-    api/parser.cpp \
     api/reader.cpp \
     api/reader/stationreader.cpp \
     api/reader/journeyreader.cpp \
@@ -22,6 +17,7 @@ SOURCES += \
     api/data/departure.cpp \
     api/data/connection.cpp \
     api/data/journey.cpp \
+    api/container.cpp \
     api/container/journeylist.cpp \
     api/container/departurelist.cpp \
     api/container/stationlist.cpp \
@@ -33,29 +29,24 @@ SOURCES += \
     api/containercache.cpp \
     api/data/stop.cpp
 HEADERS += \
-    asyncapi.h \
-    cachedapi.h \
     api/auxiliary.h \
-    api/progresshandler.h \
     api/progressindicator.h \
     api/exception.h \
     api/exception/parserexception.h \
     api/exception/networkexception.h \
     api/exception/interruptedexception.h \
-    api/storage.h \
-    api/storage/memorystorage.h \
-    api/storage/serializedstorage.h \
-    api/parser.h \
     api/reader.h \
     api/reader/stationreader.h \
     api/reader/journeyreader.h \
     api/reader/stopreader.h \
     api/reader/departurereader.h \
+    api/data.h \
     api/data/station.h \
     api/data/vehicle.h \
     api/data/departure.h \
     api/data/connection.h \
     api/data/journey.h \
+    api/container.h \
     api/container/journeylist.h \
     api/container/departurelist.h \
     api/container/stationlist.h \

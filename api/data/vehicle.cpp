@@ -16,7 +16,6 @@ using namespace iRail;
 
 Vehicle::Vehicle(Vehicle::Id iId) : mId(iId)
 {
-    qRegisterMetaType<Vehicle>("Vehicle");
     qRegisterMetaType<Vehicle::Id>("Vehicle::Id");
 }
 
@@ -57,7 +56,7 @@ bool iRail::operator==(const Vehicle& lhs, const Vehicle& rhs)
              lhs.location() == rhs.terminus());
 }
 
-iRail::Vehicle& iRail::operator=(const Vehicle& other)
+Vehicle& Vehicle::operator=(const Vehicle& other)
 {
     if (this != &other)
     {

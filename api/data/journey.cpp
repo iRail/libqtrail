@@ -16,7 +16,6 @@ using namespace iRail;
 
 Journey::Journey(Journey::Id iId) : mId(iId)
 {
-    qRegisterMetaType<Journey>("Journey");
     qRegisterMetaType<Journey::Id>("Journey::Id");
 
     mDelay = 0;
@@ -53,7 +52,7 @@ bool iRail::operator==(const Journey& lhs, const Journey& rhs)
              lhs.id().destination || rhs.id().destination);
 }
 
-iRail::Journey& iRail::operator=(const Journey& other)
+Journey& Journey::operator=(const Journey& other)
 {
     if (this != &other)
     {

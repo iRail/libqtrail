@@ -56,10 +56,9 @@ namespace iRail
 
         // Operators
         friend bool operator==(const Connection& lhs, const Connection& rhs);
-        friend Connection& operator=(const Connection& other);
+        Connection& operator=(const Connection& other);
 
     private:
-        Q_DISABLE_COPY(Connection);
         Id mId;
         Station const* mTerminus;
         Vehicle const* mVehicle;
@@ -67,11 +66,10 @@ namespace iRail
     };
 
     bool operator==(const Connection& lhs, const Connection& rhs);
-    Connection& operator=(const Connection& other);
     inline unsigned int qHash(const Connection::Id& iConnection);
+    bool operator==(const Connection::Id& lhs, const Connection::Id& rhs);
 }
 
-Q_DECLARE_METATYPE(iRail::Connection)
 Q_DECLARE_METATYPE(iRail::Connection::Id)
 
 #endif // CONNECTION_H

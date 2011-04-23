@@ -44,19 +44,16 @@ namespace iRail
 
         // Operators
         friend bool operator==(const Vehicle& lhs, const Vehicle& rhs);
-        friend Vehicle& operator=(const Vehicle& other);
+        Vehicle& operator=(const Vehicle& other);
 
     private:
-        Q_DISABLE_COPY(Vehicle);
         Id mId;
         Location mLocation;
     };
 
     bool operator==(const Vehicle& lhs, const Vehicle& rhs);
-    Vehicle& operator=(const Vehicle& other);
 }
 
-Q_DECLARE_METATYPE(iRail::Vehicle)
 Q_DECLARE_METATYPE(iRail::Vehicle::Id)
 
 #endif // STATION_H

@@ -16,7 +16,6 @@ using namespace iRail;
 
 Departure::Departure(Id iId) : mId(iId)
 {
-    qRegisterMetaType<Departure>("Departure");
     qRegisterMetaType<Departure::Id>("Departure::Id");
 
     mDelay = 0;
@@ -53,7 +52,7 @@ bool iRail::operator==(const Departure& lhs, const Departure& rhs)
              lhs.id().origin == rhs.id().origin);
 }
 
-iRail::Departure& iRail::operator=(const Departure& other)
+Departure& Departure::operator=(const Departure& other)
 {
     if (this != &other)
     {

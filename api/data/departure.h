@@ -48,20 +48,18 @@ namespace iRail
 
         // Operators
         friend bool operator==(const Departure& lhs, const Departure& rhs);
-        friend Departure& operator=(const Departure& other);
+        Departure& operator=(const Departure& other);
 
     private:
-        Q_DISABLE_COPY(Departure);
         Id mId;
         unsigned int mDelay;
     };
 
     bool operator==(const Departure& lhs, const Departure& rhs);
-    Departure& operator=(const Departure& other);
     inline unsigned int qHash(const Departure::Id& iDepartureId);
+    bool operator==(const Departure::Id& lhs, const Departure::Id& rhs);
 }
 
-Q_DECLARE_METATYPE(iRail::Departure)
 Q_DECLARE_METATYPE(iRail::Departure::Id)
 
 #endif // DEPARTURE_H

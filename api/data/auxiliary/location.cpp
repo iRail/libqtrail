@@ -23,8 +23,6 @@ Location::Location(qreal iLongitude, qreal iLatitude)
 
 Location::Location()
 {
-    qRegisterMetaType<Location>("Location");
-
     mLatitudeValid = false;
     mLatitude = 0;
 
@@ -77,6 +75,18 @@ bool iRail::operator==(const Location& lhs, const Location& rhs)
 {
     return  ((!lhs.mLongitudeValid() || (lhs.longitude() == rhs.longitude())),
              (!lhs.mLatitudeValid() || (lhs.latitude() == rhs.latitude())));
+}
+
+Location& Location::operator=(const Location& other)
+{
+    if (this != &other)
+    {
+        if (other.mLongitudeValid)
+            setLongitude(other.longitude());
+        if (other.mLatitudeValid)
+            setLatitude(other.latitude());
+    }
+    return *this;
 }
 
 QDataStream& iRail::operator<<(QDataStream& iStream, const Location& iLocation)

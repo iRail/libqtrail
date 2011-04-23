@@ -156,9 +156,9 @@ Journey JourneyReader::readConnection()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-                tDeparture = readPOI(tVehicleDeparture, tDirectionDeparture);
+                tDeparture = readStop(tVehicleDeparture, tDirectionDeparture);
             else if (mReader.name() == "arrival")
-                tArrival = readPOI(tVehicleArrival, tDirectionArrival);
+                tArrival = readStop(tVehicleArrival, tDirectionArrival);
             else if (mReader.name() == "vias")
                 tLines = readVias(tVehicles, tDirections);
             else
@@ -187,7 +187,7 @@ Journey JourneyReader::readConnection()
     return oJourney;
 }
 
-POI JourneyReader::readPOI(QString& iVehicle, Station& iTerminus)
+Stop* JourneyReader::readStop(QString& iVehicle, Station& iTerminus)
 {
     // Process the attributes
     int tDelay = 0;
@@ -199,7 +199,7 @@ POI JourneyReader::readPOI(QString& iVehicle, Station& iTerminus)
     }
 
     // Process the tags
-    QString tStation;
+    Station* tStation;
     int tPlatform;
     QDateTime tDatetime;
     mReader.readNext();
@@ -231,15 +231,15 @@ POI JourneyReader::readPOI(QString& iVehicle, Station& iTerminus)
     }
 
     // Construct the object
-    POI oPOI;
-    oPOI.station = tStation;
-    oPOI.datetime = tDatetime;
-    oPOI.delay = tDelay;
-    oPOI.platform = tPlatform;
-    return oPOI;
+    Stop::Id tStopId;
+    tStopId.datetime = tDateTime;
+    tStopId.station = tStation;
+    Stop oStop(tStopId);
+    oStop.setPlatform(tPlatform);
+    return oStop;
 }
 
-Vehicle JourneyReader::readVehicle()    // TODO: fill with data
+Vehicle* JourneyReader::readVehicle()    // TODO: fill with data
 {
     // Process the contents
     QString tVehicleId = mReader.readElementText();
@@ -284,7 +284,7 @@ QDateTime JourneyReader::readDatetime()
     return QDateTime::fromTime_t(tUnixtime.toUInt());
 }
 
-Station JourneyReader::readStation()        // TODO: fill with data
+Station* JourneyReader::readStation()        // TODO: fill with data
 {
     // Process the attributes
     QString tStationId;
@@ -382,9 +382,9 @@ Connection JourneyReader::readVia(QString& iVehicle, QString& iDirection)
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-                tDeparture = readPOI(tVehicleDummy, tDepartureDummy);
+                tDeparture = readStop(tVehicleDummy, tDepartureDummy);
             else if (mReader.name() == "arrival")
-                tArrival = readPOI(tVehicleDummy, tDepartureDummy);
+                tArrival = readStop(tVehicleDummy, tDepartureDummy);
             else if (mReader.name() == "vehicle")
                 iVehicle = readVehicle();
             else if (mReader.name() == "station")

@@ -16,7 +16,6 @@ using namespace iRail;
 
 Connection::Connection(Id iId) : mId(iId)
 {
-    qRegisterMetaType<Connection>("Connection");
     qRegisterMetaType<Connection>("Connection::Id");
 
     mTerminus = 0;
@@ -77,7 +76,7 @@ bool iRail::operator==(const Connection& lhs, const Connection& rhs)
              lhs.vehicle() == rhs.vehicle());
 }
 
-iRail::Connection& iRail::operator=(const Connection& other)
+Connection& Connection::operator=(const Connection& other)
 {
     if (this != &other)
     {

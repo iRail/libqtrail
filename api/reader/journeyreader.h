@@ -42,13 +42,13 @@ namespace iRail
         void allocate();
         QHash<Journey::Id, Journey*> readConnections();
         Journey* readConnection();
-        POI readPOI(QString& iVehicle, QString& iDirection);
-        Vehicle readVehicle();
+        Stop* readStop(QString& iVehicle, QString& iDirection);
+        Vehicle* readVehicle();
         int readPlatform();
         QDateTime readDatetime();
-        Station readStation();
+        Station* readStation();
         QList<Connection> readVias(QList<QString>& iVehicles, QList<QString>& iDirections);
-        Connection readVia(QString& iVehicle, QString& iDirection);
+        Connection* readVia(QString& iVehicle, QString& iDirection);
     };
 }
 

@@ -28,7 +28,7 @@ namespace iRail
         // Basic I/O
         double version() const;
         QDateTime timestamp() const;
-        Vehicle* mVehicle() const;
+        Vehicle* vehicle() const;
         QHash<Stop::Id, Stop*> stops() const;
     private:
         // Member data
@@ -42,7 +42,7 @@ namespace iRail
         void readVehicleInformation();
         Vehicle* readVehicle();
         QHash<Stop::Id, Stop*> readStops();
-        POI* readStop();
+        Stop* readStop();
         Station* readStation();
         QDateTime readDatetime();
     };
