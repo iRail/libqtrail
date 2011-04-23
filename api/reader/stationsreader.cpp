@@ -3,7 +3,7 @@
 //
 
 // Includes
-#include "stationreader.h"
+#include "stationsreader.h"
 #include <QStringRef>
 #include "api/auxiliary.h"
 
@@ -15,7 +15,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-StationReader::StationReader()
+StationsReader::StationsReader()
 {
 }
 
@@ -24,7 +24,7 @@ StationReader::StationReader()
 // Reader interface
 //
 
-void StationReader::readDocument()
+void StationsReader::readDocument()
 {
     mReader.readNext();
     while (!mReader.atEnd())
@@ -49,17 +49,17 @@ void StationReader::readDocument()
 //
 
 
-double StationReader::version() const
+double StationsReader::version() const
 {
     return mVersion;
 }
 
-QDateTime StationReader::timestamp() const
+QDateTime StationsReader::timestamp() const
 {
     return mTimestamp;
 }
 
-QMap<QString, Station*> StationReader::stations() const
+QMap<QString, Station*> StationsReader::stations() const
 {
     return mStations;
 }
@@ -69,7 +69,7 @@ QMap<QString, Station*> StationReader::stations() const
 // Tag readers
 //
 
-QHash<Station::Id&, Station*> StationReader::readStations()
+QHash<Station::Id&, Station*> StationsReader::readStations()
 {
     // Process the attributes
     QHash<Station::Id&, Station*> oStations;
@@ -124,7 +124,7 @@ QHash<Station::Id&, Station*> StationReader::readStations()
     return oStations;
 }
 
-Station* StationReader::readStation()
+Station* StationsReader::readStation()
 {
     // Process the attributes
     if (! mReader.attributes().hasAttribute("id"))

@@ -3,23 +3,24 @@
 //
 
 // Include guard
-#ifndef STATIONREADER_H
-#define STATIONREADER_H
+#ifndef VEHICLEREADER_H
+#define VEHICLEREADER_H
 
 // Includes
 #include <QHash>
 #include <QDateTime>
 #include "api/reader.h"
-#include "api/data/station.h"
+#include "api/data/stop.h"
+#include "api/data/vehicle.h"
 
 namespace iRail
 {
-    class StationReader : public Reader
+    class VehicleReader : public Reader
     {
     Q_OBJECT
     public:
         // Construction and destruction
-        StationReader();
+        VehicleReader();
 
         // Reader interface
         void readDocument();
@@ -27,18 +28,24 @@ namespace iRail
         // Basic I/O
         double version() const;
         QDateTime timestamp() const;
-        QHash<Station::Id&, Station*> stations() const;
+        Vehicle* vehicle() const;
+        QHash<Stop::Id&, Stop*> stops() const;
     private:
         // Member data
         double mVersion;
         QDateTime mTimestamp;
-        QHash<Station::Id&, Station*> mStations;
+        Vehicle* mVehicle;
+        QHash<Stop::Id&, Stop*> mStops;
 
         // Tag readers
         void allocate();
-        QHash<Station::Id&, Station*> readStations();
+        void readVehicleInformation();
+        Vehicle* readVehicle();
+        QHash<Stop::Id&, Stop*> readStops();
+        Stop* readStop();
         Station* readStation();
+        QDateTime readDatetime();
     };
 }
 
-#endif // STATIONREADER_H
+#endif // VEHICLEREADER_H

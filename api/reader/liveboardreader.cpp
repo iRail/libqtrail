@@ -3,7 +3,7 @@
 //
 
 // Includes
-#include "stopreader.h"
+#include "liveboardreader.h"
 #include <QStringRef>
 
 // Namespaces
@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-StopReader::StopReader()
+LiveboardReader::LiveboardReader()
 {
 }
 
@@ -23,19 +23,19 @@ StopReader::StopReader()
 // Reader interface
 //
 
-void StopReader::readDocument()
+void LiveboardReader::readDocument()
 {
     mReader.readNext();
     while (!mReader.atEnd())
     {
         if (mReader.isStartElement())
         {
-            if (mReader.name() == "vehicleinformation")
-                readVehicleInformation();
+            if (mReader.name() == "liveboard")
+                readLiveboard();
             else if (mReader.name() == "error")
                 readError();
             else
-                mReader.raiseError("could not find vehicleinformation index");
+                mReader.raiseError("could not find liveboard index");
         }
         else
             mReader.readNext();
@@ -48,24 +48,24 @@ void StopReader::readDocument()
 //
 
 
-double StopReader::version() const
+double LiveboardReader::version() const
 {
     return mVersion;
 }
 
-QDateTime StopReader::timestamp() const
+QDateTime LiveboardReader::timestamp() const
 {
     return mTimestamp;
 }
 
-Vehicle* StopReader::vehicle() const
+Station LiveboardReader::station() const
 {
-    return mVehicle;
+    return mStation;
 }
 
-QHash<Stop::Id&, Stop*> StopReader::stops() const
+QHash<Departure::Id&, Departure*> LiveboardReader::departures() const
 {
-    return mStops;
+    return mDepartures;
 }
 
 
@@ -73,7 +73,7 @@ QHash<Stop::Id&, Stop*> StopReader::stops() const
 // Tag readers
 //
 
-void StopReader::readVehicleInformation()
+void LiveboardReader::readLiveboard()
 {
     // Process the attributes
     if (mReader.attributes().hasAttribute("timestamp"))
@@ -88,7 +88,7 @@ void StopReader::readVehicleInformation()
     {
         QStringRef tVersionString = mReader.attributes().value("version");
 
-        mVersion = tVersionString.toString().toDouble();
+       mVersion = tVersionString.toString().toDouble();
     }
     else
         mReader.raiseError("could not find vehicles version attribute");
@@ -105,131 +105,19 @@ void StopReader::readVehicleInformation()
 
         if (mReader.isStartElement())
         {
-            if (mReader.name() == "vehicle")
-                mVehicle = readVehicle();
-            else if (mReader.name() == "stops")
-                mStops = readStops();
-            else
-                skipUnknownElement();
-        }
-        else
-            mReader.readNext();
-    }
-}
-
-Vehicle* StopReader::readVehicle()
-{
-    // Process the attributes
-    Location tLocation;
-    if (mReader.attributes().hasAttribute("location"))
-    {
-        QStringRef tLocationString = mReader.attributes().value("location");
-
-        int tSeparator = tLocationString.toString().indexOf(" ");
-
-        // TODO: when Qt 4.8 gets released, QStringRef
-        //       will natively implement these
-        //       convenience functionality
-        //       http://qt.gitorious.org/qt/qt/merge_requests/625
-        qreal tLongitude = tLocationString.toString().midRef(0, tSeparator).toString().toDouble();
-        qreal tLatitude = tLocationString.toString().midRef(tSeparator+1).toString().toDouble();
-        tLocation.setLongitude(tLongitude);
-        tLocation.setLatitude(tLatitude);
-    }
-
-    // Process the contents
-    QString tVehicleId = mReader.readElementText();
-    if (mReader.isEndElement())
-        mReader.readNext();
-
-    // Construct the object
-    Vehicle* oVehicle = new Vehicle(tVehicleId);
-    oVehicle->setLocation(tLocation);
-    return oVehicle;
-}
-
-QHash<Stop::Id&, Stop*> StopReader::readStops()
-{
-    // Process the attributes
-    QHash<Stop::Id&, Stop*> oStops;
-    if (mReader.attributes().hasAttribute("number"))
-    {
-        QStringRef tCountString = mReader.attributes().value("number");
-        int tCount = tCountString.toString().toInt();
-        if (tCount > 0)
-            oStops.reserve(tCount);
-    }
-
-    // Process the tags
-    mReader.readNext();
-    while (!mReader.atEnd())
-    {
-        if (mReader.isEndElement())
-        {
-            mReader.readNext();
-            break;
-        }
-
-        if (mReader.isStartElement())
-        {
-            if (mReader.name() == "stop")
-            {
-                Stop* tStop = readStop();
-                oStops.insert(tStop->id(), tStop);
-            }
-            else
-                skipUnknownElement();
-        }
-        else
-            mReader.readNext();
-    }
-
-    return oStops;
-}
-
-Stop* StopReader::readStop()
-{
-    // Process the attributes
-    double tDelay;
-    if (mReader.attributes().hasAttribute("delay"))
-    {
-        tDelay = mReader.attributes().value("delay").toString().toDouble();
-    }
-    else
-        mReader.raiseError("stop without delay attribute");
-
-    // Process the tags
-    Station* tStation;
-    QDateTime tDateTime;
-    mReader.readNext();
-    while (!mReader.atEnd())
-    {
-        if (mReader.isEndElement())
-        {
-            mReader.readNext();
-            break;
-        }
-
-        if (mReader.isStartElement())
-        {
             if (mReader.name() == "station")
-                tStation = readStation();
-            if (mReader.name() == "time")
-                tDateTime = readDatetime();
+                mStation = readStation();
+            else if (mReader.name() == "departures")
+                mDepartures = readDepartures();
             else
                 skipUnknownElement();
         }
         else
             mReader.readNext();
     }
-
-    // Construct the object
-    Stop::Id& tStopId(tStation, tDatetime);
-    Stop* oStop = new Stop(tStopId);
-    return oStop;
 }
 
-Station* StopReader::readStation()   // TODO: fill station object
+Station LiveboardReader::readStation()
 {
     // Process the attributes
     QString oStationId;
@@ -247,9 +135,116 @@ Station* StopReader::readStation()   // TODO: fill station object
 
     // Construct the object
     return Station(oStationId);
+    // TODO: load from cache? do request? hmm
 }
 
-QDateTime StopReader::readDatetime()
+QHash<Departure::Id&, Departure*> LiveboardReader::readDepartures()
+{
+    // Process the attributes
+    QHash<Departure::Id&, Departure*> oDepartures;
+    if (mReader.attributes().hasAttribute("number"))
+    {
+        QStringRef tCountString = mReader.attributes().value("number");
+        int tCount = tCountString.toString().toInt();
+        if (tCount > 0)
+            oDepartures.reserve(tCount);
+    }
+
+    // Process the tags
+    mReader.readNext();
+    while (!mReader.atEnd())
+    {
+        if (mReader.isEndElement())
+        {
+            mReader.readNext();
+            break;
+        }
+
+        if (mReader.isStartElement())
+        {
+            if (mReader.name() == "departure")
+            {
+                Departure* tDeparture = readDeparture;
+                oDepartures.insert(tDeparture->id(), tDeparture);
+            }
+            else
+                skipUnknownElement();
+        }
+        else
+            mReader.readNext();
+    }
+
+    return oDepartures;
+}
+
+Departure* LiveboardReader::readDeparture()
+{
+    // Process the attributes
+    unsigned int tDelay = 0;
+    if (mReader.attributes().hasAttribute("delay"))
+    {
+        tDelay = mReader.attributes().value("delay").toString().toInt();
+    }
+
+    // Process the tags
+    QString tStation, tVehicle;
+    QDateTime tDateTime;
+    int tPlatform = 0;
+    mReader.readNext();
+    while (!mReader.atEnd())
+    {
+        if (mReader.isEndElement())
+        {
+            mReader.readNext();
+            break;
+        }
+
+        if (mReader.isStartElement())
+        {
+            if (mReader.name() == "station")
+                tStation = readStation();
+            else if (mReader.name() == "vehicle")
+                tVehicle = readVehicle();
+            else if (mReader.name() == "time")
+                tDateTime = readDatetime();
+            else if (mReader.name() == "platform")
+                tPlatform = readPlatform();
+            else
+                skipUnknownElement();
+        }
+        else
+            mReader.readNext();
+    }
+
+    // Construct the stop
+    // TODO: put in anonymous StopList
+    Stop::Id& tStopId;
+    tStopId.station = tStation;
+    tStopId.datetime = tDateTime;
+    Stop* tStop = new Stop(tStopId);
+    tStop->setPlatform(tPlatform);
+
+    // Construct the id
+    Departure::Id& tDepartureId;
+    tDepartureId.origin = tStop;
+    tDepartureId.vehicle = tVehicle;
+    Departure* oDeparture = new Departure(tDepartureId);
+    oDeparture->setDelay(tDelay);
+
+    return oDeparture;
+}
+
+QString LiveboardReader::readVehicle()
+{
+    // Process the contents
+    QString oVehicle = mReader.readElementText();
+    if (mReader.isEndElement())
+        mReader.readNext();
+
+    return oVehicle;
+}
+
+QDateTime LiveboardReader::readDatetime()
 {
     // Process the contents
     QString tUnixtime = mReader.readElementText();
@@ -257,4 +252,24 @@ QDateTime StopReader::readDatetime()
         mReader.readNext();
 
     return QDateTime::fromTime_t(tUnixtime.toUInt());
+}
+
+int LiveboardReader::readPlatform()
+{
+    // Process the contents
+    QString tPlatformString = mReader.readElementText();
+    unsigned int oPlatform = tPlatformString.toInt();
+    if (mReader.isEndElement())
+        mReader.readNext();
+
+    return oPlatform;
+}
+
+
+//
+// Auxiliary
+//
+
+void LiveboardReader::allocate()
+{
 }

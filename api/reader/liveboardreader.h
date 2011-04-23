@@ -3,8 +3,8 @@
 //
 
 // Include guard
-#ifndef DEPARTUREREADER_H
-#define DEPARTUREREADER_H
+#ifndef LIVEBOARDREADER_H
+#define LIVEBOARDREADER_H
 
 // Includes
 #include <QHash>
@@ -15,12 +15,12 @@
 
 namespace iRail
 {
-    class DepartureReader : public Reader
+    class LiveboardReader : public Reader
     {
     Q_OBJECT
     public:
         // Construction and destruction
-        DepartureReader();
+        LiveboardReader();
 
         // Reader interface
         void readDocument();
@@ -50,4 +50,4 @@ namespace iRail
     };
 }
 
-#endif // DEPARTUREREADER_H
+#endif // LIVEBOARDREADER_H

@@ -3,8 +3,8 @@
 //
 
 // Include guard
-#ifndef JOURNEYREADER_H
-#define JOURNEYREADER_H
+#ifndef CONNECTIONSREADER_H
+#define CONNECTIONSREADER_H
 
 // Includes
 #include <QList>
@@ -18,12 +18,12 @@
 
 namespace iRail
 {
-    class JourneyReader : public Reader
+    class ConnectionsReader : public Reader
     {
     Q_OBJECT
     public:
         // Construction and destruction
-        JourneyReader();
+        ConnectionsReader();
 
         // Reader interface
         void readDocument();
@@ -52,4 +52,4 @@ namespace iRail
     };
 }
 
-#endif // JOURNEYREADER_H
+#endif // CONNECTIONSREADER_H

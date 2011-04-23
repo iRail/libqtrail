@@ -8,10 +8,6 @@ RESOURCES +=
 SOURCES += \
     api/progressindicator.cpp \
     api/reader.cpp \
-    api/reader/stationreader.cpp \
-    api/reader/journeyreader.cpp \
-    api/reader/stopreader.cpp \
-    api/reader/departurereader.cpp \
     api/data.cpp \
     api/data/station.cpp \
     api/data/vehicle.cpp \
@@ -28,7 +24,11 @@ SOURCES += \
     api/container/vehiclelist.cpp \
     api/container/connectionlist.cpp \
     api/containercache.cpp \
-    api/data/stop.cpp
+    api/data/stop.cpp \
+    api/reader/liveboardreader.cpp \
+    api/reader/connectionsreader.cpp \
+    api/reader/stationsreader.cpp \
+    api/reader/vehiclereader.cpp
 HEADERS += \
     api/auxiliary.h \
     api/progressindicator.h \
@@ -37,10 +37,6 @@ HEADERS += \
     api/exception/networkexception.h \
     api/exception/interruptedexception.h \
     api/reader.h \
-    api/reader/stationreader.h \
-    api/reader/journeyreader.h \
-    api/reader/stopreader.h \
-    api/reader/departurereader.h \
     api/data.h \
     api/data/station.h \
     api/data/vehicle.h \
@@ -57,4 +53,8 @@ HEADERS += \
     api/container/vehiclelist.h \
     api/container/connectionlist.h \
     api/containercache.h \
-    api/data/stop.h
+    api/data/stop.h \
+    api/reader/liveboardreader.h \
+    api/reader/connectionsreader.h \
+    api/reader/stationsreader.h \
+    api/reader/vehiclereader.h

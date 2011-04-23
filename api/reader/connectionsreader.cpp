@@ -3,7 +3,7 @@
 //
 
 // Includes
-#include "journeyreader.h"
+#include "connectionsreader.h"
 #include <QStringRef>
 
 // Namespaces
@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-JourneyReader::JourneyReader()
+ConnectionsReader::ConnectionsReader()
 {
 }
 
@@ -23,7 +23,7 @@ JourneyReader::JourneyReader()
 // Reader interface
 //
 
-void JourneyReader::readDocument()
+void ConnectionsReader::readDocument()
 {
     mReader.readNext();
     while (!mReader.atEnd())
@@ -48,17 +48,17 @@ void JourneyReader::readDocument()
 //
 
 
-double JourneyReader::version() const
+double ConnectionsReader::version() const
 {
     return mVersion;
 }
 
-QDateTime JourneyReader::timestamp() const
+QDateTime ConnectionsReader::timestamp() const
 {
     return mTimestamp;
 }
 
-QList<Journey> JourneyReader::journeys() const
+QList<Journey> ConnectionsReader::journeys() const
 {
     return mJourneys;
 }
@@ -68,7 +68,7 @@ QList<Journey> JourneyReader::journeys() const
 // Tag readers
 //
 
-QHash<Journey::Id&, Journey*> JourneyReader::readConnections()
+QHash<Journey::Id&, Journey*> ConnectionsReader::readConnections()
 {
     // Process the attributes
     QHash<Journey::Id&, Journey*> oConnections;
@@ -123,7 +123,7 @@ QHash<Journey::Id&, Journey*> JourneyReader::readConnections()
     return oConnection;
 }
 
-Journey JourneyReader::readConnection()
+Journey ConnectionsReader::readConnection()
 {
     // Process the attributes
     unsigned int tId;
@@ -187,7 +187,7 @@ Journey JourneyReader::readConnection()
     return oJourney;
 }
 
-Stop* JourneyReader::readStop(QString& iVehicle, Station& iTerminus)
+Stop* ConnectionsReader::readStop(QString& iVehicle, Station& iTerminus)
 {
     // Process the attributes
     int tDelay = 0;
@@ -239,7 +239,7 @@ Stop* JourneyReader::readStop(QString& iVehicle, Station& iTerminus)
     return oStop;
 }
 
-Vehicle* JourneyReader::readVehicle()    // TODO: fill with data
+Vehicle* ConnectionsReader::readVehicle()    // TODO: fill with data
 {
     // Process the contents
     QString tVehicleId = mReader.readElementText();
@@ -249,7 +249,7 @@ Vehicle* JourneyReader::readVehicle()    // TODO: fill with data
     return Vehicle(tVehicleId);
 }
 
-int JourneyReader::readPlatform()
+int ConnectionsReader::readPlatform()
 {
     // Process the attributes
     bool *tNormal = 0;
@@ -274,7 +274,7 @@ int JourneyReader::readPlatform()
     return oPlatform;
 }
 
-QDateTime JourneyReader::readDatetime()
+QDateTime ConnectionsReader::readDatetime()
 {
     // Process the contents
     QString tUnixtime = mReader.readElementText();
@@ -284,7 +284,7 @@ QDateTime JourneyReader::readDatetime()
     return QDateTime::fromTime_t(tUnixtime.toUInt());
 }
 
-Station* JourneyReader::readStation()        // TODO: fill with data
+Station* ConnectionsReader::readStation()        // TODO: fill with data
 {
     // Process the attributes
     QString tStationId;
@@ -304,7 +304,7 @@ Station* JourneyReader::readStation()        // TODO: fill with data
     return Station(tStationId);
 }
 
-QList<Connection> JourneyReader::readVias(QList<QString>& iVehicles, QList<QString>& iDirections)
+QList<Connection> ConnectionsReader::readVias(QList<QString>& iVehicles, QList<QString>& iDirections)
 {
     // Process the attributes
     int tNumber;
@@ -353,7 +353,7 @@ QList<Connection> JourneyReader::readVias(QList<QString>& iVehicles, QList<QStri
     return tLines;
 }
 
-Connection JourneyReader::readVia(QString& iVehicle, QString& iDirection)
+Connection ConnectionsReader::readVia(QString& iVehicle, QString& iDirection)
 {
     // Process the attributes
     unsigned int tId;   // TODO: do something with this
