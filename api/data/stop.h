@@ -27,8 +27,10 @@ namespace iRail
         {
             Station const* station;
             QDateTime datetime;
-            friend inline unsigned int qHash(const Stop::Id& iStopId);
-            friend bool operator==(const Stop::Id& lhs, const Stop::Id& rhs);
+
+            // Operator implementation
+            bool equals(const Data::Id& id) const;
+            unsigned int hash() const;
         };
         enum Roles
         {
@@ -46,18 +48,14 @@ namespace iRail
         unsigned int platform() const;
         void setPlatform(unsigned int iPlatform);
 
-        // Operators
-        friend bool operator==(const Stop& lhs, const Stop& rhs);
-        Stop& operator=(const Stop& other);
+        // Operator implementation
+        bool equals(const Data& data) const;
+        Data& assign(const Data& data);
 
     private:
         Id mId;
         unsigned int mPlatform;
     };
-
-    bool operator==(const Stop& lhs, const Stop& rhs);
-    inline unsigned int qHash(const Stop::Id& iStopId);
-    bool operator==(const Stop::Id& lhs, const Stop::Id& rhs);
 }
 
 Q_DECLARE_METATYPE(iRail::Stop::Id)

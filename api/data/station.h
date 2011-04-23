@@ -27,6 +27,10 @@ namespace iRail
         struct Id : Data::Id
         {
             QString guid;
+
+            // Operator implementation
+            bool equals(const Data::Id& id) const;
+            unsigned int hash() const;
         };
         enum Roles
         {
@@ -46,9 +50,9 @@ namespace iRail
         const Location& location() const;
         void setLocation(const Location& iLocation);
 
-        // Operators
-        friend bool operator==(const Station& lhs, const Station& rhs);
-        Station& operator=(const Station& other);
+        // Operator implementation
+        bool equals(const Data& data) const;
+        Data& assign(const Data& data);
         friend QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
         friend QDataStream& operator>>(QDataStream& iStream, Station& iStation);
 
@@ -58,7 +62,6 @@ namespace iRail
         Location mLocation;
     };
 
-    bool operator==(const Station& lhs, const Station& rhs);
     QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
 }
 

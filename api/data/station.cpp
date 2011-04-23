@@ -58,18 +58,20 @@ void Station::setLocation(const Location& iLocation)
 
 
 //
-// Operators
+// Operator implementation
 //
 
-bool iRail::operator==(const Station& lhs, const Station& rhs)
+bool Station::equals(const Data& data) const
 {
-    return  (lhs.id() == rhs.id() &&
-             lhs.name() == rhs.name() &&
-             *(lhs.location()) == *(rhs.location()));
+    const Station& other = dynamic_cast<const Station&>(data);
+    return  (id() == other.id() &&
+             name() == other.name() &&
+             *(location()) == *(other.location()));
 }
 
-Station& Station::operator=(const Station& other)
+Data& Station::assign(const Data& data)
 {
+    const Station& other = dynamic_cast<const Station&>(data);
     if (this != &other)
     {
         Q_ASSERT(this->id() == other.id());
@@ -78,6 +80,17 @@ Station& Station::operator=(const Station& other)
         setLocation(other.location());
     }
     return *this;
+}
+
+unsigned int Station::Id::hash()
+{
+    return qHash(guid);
+}
+
+bool Station::Id::equals(const Data::Id& data) const
+{
+    const Station::Id& other = dynamic_cast<const Station::Id&>(data);
+    return  (guid == other.guid);
 }
 
 QDataStream& iRail::operator<<(QDataStream& iStream, const Station& iStation)
@@ -98,7 +111,3 @@ QDataStream& iRail::operator>>(QDataStream& iStream, Station& iStation)
     return iStream;
 }
 
-inline unsigned int iRail::qHash(const Station &iStation)
-{
-    return qHash(iStation.id());
-}

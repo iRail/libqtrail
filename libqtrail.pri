@@ -4,7 +4,7 @@
 
 QT       += network xml
 
-RESOURCES += api/parser.qrc
+RESOURCES +=
 SOURCES += \
     api/progressindicator.cpp \
     api/reader.cpp \

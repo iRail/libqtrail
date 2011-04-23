@@ -28,8 +28,10 @@ namespace iRail
         {
             Stop const* origin;
             Vehicle const* vehicle;
-            friend inline unsigned int qHash(const Departure::Id& iDepartureId);
-            friend bool operator==(const Departure::Id& lhs, const Departure::Id& rhs);
+
+            // Operator implementation
+            bool equals(const Data::Id& id) const;
+            unsigned int hash() const;
         };
         enum Roles
         {
@@ -46,18 +48,14 @@ namespace iRail
         unsigned int delay() const;
         void setDelay(unsigned int iDelay);
 
-        // Operators
-        friend bool operator==(const Departure& lhs, const Departure& rhs);
-        Departure& operator=(const Departure& other);
+        // Operator implementation
+        bool equals(const Data& data) const;
+        Data& assign(const Data& data);
 
     private:
         Id mId;
         unsigned int mDelay;
     };
-
-    bool operator==(const Departure& lhs, const Departure& rhs);
-    inline unsigned int qHash(const Departure::Id& iDepartureId);
-    bool operator==(const Departure::Id& lhs, const Departure::Id& rhs);
 }
 
 Q_DECLARE_METATYPE(iRail::Departure::Id)

@@ -29,6 +29,10 @@ namespace iRail
         struct Id : Data::Id
         {
             QString guid;
+
+            // Operator implementation
+            bool equals(const Data::Id& id) const;
+            unsigned int hash() const;
         };
         enum Roles
         {
@@ -45,16 +49,14 @@ namespace iRail
         const Location& location() const;
         void setLocation(const Location& iLocation);
 
-        // Operators
-        friend bool operator==(const Vehicle& lhs, const Vehicle& rhs);
-        Vehicle& operator=(const Vehicle& other);
+        // Operator implementation
+        bool equals(const Data& data) const;
+        Data& assign(const Data& data);
 
     private:
         Id mId;
         Location mLocation;
     };
-
-    bool operator==(const Vehicle& lhs, const Vehicle& rhs);
 }
 
 Q_DECLARE_METATYPE(iRail::Vehicle::Id)

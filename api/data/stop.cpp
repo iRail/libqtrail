@@ -48,19 +48,21 @@ void Stop::setPlatform(unsigned int iPlatform)
 
 
 //
-// Operators
+// Operator implementation
 //
 
-bool iRail::operator==(const Stop& lhs, const Stop& rhs)
+bool Stop::equals(const Data& data) const
 {
-    return  (lhs.id().station == rhs.id().station &&
-             lhs.id().datetime == rhs.id().datetime &&
-             lhs.delay() == rhs.delay() &&
-             lhs.platform() == rhs.platform());
+    const Stop& other = dynamic_cast<const Stop&>(data);
+    return  (id().station == other.id().station &&
+             id().datetime == other.id().datetime &&
+             delay() == other.delay() &&
+             platform() == other.platform());
 }
 
-Stop& Stop::operator=(const Stop& other)
+Data& Stop::assign(const Data& data)
 {
+    const Stop& other = dynamic_cast<const Stop&>(data);
     if (this != &other)
     {
         Q_ASSERT(this->id() == other.id());
@@ -70,13 +72,14 @@ Stop& Stop::operator=(const Stop& other)
     return *this;
 }
 
-inline unsigned int qHash(const Stop::Id& iStopId)
+unsigned int Stop::Id::hash()
 {
-    return qHash(iStopId.station) ^ qHash(iStopId.datetime);
+    return qHash(station) ^ qHash(datetime);
 }
 
-bool iRail::operator==(const Stop::Id& lhs, const Stop::Id& rhs)
+bool Stop::Id::equals(const Data::Id& data) const
 {
-    return  (lhs.station->id() == rhs.station->id() &&
-             lhs.datetime == rhs.datetime);
+    const Stop::Id& other = dynamic_cast<const Stop::Id&>(data);
+    return  (station->id() == other.station->id() &&
+             datetime == other.datetime);
 }

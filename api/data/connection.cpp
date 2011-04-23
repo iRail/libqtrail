@@ -65,19 +65,21 @@ void Connection::setDelay(unsigned int iDelay)
 
 
 //
-// Operators
+// Operator implementation
 //
 
-bool iRail::operator==(const Connection& lhs, const Connection& rhs)
+bool Connection::equals(const Data& data) const
 {
-    return  (lhs.departure() == rhs.departure() &&
-             lhs.arrival() == rhs.arrival() &&
-             lhs.terminus() == rhs.terminus() &&
-             lhs.vehicle() == rhs.vehicle());
+    const Connection& other = dynamic_cast<const Connection&>(data);
+    return  (departure() == other.departure() &&
+             arrival() == other.arrival() &&
+             terminus() == other.terminus() &&
+             vehicle() == other.vehicle());
 }
 
-Connection& Connection::operator=(const Connection& other)
+Data& Connection::assign(const Data& data)
 {
+    const Connection& other = dynamic_cast<const Connection&>(data);
     if (this != &other)
     {
         Q_ASSERT(this->id() == other.id());
@@ -89,13 +91,14 @@ Connection& Connection::operator=(const Connection& other)
     return *this;
 }
 
-inline unsigned int qHash(const Connection::Id& iConnection)
+unsigned int Connection::Id::hash()
 {
-    return (3*qHash(iConnection.origin)) ^ (5*qHash(iConnection.destination));
+    return (3*qHash(origin)) ^ (5*qHash(destination));
 }
 
-bool iRail::operator==(const Connection::Id& lhs, const Connection::Id& rhs)
+bool Connection::Id::equals(const Data::Id& data) const
 {
-    return  (lhs.origin->id() == rhs.origin->id() &&
-             lhs.destination->id() == rhs.destination->id());
+    const Connection::Id& other = dynamic_cast<const Connection::Id&>(data);
+    return  (origin->id() == other.origin->id() &&
+             destination->id() == other.destination->id());
 }

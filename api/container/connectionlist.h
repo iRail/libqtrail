@@ -24,13 +24,14 @@ namespace iRail
     class ConnectionList : public QAbstractListModel
     {
     Q_OBJECT
-    public:
+    private:
         // Construction and destruction
         ConnectionList(const Journey::Id& iJourney, QObject* iParent = 0);
         ~ConnectionList();
         friend class ContainerCache;
 
         // Basic I/O
+    public:
         const Journey::Id& journeyId() const;
 
         // Model interface
