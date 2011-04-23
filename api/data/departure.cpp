@@ -24,7 +24,7 @@ Departure::Departure(IId iId) : mId(iId)
 // Basic I/O
 //
 
-Data::Id& Departure::id() const
+Departure::IId& Departure::id() const
 {
     return mId;
 }

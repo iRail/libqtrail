@@ -26,7 +26,7 @@ Connection::Connection(IId iId) : mId(iId)
 // Basic I/O
 //
 
-Data::Id& Connection::id() const
+Connection::IId& Connection::id() const
 {
     return mId;
 }

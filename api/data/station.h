@@ -44,7 +44,7 @@ namespace iRail
         ~Station();
 
         // Basic I/O
-        Data::Id& id() const;
+        IId& id() const;
         QString name() const;
         void setName(const QString& iName);
         const Location& location() const;

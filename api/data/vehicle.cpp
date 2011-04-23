@@ -28,7 +28,7 @@ Vehicle::~Vehicle()
 // Basic I/O
 //
 
-Data::Id& Vehicle::id() const
+Vehicle::IId& Vehicle::id() const
 {
     return mId;
 }

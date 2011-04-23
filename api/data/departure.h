@@ -44,7 +44,7 @@ namespace iRail
         Departure(IId iId);
 
         // Basic I/O
-        Data::Id& id() const;
+        IId& id() const;
         unsigned int delay() const;
         void setDelay(unsigned int iDelay);
 

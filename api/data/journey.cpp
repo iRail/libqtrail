@@ -24,7 +24,7 @@ Journey::Journey(IId iId) : mId(iId)
 // Basic I/O
 //
 
-Data::Id& id() const
+Journey::IId& id() const
 {
     return mId;
 }

@@ -29,7 +29,7 @@ Station::~Station()
 // Basic I/O
 //
 
-Data::Id& Station::id() const
+Station::IId& Station::id() const
 {
     return mId;
 }

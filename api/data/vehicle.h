@@ -45,7 +45,7 @@ namespace iRail
         ~Vehicle();
 
         // Basic I/O
-        Data::Id& id() const;
+        IId& id() const;
         const Location& location() const;
         void setLocation(const Location& iLocation);
 

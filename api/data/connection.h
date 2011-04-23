@@ -48,7 +48,7 @@ namespace iRail
         Connection(IId iId);
 
         // Basic I/O
-        Data::Id& id() const;
+        IId& id() const;
         Station const* terminus() const;
         void setTerminus(Station const* iTerminus);
         Vehicle const* vehicle() const;

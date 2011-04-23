@@ -29,7 +29,7 @@ Stop::~Stop()
 // Basic I/O
 //
 
-Data::Id& Stop::id() const
+Stop::IId& Stop::id() const
 {
     return mId;
 }
