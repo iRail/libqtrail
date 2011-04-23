@@ -26,13 +26,13 @@ namespace iRail
     Q_PROPERTY(uint delay READ delay WRITE setDelay)
     public:
         // Auxiliary structures
-        struct IId : Data::Id
+        struct Id : AbstractId
         {
             Stop const* origin;
             Stop const* destination;
 
             // Operator implementation
-            bool equals(const Data::Id& id) const;
+            bool equals(const AbstractId& id) const;
             unsigned int hash() const;
         };
         enum Roles
@@ -45,10 +45,10 @@ namespace iRail
         };
 
         // Construction and destruction
-        Connection(IId iId);
+        Connection(Id iId);
 
         // Basic I/O
-        IId& id() const;
+        Id& id() const;
         Station const* terminus() const;
         void setTerminus(Station const* iTerminus);
         Vehicle const* vehicle() const;
@@ -61,7 +61,7 @@ namespace iRail
         Data& assign(const Data& data);
 
     private:
-        IId mId;
+        Id mId;
         Station const* mTerminus;
         Vehicle const* mVehicle;
         unsigned int mDelay;

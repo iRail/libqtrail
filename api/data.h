@@ -15,22 +15,22 @@ namespace iRail
     class Data : public QObject
     {
     Q_OBJECT
-    Q_PROPERTY(Id id READ id CONSTANT)
+    Q_PROPERTY(AbstractId id READ id CONSTANT)
     public:
         // Auxiliary types
-        struct Id
+        struct AbstractId
         {
             // Operator implementation
-            virtual bool equals(const Id& id) const = 0;
+            virtual bool equals(const AbstractId& id) const = 0;
             virtual unsigned int hash() const = 0;
 
             // Operators
-            friend unsigned int qHash(const Id& id);
-            friend bool operator==(const Id& lhs, const Id& rhs);
+            friend unsigned int qHash(const AbstractId& id);
+            friend bool operator==(const AbstractId& lhs, const AbstractId& rhs);
         };
 
         // Basic I/O
-        virtual Id& id() const = 0;
+        virtual AbstractId& id() const = 0;
 
         // Operator implementation
         virtual bool equals(const Data& data) const = 0;

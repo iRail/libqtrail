@@ -13,12 +13,12 @@ using namespace iRail;
 // Operators
 //
 
-unsigned int iRail::qHash(const Data::Id& id)
+unsigned int iRail::qHash(const Data::AbstractId& id)
 {
     return id.hash();
 }
 
-bool iRail::operator==(const Data::Id& lhs, const Data::Id& rhs)
+bool iRail::operator==(const Data::AbstractId& lhs, const Data::AbstractId& rhs)
 {
     return lhs.equals(rhs);
 }

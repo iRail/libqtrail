@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Stop::Stop(IId iId) : mId(iId)
+Stop::Stop(Id iId) : mId(iId)
 {
     mPlatform = 0;
 }
@@ -29,7 +29,7 @@ Stop::~Stop()
 // Basic I/O
 //
 
-Stop::IId& Stop::id() const
+Stop::Id& Stop::id() const
 {
     return mId;
 }
@@ -70,14 +70,14 @@ Data& Stop::assign(const Data& data)
     return *this;
 }
 
-unsigned int Stop::IId::hash() const
+unsigned int Stop::Id::hash() const
 {
     return qHash(station) ^ qHash(datetime);
 }
 
-bool Stop::IId::equals(const Data::Id& data) const
+bool Stop::Id::equals(const AbstractId& data) const
 {
-    const Stop::IId& other = dynamic_cast<const Stop::IId&>(data);
+    const Stop::Id& other = dynamic_cast<const Stop::Id&>(data);
     return  (station->id() == other.station->id() &&
              datetime == other.datetime);
 }

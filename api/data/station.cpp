@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Station::Station(IId iId) : mId(iId)
+Station::Station(Id iId) : mId(iId)
 {
     mName = "";
 }
@@ -29,7 +29,7 @@ Station::~Station()
 // Basic I/O
 //
 
-Station::IId& Station::id() const
+Station::Id& Station::id() const
 {
     return mId;
 }
@@ -80,14 +80,14 @@ Data& Station::assign(const Data& data)
     return *this;
 }
 
-unsigned int Station::IId::hash() const
+unsigned int Station::Id::hash() const
 {
     return qHash(guid);
 }
 
-bool Station::IId::equals(const Data::Id& data) const
+bool Station::Id::equals(const AbstractId& data) const
 {
-    const Station::IId& other = dynamic_cast<const Station::IId&>(data);
+    const Station::Id& other = dynamic_cast<const Station::Id&>(data);
     return  (guid == other.guid);
 }
 

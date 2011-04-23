@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Vehicle::Vehicle(IId iId) : mId(iId)
+Vehicle::Vehicle(Id iId) : mId(iId)
 {
 }
 
@@ -28,7 +28,7 @@ Vehicle::~Vehicle()
 // Basic I/O
 //
 
-Vehicle::IId& Vehicle::id() const
+Vehicle::Id& Vehicle::id() const
 {
     return mId;
 }
@@ -68,13 +68,13 @@ Data& Vehicle::assign(const Data& data)
     return *this;
 }
 
-unsigned int Vehicle::IId::hash() const
+unsigned int Vehicle::Id::hash() const
 {
     return qHash(guid);
 }
 
-bool Vehicle::IId::equals(const Data::Id& data) const
+bool Vehicle::Id::equals(const AbstractId& data) const
 {
-    const Vehicle::IId& other = dynamic_cast<const Vehicle::IId&>(data);
+    const Vehicle::Id& other = dynamic_cast<const Vehicle::Id&>(data);
     return  (guid == other.guid);
 }

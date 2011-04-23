@@ -24,12 +24,12 @@ namespace iRail
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Auxiliary structures
-        struct IId : Data::Id
+        struct Id : AbstractId
         {
             QString guid;
 
             // Operator implementation
-            bool equals(const Data::Id& id) const;
+            bool equals(const AbstractId& id) const;
             unsigned int hash() const;
         };
         enum Roles
@@ -40,11 +40,11 @@ namespace iRail
         };
 
         // Construction and destruction
-        Station(IId iId);
+        Station(Id iId);
         ~Station();
 
         // Basic I/O
-        IId& id() const;
+        Id& id() const;
         QString name() const;
         void setName(const QString& iName);
         const Location& location() const;
@@ -57,7 +57,7 @@ namespace iRail
         friend QDataStream& operator>>(QDataStream& iStream, Station& iStation);
 
     private:
-        IId mId;
+        Id mId;
         QString mName;
         Location mLocation;
     };

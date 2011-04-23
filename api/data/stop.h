@@ -23,13 +23,13 @@ namespace iRail
     Q_PROPERTY(uint platform READ platform WRITE setPlatform)
     public:
         // Auxiliary structures
-        struct IId : Data::Id
+        struct Id : AbstractId
         {
             Station const* station;
             QDateTime datetime;
 
             // Operator implementation
-            bool equals(const Data::Id& id) const;
+            bool equals(const AbstractId& id) const;
             unsigned int hash() const;
         };
         enum Roles
@@ -40,11 +40,11 @@ namespace iRail
         };
 
         // Construction and destruction
-        Stop(IId iId);
+        Stop(Id iId);
         ~Stop();
 
         // Basic I/O
-        IId& id() const;
+        Id& id() const;
         unsigned int platform() const;
         void setPlatform(unsigned int iPlatform);
 
@@ -53,7 +53,7 @@ namespace iRail
         Data& assign(const Data& data);
 
     private:
-        IId mId;
+        Id mId;
         unsigned int mPlatform;
     };
 }

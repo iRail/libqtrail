@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Connection::Connection(IId iId) : mId(iId)
+Connection::Connection(Id iId) : mId(iId)
 {
     mTerminus = 0;
     mVehicle = 0;
@@ -26,7 +26,7 @@ Connection::Connection(IId iId) : mId(iId)
 // Basic I/O
 //
 
-Connection::IId& Connection::id() const
+Connection::Id& Connection::id() const
 {
     return mId;
 }
@@ -89,14 +89,14 @@ Data& Connection::assign(const Data& data)
     return *this;
 }
 
-unsigned int Connection::IId::hash() const
+unsigned int Connection::Id::hash() const
 {
     return (3*qHash(origin)) ^ (5*qHash(destination));
 }
 
-bool Connection::IId::equals(const Data::Id& data) const
+bool Connection::Id::equals(const AbstractId& data) const
 {
-    const Connection::IId& other = dynamic_cast<const Connection::IId&>(data);
+    const Connection::Id& other = dynamic_cast<const Connection::Id&>(data);
     return  (origin->id() == other.origin->id() &&
              destination->id() == other.destination->id());
 }
