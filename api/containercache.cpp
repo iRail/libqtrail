@@ -52,22 +52,58 @@ VehicleListPointer ContainerCache::vehicleList() const
     return mVehicleList;
 }
 
-StopListPointer ContainerCache::stopList(const Vehicle& iVehicle) const
+StopListPointer ContainerCache::stopList() const
 {
-    return StopListPointer(new StopList(iVehicle, this));
+    if (mStopList.isNull())
+        mStopList = StopListPointer(new StopList());
+    return mStopList;
 }
 
-DepartureListPointer ContainerCache::departureList(const Station& iStation) const
+StopListPointer ContainerCache::stopList(const Vehicle::Id& iVehicleId) const
 {
-    return DepartureListPointer(new DepartureList(iStation, this));
+    if (mStopLists.contains(iVehicleId))
+        return mStopLists[iVehicleId];
+    else
+    {
+        StopListPointer oStopList(new StopList(iVehicleId));
+        mStopLists.insert(iVehicleId, oStopList);
+        return oStopList;
+    }
 }
 
-JourneyListPointer ContainerCache::journeyList(const POI& iDeparture, const POI& iArrival) const
+DepartureListPointer ContainerCache::departureList(const Station::Id& iStationId) const
 {
-    return JourneyListPointer(new JourneyList(iDeparture, iArrival, this));
+    if (mDepartureLists.contains(iStationId))
+        return mDepartureLists[iStationId];
+    else
+    {
+        DepartureListPointer oDepartureList(new DepartureList(iStationId));
+        mDepartureLists.insert(iStationId, oDepartureList);
+        return oDepartureList;
+    }
 }
 
-ConnectionListPointer ContainerCache::connectionList(const Journey& iJourney) const
+JourneyListPointer ContainerCache::journeyList(const Station::Id& iOrigin, const Station::Id& iDestination) const
 {
-    return ConnectionListPointer(new ConnectionList(iJourney, this));
+    (QPair<Station::Id, Station::Id> iIdPair(iOrigin, iDestination);
+    if (mJourneyLists.contains(iIdPair))
+        return mJourneyLists[iIdPair];
+    else
+    {
+        JourneyListPointer oJourneyList(new JourneyList(iOrigin, iDestination));
+        mJourneyLists.insert(iIdPair, oJourneyList);
+        return oJourneyList;
+    }
+}
+
+ConnectionListPointer ContainerCache::connectionList(const Journey::Id& iJourneyId) const
+{
+    if (mConnectionLists.contains(iJourneyId))
+        return mConnectionLists[iJourneyId];
+    else
+    {
+        ConnectionListPointer oConnectionList(new ConnectionList(iJourneyId));
+        mConnectionLists.insert(iJourneyId, oConnectionList);
+        return oConnectionList;
+    }
 }

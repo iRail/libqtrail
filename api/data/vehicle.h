@@ -48,7 +48,7 @@ namespace iRail
 
     private:
         Q_DISABLE_COPY(Vehicle);
-        id mId;
+        Id mId;
         Location mLocation;
     };
 
