@@ -126,7 +126,7 @@ void DepartureList::fetch(const QDateTime& iDatetime)
 void DepartureList::process()
 {
     // Parse the data
-    DepartureReader tReader;
+    LiveboardReader tReader;
     try
     {
         tReader.read(mNetworkReply);

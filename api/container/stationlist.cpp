@@ -103,7 +103,7 @@ void StationList::fetch()
 void StationList::process()
 {
     // Parse the data
-    StationReader tReader;
+    StationsReader tReader;
     try
     {
         tReader.read(mNetworkReply);
