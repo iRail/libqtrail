@@ -39,8 +39,8 @@ namespace iRail
 
         // Basic I/O
         Id id() const;
-        Location const* location() const;
-        void setLocation(Location const* iLocation);
+        const Location& location() const;
+        void setLocation(const Location& iLocation);
 
         // Operators
         friend bool operator==(const Vehicle& lhs, const Vehicle& rhs);
@@ -49,7 +49,7 @@ namespace iRail
     private:
         Q_DISABLE_COPY(Vehicle);
         id mId;
-        Location const* mLocation;
+        Location mLocation;
     };
 
     bool operator==(const Vehicle& lhs, const Vehicle& rhs);

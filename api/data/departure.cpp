@@ -18,6 +18,8 @@ Departure::Departure(Id iId) : mId(iId)
 {
     qRegisterMetaType<Departure>("Departure");
     qRegisterMetaType<Departure::Id>("Departure::Id");
+
+    mDelay = 0;
 }
 
 

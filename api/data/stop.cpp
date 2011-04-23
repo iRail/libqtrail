@@ -18,6 +18,8 @@ Stop::Stop(Stop::Id iId) : mId(iId)
 {
     qRegisterMetaType<Stop>("Stop");
     qRegisterMetaType<Stop>("Stop::Id");
+
+    mPlatform = 0;
 }
 
 

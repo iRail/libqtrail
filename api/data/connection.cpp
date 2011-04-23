@@ -18,6 +18,10 @@ Connection::Connection(Id iId) : mId(iId)
 {
     qRegisterMetaType<Connection>("Connection");
     qRegisterMetaType<Connection>("Connection::Id");
+
+    mTerminus = 0;
+    mVehicle = 0;
+    mDelay = 0;
 }
 
 

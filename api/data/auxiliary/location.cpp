@@ -26,7 +26,10 @@ Location::Location()
     qRegisterMetaType<Location>("Location");
 
     mLatitudeValid = false;
+    mLatitude = 0;
+
     mLongitudeValid = false;
+    mLongitude = 0;
 }
 
 Location::~Location()

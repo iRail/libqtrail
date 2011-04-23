@@ -40,7 +40,7 @@ namespace iRail
         Id id() const;
         QString name() const;
         void setName(const QString& iName);
-        Location const* location() const;
+        const Location& location() const;
         void setLocation(Location const* iLocation);
 
         // Operators
@@ -53,7 +53,7 @@ namespace iRail
         Q_DISABLE_COPY(Station);
         Id mId;
         QString mName;
-        Location const* mLocation;
+        Location mLocation;
     };
 
     bool operator==(const Station& lhs, const Station& rhs);

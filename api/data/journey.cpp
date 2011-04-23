@@ -18,6 +18,8 @@ Journey::Journey(Journey::Id iId) : mId(iId)
 {
     qRegisterMetaType<Journey>("Journey");
     qRegisterMetaType<Journey::Id>("Journey::Id");
+
+    mDelay = 0;
 }
 
 
