@@ -13,20 +13,23 @@
 #include <QPair>
 #include <QDebug>
 #include <QHash>
+#include "api/data.h"
 #include <QDateTime>
 #include "station.h"
 #include "auxiliary/location.h"
 
 namespace iRail
 {
-    class Vehicle : public QObject
+    class Vehicle : public Data
     {
     Q_OBJECT
-    Q_PROPERTY(Id id READ id CONSTANT)
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Auxiliary structures
-        typedef QString Id;
+        struct Id : Data::Id
+        {
+            QString guid;
+        };
         enum Roles
         {
             IdRole = Qt::UserRole+1,
@@ -38,7 +41,7 @@ namespace iRail
         ~Vehicle();
 
         // Basic I/O
-        Id id() const;
+        Id& id() const;
         const Location& location() const;
         void setLocation(const Location& iLocation);
 

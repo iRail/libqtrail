@@ -12,18 +12,18 @@
 #include <QString>
 #include <QDateTime>
 #include <QHash>
+#include "api/data.h"
 #include "api/data/station.h"
 
 namespace iRail
 {
-    class Stop : public QObject
+    class Stop : public Data
     {
     Q_OBJECT
-    Q_PROPERTY(Id id READ id CONSTANT)
     Q_PROPERTY(uint platform READ platform WRITE setPlatform)
     public:
         // Auxiliary structures
-        struct Id
+        struct Id : Data::Id
         {
             Station const* station;
             QDateTime datetime;
@@ -42,7 +42,7 @@ namespace iRail
         ~Stop();
 
         // Basic I/O
-        Id id() const;
+        Id& id() const;
         unsigned int platform() const;
         void setPlatform(unsigned int iPlatform);
 

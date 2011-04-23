@@ -9,7 +9,6 @@
 // Includes
 #include <QObject>
 #include <QMetaType>
-#include <QSharedPointer>
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
@@ -18,10 +17,11 @@
 #include "api/data/vehicle.h"
 #include "api/data/connection.h"
 #include "api/data/stop.h"
-#include "api/containercache.h"
 
 namespace iRail
 {
+    class ContainerCache;
+
     class StopList : public QAbstractListModel
     {
     Q_OBJECT
@@ -50,17 +50,10 @@ namespace iRail
     private slots:
 
     private:
-        Q_DISABLE_COPY(StopList);
-
         // Member data
         Vehicle::Id mVehicleId;
         QHash<Stop::Id, Stop*> mStops;
     };
-
-    typedef QSharedPointer<StopList> StopListPointer;
 }
-
-Q_DECLARE_METATYPE(iRail::StopList)
-Q_DECLARE_METATYPE(iRail::StopListPointer)
 
 #endif // STOPLIST_H

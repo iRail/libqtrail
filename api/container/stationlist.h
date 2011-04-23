@@ -9,7 +9,6 @@
 // Includes
 #include <QObject>
 #include <QMetaType>
-#include <QSharedPointer>
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
@@ -17,10 +16,11 @@
 #include "api/requesthelper.h"
 #include "api/exception.h"
 #include "api/data/station.h"
-#include "api/containercache.h"
 
 namespace iRail
 {
+    class ContainerCache;
+
     class StationList : public QAbstractListModel
     {
     Q_OBJECT
@@ -54,8 +54,6 @@ namespace iRail
         void process();
 
     private:
-        Q_DISABLE_COPY(StationList);
-
         // Member data
         RequestHelper mRequestHelper;
         QDateTime mTimestamp;
@@ -63,13 +61,8 @@ namespace iRail
         QList<Station::Id> mStationIds;
     };
 
-    typedef QSharedPointer<StationList> StationListPointer;
-
     QDataStream &operator<<(QDataStream& iStream, const StationList& iStationList);
     QDataStream &operator>>(QDataStream& iStream, StationList& iStationList);
 }
-
-Q_DECLARE_METATYPE(iRail::StationList)
-Q_DECLARE_METATYPE(iRail::StationListPointer)
 
 #endif // STATIONLIST_H

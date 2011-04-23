@@ -16,9 +16,6 @@ using namespace iRail;
 
 StopList::StopList(const Vehicle::Id& iVehicleId, QObject* iParent) : mVehicleId(iVehicleId), QAbstractListModel(iParent)
 {
-    qRegisterMetaType<StopList>("StopList");
-    qRegisterMetaType<StopListPointer>("StopListPointer");
-
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Stop::StationRole] = "station";
     tRoleNames[Stop::DatetimeRole] = "datetime";

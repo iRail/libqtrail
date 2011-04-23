@@ -17,17 +17,12 @@ using namespace iRail;
 
 StationList::StationList(QObject* iParent) : QAbstractListModel(iParent)
 {
-    qRegisterMetaType<StationList>("StationList");
-    qRegisterMetaType<StationListPointer>("StationListPointer");
-    qRegisterMetaTypeStreamOperators<StationListPointer>("StationListPointer");
-
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Station::IdRole] = "id";
     tRoleNames[Station::NameRole] = "name";
     tRoleNames[Station::LocationRole] = "location";
     setRoleNames(tRoleNames);
 }
-
 
 StationList::~StationList()
 {

@@ -29,23 +29,23 @@ namespace iRail
         ~ContainerCache();
 
         // Container request methods
-        StationListPointer stationList() const;
-        VehicleListPointer vehicleList() const;
-        StopListPointer stopList() const;
-        StopListPointer stopList(const Vehicle::Id& iVehicleId) const;
-        DepartureListPointer departureList(const Station::Id& iStationId) const;
-        JourneyListPointer journeyList(const Station::Id& iOriginId, const Station::Id& iDestinationId) const;
-        ConnectionListPointer connectionList(const Journey::Id& iJourneyId) const;
+        StationList* stationList() const;
+        VehicleList* vehicleList() const;
+        StopList* stopList() const;
+        StopList* stopList(const Vehicle::Id& iVehicleId) const;
+        DepartureList* departureList(const Station::Id& iStationId) const;
+        JourneyList* journeyList(const Station::Id& iOriginId, const Station::Id& iDestinationId) const;
+        ConnectionList* connectionList(const Journey::Id& iJourneyId) const;
 
     private:
         // Member data
-        StationListPointer mStationList;
-        VehicleListPointer mVehicleList;
-        StopListPointer mStopList;
-        QHash<Vehicle::Id, StopListPointer> mStopLists;
-        QHash<Station::Id, DepartureListPointer> mDepartureLists;
-        QHash<QPair<Station::Id, Station::Id>, JourneyListPointer> mJourneyLists;
-        QHash<Journey::Id, ConnectionListPointer> mConnectionLists;
+        StationList* mStationList;
+        VehicleList* mVehicleList;
+        StopList* mStopList;
+        QHash<Vehicle::Id, StopList*> mStopLists;
+        QHash<Station::Id, DepartureList*> mDepartureLists;
+        QHash<QPair<Station::Id, Station::Id>, JourneyList*> mJourneyLists;
+        QHash<Journey::Id, ConnectionList*> mConnectionLists;
 
         // Singleton
         static ContainerCache* mInstance;

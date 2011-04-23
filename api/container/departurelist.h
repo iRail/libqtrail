@@ -9,7 +9,6 @@
 // Includes
 #include <QObject>
 #include <QMetaType>
-#include <QSharedPointer>
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
@@ -18,16 +17,18 @@
 #include "api/requesthelper.h"
 #include "api/data/station.h"
 #include "api/data/departure.h"
-#include "api/containercache.h"
 
 namespace iRail
 {
+    class ContainerCache;
+
     class DepartureList : public QAbstractListModel
     {
     Q_OBJECT
     private:
         // Construction and destruction
         DepartureList(const Station::Id& iStationId, QObject* iParent = 0);
+        ~DepartureList();
         friend class ContainerCache;
 
         // Basic I/O
@@ -56,19 +57,12 @@ namespace iRail
         void process();
 
     private:
-        Q_DISABLE_COPY(DepartureList);
-
         // Member data
         RequestHelper mRequestHelper;
         QDateTime mTimestamp;
         Station::Id mStationId;
         QHash<Departure::Id, Departure*> mDepartures;
     };
-
-    typedef QSharedPointer<DepartureList> DepartureListPointer;
 }
-
-Q_DECLARE_METATYPE(iRail::DepartureList)
-Q_DECLARE_METATYPE(iRail::DepartureListPointer)
 
 #endif // LIVEBOARD_H

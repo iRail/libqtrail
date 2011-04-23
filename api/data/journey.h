@@ -11,20 +11,20 @@
 #include <QMetaType>
 #include <QString>
 #include <QHash>
+#include "api/data.h"
 #include "stop.h"
 #include "station.h"
 #include "vehicle.h"
 
 namespace iRail
 {
-    class Journey : public QObject
+    class Journey : public Data
     {
     Q_OBJECT
-    Q_PROPERTY(Id id READ id CONSTANT)
-    Q_PROPERTY(uint delay READ relay WRITE setDelay)
+    Q_PROPERTY(uint delay READ delay WRITE setDelay)
     public:
         // Auxiliary structures
-        struct Id
+        struct Id : Data::Id
         {
             Stop const* origin;
             Stop const* destination;
@@ -40,10 +40,10 @@ namespace iRail
         };
 
         // Construction and destruction
-        Journey(Stop const* iDeparture, Stop const* iArrival);
+        Journey(Id iId);
 
         // Basic I/O
-        Id id() const;
+        Id& id() const;
         unsigned int delay() const;
         void setDelay(unsigned int iDelay);
 

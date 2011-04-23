@@ -18,7 +18,9 @@ ContainerCache* ContainerCache::mInstance = 0;
 
 ContainerCache::ContainerCache(QObject* iParent) : QObject(iParent)
 {
-
+    mStationList = 0;
+    mVehicleList = 0;
+    mStopList = 0;
 }
 
 ContainerCache& ContainerCache::instance()
@@ -30,8 +32,13 @@ ContainerCache& ContainerCache::instance()
 
 ContainerCache::~ContainerCache()
 {
-    // TODO: do the QHashes need to be qDeleteAll'd in here, or do the values
-    // get destructed automatically?
+    delete mStationList;
+    delete mVehicleList;
+    delete mStopList;
+    qDeleteAll(mStopLists);
+    qDeleteAll(mDepartureLists);
+    qDeleteAll(mJourneyLists);
+    qDeleteAll(mConnectionLists);
 }
 
 
@@ -39,71 +46,71 @@ ContainerCache::~ContainerCache()
 // Container request methods
 //
 
-StationListPointer ContainerCache::stationList() const
+StationList* ContainerCache::stationList() const
 {
-    if (mStationList.isNull())
-        mStationList = StationListPointer(new StationList(this));
+    if (mStationList == 0)
+        mStationList = new StationList(this);
     return mStationList;
 }
 
-VehicleListPointer ContainerCache::vehicleList() const
+VehicleList* ContainerCache::vehicleList() const
 {
-    if (mVehicleList.isNull())
-        mVehicleList = VehicleListPointer(new StationList(this));
+    if (mVehicleList == 0)
+        mVehicleList = new StationList(this);
     return mVehicleList;
 }
 
-StopListPointer ContainerCache::stopList() const
+StopList* ContainerCache::stopList() const
 {
-    if (mStopList.isNull())
-        mStopList = StopListPointer(new StopList());
+    if (mStopList == 0)
+        mStopList = new StopList();
     return mStopList;
 }
 
-StopListPointer ContainerCache::stopList(const Vehicle::Id& iVehicleId) const
+StopList* ContainerCache::stopList(const Vehicle::Id& iVehicleId) const
 {
     if (mStopLists.contains(iVehicleId))
         return mStopLists[iVehicleId];
     else
     {
-        StopListPointer oStopList(new StopList(iVehicleId));
+        StopList* oStopList = new StopList(iVehicleId);
         mStopLists.insert(iVehicleId, oStopList);
         return oStopList;
     }
 }
 
-DepartureListPointer ContainerCache::departureList(const Station::Id& iStationId) const
+DepartureList* ContainerCache::departureList(const Station::Id& iStationId) const
 {
     if (mDepartureLists.contains(iStationId))
         return mDepartureLists[iStationId];
     else
     {
-        DepartureListPointer oDepartureList(new DepartureList(iStationId));
+        DepartureList* oDepartureList = new DepartureList(iStationId);
         mDepartureLists.insert(iStationId, oDepartureList);
         return oDepartureList;
     }
 }
 
-JourneyListPointer ContainerCache::journeyList(const Station::Id& iOrigin, const Station::Id& iDestination) const
+JourneyList* ContainerCache::journeyList(const Station::Id& iOrigin, const Station::Id& iDestination) const
 {
     (QPair<Station::Id, Station::Id> iIdPair(iOrigin, iDestination);
     if (mJourneyLists.contains(iIdPair))
         return mJourneyLists[iIdPair];
     else
     {
-        JourneyListPointer oJourneyList(new JourneyList(iOrigin, iDestination));
+        JourneyList* oJourneyList = new JourneyList(iOrigin, iDestination);
         mJourneyLists.insert(iIdPair, oJourneyList);
         return oJourneyList;
     }
 }
 
-ConnectionListPointer ContainerCache::connectionList(const Journey::Id& iJourneyId) const
+ConnectionList* ContainerCache::connectionList(const Journey::Id& iJourneyId) const
 {
     if (mConnectionLists.contains(iJourneyId))
         return mConnectionLists[iJourneyId];
     else
     {
-        ConnectionListPointer oConnectionList(new ConnectionList(iJourneyId));
+        ConnectionList* oConnectionList(new ConnectionList(iJourneyId));
         mConnectionLists.insert(iJourneyId, oConnectionList);
         return oConnectionList;
     }

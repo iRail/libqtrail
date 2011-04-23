@@ -11,22 +11,22 @@
 #include <QMetaType>
 #include <QString>
 #include <QHash>
+#include "api/data.h"
 #include "stop.h"
 #include "station.h"
 #include "vehicle.h"
 
 namespace iRail
 {
-    class Connection : public QObject
+    class Connection : public Data
     {
     Q_OBJECT
-    Q_PROPERTY(Id id READ id CONSTANT)
-    Q_PROPERTY(Station terminus READ terminus WRITE setTerminus)
-    Q_PROPERTY(Vehicle vehicle READ vehicle WRITE setVehicle)
-    Q_PROPERTY(uint delay READ relay WRITE setDelay)
+    Q_PROPERTY(Station terminus READ terminus)
+    Q_PROPERTY(Vehicle vehicle READ vehicle)
+    Q_PROPERTY(uint delay READ delay WRITE setDelay)
     public:
         // Auxiliary structures
-        struct Id
+        struct Id : Data::Id
         {
             Stop const* origin;
             Stop const* destination;
@@ -46,7 +46,7 @@ namespace iRail
         Connection(Id iId);
 
         // Basic I/O
-        Id id() const;
+        Id& id() const;
         Station const* terminus() const;
         void setTerminus(Station const* iTerminus);
         Vehicle const* vehicle() const;

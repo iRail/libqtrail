@@ -9,7 +9,6 @@
 // Includes
 #include <QObject>
 #include <QMetaType>
-#include <QSharedPointer>
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
@@ -17,10 +16,11 @@
 #include "api/exception.h"
 #include "api/data/connection.h"
 #include "api/data/journey.h"
-#include "api/containercache.h"
 
 namespace iRail
 {
+    class ContainerCache;
+
     class ConnectionList : public QAbstractListModel
     {
     Q_OBJECT
@@ -28,6 +28,7 @@ namespace iRail
         // Construction and destruction
         ConnectionList(const Journey::Id& iJourney, QObject* iParent = 0);
         ~ConnectionList();
+        friend class ContainerCache;
 
         // Basic I/O
         const Journey::Id& journeyId() const;
@@ -41,18 +42,11 @@ namespace iRail
         friend QDataStream &operator>>(QDataStream& iStream, ConnectionList& iVehicleList);
 
     private:
-        Q_DISABLE_COPY(VehicleList);
-
         // Member data
         QDateTime mTimestamp;
         Journey::Id mJourneyId;
         QHash<Connection::Id, Connection*> mConnections;
     };
-
-    typedef QSharedPointer<ConnectionList> ConnectionListPointer;
 }
-
-Q_DECLARE_METATYPE(iRail::ConnectionList)
-Q_DECLARE_METATYPE(iRail::ConnectionListPointer)
 
 #endif // CONNECTIONLIST_H

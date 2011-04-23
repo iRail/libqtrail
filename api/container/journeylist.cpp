@@ -16,9 +16,6 @@ using namespace iRail;
 
 JourneyList::JourneyList(const Station::Id& iOrigin, const Station::Id& iDestination, QObject* iParent) : mOrigin(iOrigin), mDestination(iDestination), QAbstractListModel(iParent)
 {
-    qRegisterMetaType<JourneyList>("JourneyList");
-    qRegisterMetaType<JourneyListPointer>("JourneyListPointer");
-
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Journey::OriginRole] = "origin";
     tRoleNames[Journey::DestinationRole] = "destination";

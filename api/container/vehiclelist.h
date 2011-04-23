@@ -9,17 +9,17 @@
 // Includes
 #include <QObject>
 #include <QMetaType>
-#include <QSharedPointer>
 #include <QString>
 #include <QDateTime>
 #include <QAbstractListModel>
 #include <QHash>
 #include "api/exception.h"
 #include "api/data/vehicle.h"
-#include "api/containercache.h"
 
 namespace iRail
 {
+    class ContainerCache;
+
     class VehicleList : public QAbstractListModel
     {
     Q_OBJECT
@@ -41,17 +41,10 @@ namespace iRail
         friend QDataStream &operator>>(QDataStream& iStream, VehicleList& iVehicleList);
 
     private:
-        Q_DISABLE_COPY(VehicleList);
-
         // Member data
         QDateTime mTimestamp;
         QHash<Vehicle::Id, Vehicle*> mVehicles;
     };
-
-    typedef QSharedPointer<VehicleList> VehicleListPointer;
 }
-
-Q_DECLARE_METATYPE(iRail::VehicleList)
-Q_DECLARE_METATYPE(iRail::VehicleListPointer)
 
 #endif // VEHICLELIST_H

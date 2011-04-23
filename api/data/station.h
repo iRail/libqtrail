@@ -13,18 +13,21 @@
 #include <QPair>
 #include <QHash>
 #include "auxiliary/location.h"
+#include "api/data.h"
 
 namespace iRail
 {
-    class Station : public QObject
+    class Station : public Data
     {
     Q_OBJECT
-    Q_PROPERTY(QString id READ id CONSTANT)
     Q_PROPERTY(QString name READ name WRITE setName)
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Auxiliary structures
-        typedef QString Id;
+        struct Id : Data::Id
+        {
+            QString guid;
+        };
         enum Roles
         {
             IdRole = Qt::UserRole+1,
@@ -37,7 +40,7 @@ namespace iRail
         ~Station();
 
         // Basic I/O
-        Id id() const;
+        Id& id() const;
         QString name() const;
         void setName(const QString& iName);
         const Location& location() const;

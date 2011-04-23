@@ -16,9 +16,6 @@ using namespace iRail;
 
 ConnectionList::ConnectionList(const Journey::Id& iJourneyId, QObject* iParent) : mJourneyId(iJourneyId), QAbstractListModel(iParent)
 {
-    qRegisterMetaType<ConnectionList>("ConnectionList");
-    qRegisterMetaType<ConnectionListPointer>("ConnectionListPointer");
-
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Connection::OriginRole] = "origin";
     tRoleNames[Connection::DestinationRole] = "destination";

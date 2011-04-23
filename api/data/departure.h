@@ -12,19 +12,19 @@
 #include <QString>
 #include <QDebug>
 #include <QHash>
+#include "api/data.h"
 #include "stop.h"
 #include "vehicle.h"
 
 namespace iRail
 {
-    class Departure : public QObject
+    class Departure : public Data
     {
     Q_OBJECT
-    Q_PROPERTY(Id id READ id CONSTANT)
-    Q_PROPERTY(uint delay READ relay WRITE setDelay)
+    Q_PROPERTY(uint delay READ delay WRITE setDelay)
     public:
         // Auxiliary structure
-        struct Id
+        struct Id : Data::Id
         {
             Stop const* origin;
             Vehicle const* vehicle;
@@ -42,7 +42,7 @@ namespace iRail
         Departure(Id iId);
 
         // Basic I/O
-        Id id() const;
+        Id& id() const;
         unsigned int delay() const;
         void setDelay(unsigned int iDelay);
 
