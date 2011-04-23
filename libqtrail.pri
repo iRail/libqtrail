@@ -20,7 +20,6 @@ SOURCES += \
     api/data/station.cpp \
     api/data/vehicle.cpp \
     api/data/departure.cpp \
-    api/data/poi.cpp \
     api/data/connection.cpp \
     api/data/journey.cpp \
     api/container/journeylist.cpp \
@@ -28,10 +27,11 @@ SOURCES += \
     api/container/stationlist.cpp \
     api/container/stoplist.cpp \
     api/requesthelper.cpp \
-    ../libirail/api/data/location.cpp \
-    ../libirail/api/container/vehiclelist.cpp \
-    ../libirail/api/container/connectionlist.cpp \
-    ../libirail/api/containercache.cpp
+    api/data/auxiliary/location.cpp \
+    api/container/vehiclelist.cpp \
+    api/container/connectionlist.cpp \
+    api/containercache.cpp \
+    api/data/stop.cpp
 HEADERS += \
     asyncapi.h \
     cachedapi.h \
@@ -54,7 +54,6 @@ HEADERS += \
     api/data/station.h \
     api/data/vehicle.h \
     api/data/departure.h \
-    api/data/poi.h \
     api/data/connection.h \
     api/data/journey.h \
     api/container/journeylist.h \
@@ -62,7 +61,8 @@ HEADERS += \
     api/container/stationlist.h \
     api/container/stoplist.h \
     api/requesthelper.h \
-    ../libirail/api/data/location.h \
-    ../libirail/api/container/vehiclelist.h \
-    ../libirail/api/container/connectionlist.h \
-    ../libirail/api/containercache.h
+    api/data/auxiliary/location.h \
+    api/container/vehiclelist.h \
+    api/container/connectionlist.h \
+    api/containercache.h \
+    api/data/stop.h

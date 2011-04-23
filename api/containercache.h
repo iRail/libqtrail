@@ -33,7 +33,7 @@ namespace iRail
         VehicleListPointer vehicleList() const;
         StopListPointer stopList(const Vehicle& iVehicle) const;
         DepartureListPointer departureList(const Station& iStation) const;
-        JourneyListPointer journeyList(const POI& iDeparture, const POI& iArrival) const;
+        JourneyListPointer journeyList(const Stop& iDeparture, const Stop& iArrival) const;
         ConnectionListPointer connectionList(const Journey& iJourney) const;
 
     private:

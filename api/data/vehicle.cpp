@@ -14,9 +14,10 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Vehicle::Vehicle(QString iId) : mId(iId), mLocation(Location())
+Vehicle::Vehicle(Vehicle::Id iId) : mId(iId), mLocation(Location())
 {
     qRegisterMetaType<Vehicle>("Vehicle");
+    qRegisterMetaType<Vehicle::Id>("Vehicle::Id");
 }
 
 
@@ -29,7 +30,7 @@ Vehicle::~Vehicle()
 // Basic I/O
 //
 
-QString Vehicle::id() const
+Vehicle::Id Vehicle::id() const
 {
     return mId;
 }

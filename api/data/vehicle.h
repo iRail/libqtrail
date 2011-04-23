@@ -8,35 +8,36 @@
 
 // Includes
 #include <QObject>
-#include <QSharedPointer>
 #include <QMetaType>
 #include <QString>
 #include <QPair>
 #include <QDebug>
 #include <QDateTime>
 #include "station.h"
-#include "location.h"
+#include "auxiliary/location.h"
 
 namespace iRail
 {
     class Vehicle : public QObject
     {
     Q_OBJECT
-    Q_PROPERTY(QString id READ id CONSTANT)
+    Q_PROPERTY(Id id READ id CONSTANT)
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Auxiliary structures
-        enum Roles {
+        typedef QString Id;
+        enum Roles
+        {
           IdRole = Qt::UserRole+1,
           LocationRole
         };
 
         // Construction and destruction
-        Vehicle(QString iId);
+        Vehicle(Id iId);
         ~Vehicle();
 
         // Basic I/O
-        QString id() const;
+        Id id() const;
         Location const* location() const;
         void setLocation(Location const* iLocation);
 
@@ -48,7 +49,7 @@ namespace iRail
 
     private:
         Q_DISABLE_COPY(Vehicle);
-        QString mId;
+        id mId;
         Location const* mLocation;
     };
 
@@ -59,5 +60,6 @@ namespace iRail
 }
 
 Q_DECLARE_METATYPE(iRail::Vehicle)
+Q_DECLARE_METATYPE(iRail::Vehicle::Id)
 
 #endif // STATION_H

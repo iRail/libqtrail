@@ -16,19 +16,22 @@
 #include "api/exception.h"
 #include "api/data/vehicle.h"
 #include "api/data/connection.h"
-#include "api/data/poi.h"
+#include "api/data/stop.h"
+#include "api/containercache.h"
 
 namespace iRail
 {
     class StopList : public QAbstractListModel
     {
     Q_OBJECT
-    public:
+    private:
         // Construction and destruction
         StopList(const Vehicle& iVehicle, QObject* iParent = 0);
         ~StopList();
+        friend class ContainerCache;
 
         // Basic I/O
+    public:
         Vehicle vehicle() const;
 
         // Model interface
@@ -50,10 +53,10 @@ namespace iRail
 
         // Member data
         const Vehicle& mVehicle;
-        QList<POI*> mStops;
+        QList<Stop*> mStops;
     };
 
-    typedef QSharedPointer<StopList> StopListPointer;
+    typedef QSharedStopnter<StopList> StopListStopnter;
 
     QDataStream &operator<<(QDataStream& iStream, const StopList& iStopList);
     QDataStream &operator>>(QDataStream& iStream, StopList& iStopList);

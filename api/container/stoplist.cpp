@@ -20,10 +20,10 @@ StopList::StopList(const Vehicle& iVehicle, QObject* iParent) : mVehicle(iVehicl
     qRegisterMetaType<StopListPointer>("StopListPointer");
 
     QHash<int, QByteArray> tRoleNames;
-    tRoleNames[POI::StationRole] = "station";
-    tRoleNames[POI::DatetimeRole] = "datetime";
-    tRoleNames[POI::DelayRole] = "delay";
-    tRoleNames[POI::PlatformRole] = "platform";
+    tRoleNames[Stop::StationRole] = "station";
+    tRoleNames[Stop::DatetimeRole] = "datetime";
+    tRoleNames[Stop::DelayRole] = "delay";
+    tRoleNames[Stop::PlatformRole] = "platform";
     setRoleNames(tRoleNames);
 }
 
@@ -58,17 +58,17 @@ QVariant StopList::data(const QModelIndex& iIndex, int iRole) const
     if (iIndex.row() > (mStops.size()-1) )
         return QVariant();
 
-    POI* oStop = mStops.at(iIndex.row());
+    Stop* oStop = mStops.at(iIndex.row());
     switch (iRole)
     {
     case Qt::DisplayRole:
-    case POI::StationRole:
+    case Stop::StationRole:
         return QVariant::fromValue(oStop->station());
-    case POI::DatetimeRole:
+    case Stop::DatetimeRole:
         return QVariant::fromValue(oStop->datetime());
-    case POI::DelayRole:
+    case Stop::DelayRole:
         return QVariant::fromValue(oStop->delay());
-    case POI::PlatformRole:
+    case Stop::PlatformRole:
         return QVariant::fromValue(oStop->platform());
     default:
         return QVariant();
@@ -85,7 +85,7 @@ QDataStream& iRail::operator<<(QDataStream& iStream, const StopList& iStopList)
     iStream << iStopList.mVehicle;
 
     iStream << iStopList.mStops.size();
-    foreach (POI* tStop, iStopList.mStops)
+    foreach (Stop* tStop, iStopList.mStops)
         iStream << *tStop;
 
     return iStream;
@@ -100,7 +100,7 @@ QDataStream& iRail::operator>>(QDataStream& iStream, StopList& iStopList)
     Q_ASSERT(iStopList.mStops.size() == 0);
     for (int i = 0; i < tStopCount; i++)
     {
-        POI* tStop;
+        Stop* tStop;
         iStream >> *tStop;
         iStopList.mStops << tStop;
     }

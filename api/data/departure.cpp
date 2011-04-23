@@ -14,9 +14,10 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Departure::Departure(const QString& iVehicle, const POI& iPOI) : mVehicle(iVehicle), mPOI(iPOI)
+Departure::Departure(Id iId) : mId(iId)
 {
     qRegisterMetaType<Departure>("Departure");
+    qRegisterMetaType<Departure::Id>("Departure::Id");
 }
 
 
@@ -24,14 +25,9 @@ Departure::Departure(const QString& iVehicle, const POI& iPOI) : mVehicle(iVehic
 // Basic I/O
 //
 
-QString Departure::vehicle() const
+Departure::Id id() const
 {
-    return mVehicle;
-}
-
-POI Departure::poi() const
-{
-    return mPOI;
+    return mId;
 }
 
 
@@ -42,19 +38,19 @@ POI Departure::poi() const
 bool iRail::operator==(const Departure& lhs, const Departure& rhs)
 {
     return  (lhs.vehicle() == rhs.vehicle() &&
-             lhs.poi() == rhs.poi());
+             lhs.Stop() == rhs.Stop());
 }
 
 bool iRail::operator||(const Departure& lhs, const Departure& rhs)
 {
     return  (lhs.vehicle() || rhs.vehicle() &&
-             lhs.poi() || rhs.poi());
+             lhs.Stop() || rhs.Stop());
 }
 
 QDataStream& iRail::operator<<(QDataStream& iStream, const Departure& iDeparture)
 {
     iStream << iDeparture.mVehicle;
-    iStream << iDeparture.mPOI;
+    iStream << iDeparture.mStop;
 
     return iStream;
 }
@@ -64,9 +60,9 @@ QDataStream& iRail::operator>>(QDataStream& iStream, Departure& iDeparture)
     iStream >> tVehicle;
     iDeparture.mVehicle = tVehicle;
 
-    POI* tPOI = new POI(new Station("dummy"), QDateTime());
+    Stop* tStop = new Stop(new Station("dummy"), QDateTime());
     iStream >> tDeparture;
-    iConnection.mPOI = tPOI;
+    iConnection.mStop = tStop;
 
     return iStream;
 }

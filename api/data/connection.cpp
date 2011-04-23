@@ -14,9 +14,10 @@ using namespace iRail;
 // Construction and destruction
 //
 
-Connection::Connection(const POI& iDeparture, const POI& iArrival) : mDeparture(iDeparture, mArrival(iArrival)
+Connection::Connection(Id iId) : mId(iId)
 {
-    qRegisterMetaType<Departure>("Connection");
+    qRegisterMetaType<Connection>("Connection");
+    qRegisterMetaType<Connection>("Connection::Id");
 }
 
 
@@ -24,14 +25,9 @@ Connection::Connection(const POI& iDeparture, const POI& iArrival) : mDeparture(
 // Basic I/O
 //
 
-POI Connection::departure() const
+Id Connection::id() const
 {
-    return mDeparture;
-}
-
-POI Connection::arrival() const
-{
-    return mArrival;
+    return mId;
 }
 
 Station Connection::terminus() const
@@ -84,11 +80,11 @@ QDataStream& iRail::operator<<(QDataStream& iStream, const Connection& iConnecti
 }
 QDataStream& iRail::operator>>(QDataStream& iStream, Connection& iConnection)
 {
-    POI* tDeparture = new POI(new Station("dummy"), QDateTime());
+    Stop* tDeparture = new Stop(new Station("dummy"), QDateTime());
     iStream >> tDeparture;
     iConnection.mDeparture = tDeparture;
 
-    POI* tArrival = new POI(new Station("dummy"), QDateTime());
+    Stop* tArrival = new Stop(new Station("dummy"), QDateTime());
     iStream >> tDeparture;
     iConnection.mArrival = tArrival;
 

@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-JourneyList::JourneyList(const POI& iDeparture, const POI& iArrival, QObject* iParent) : mDeparture(iDeparture), mArrival(iArrival), QAbstractListModel(iParent)
+JourneyList::JourneyList(const Stop& iDeparture, const Stop& iArrival, QObject* iParent) : mDeparture(iDeparture), mArrival(iArrival), QAbstractListModel(iParent)
 {
     qRegisterMetaType<JourneyList>("JourneyList");
     qRegisterMetaType<JourneyListPointer>("JourneyListPointer");
@@ -36,12 +36,12 @@ JourneyList::~Connection()
 //
 
 
-const POI& JourneyList::departure() const
+const Stop& JourneyList::departure() const
 {
     return mDeparture;
 }
 
-const POI& JourneyList::arrival() const
+const Stop& JourneyList::arrival() const
 {
     return mArrival;
 }

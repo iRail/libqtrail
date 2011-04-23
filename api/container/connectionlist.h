@@ -16,6 +16,7 @@
 #include "api/exception.h"
 #include "api/data/connection.h"
 #include "api/data/journey.h"
+#include "api/containercache.h"
 
 namespace iRail
 {

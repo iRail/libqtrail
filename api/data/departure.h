@@ -11,7 +11,7 @@
 #include <QMetaType>
 #include <QString>
 #include <QDebug>
-#include "poi.h"
+#include "stop.h"
 #include "vehicle.h"
 
 namespace iRail
@@ -19,21 +19,25 @@ namespace iRail
     class Departure : public QObject
     {
     Q_OBJECT
-    Q_PROPERTY(QString vehicle READ vehicle CONSTANT)
-    Q_PROPERTY(POI poi READ poi CONSTANT)
+    Q_PROPERTY(Id id READ id CONSTANT)
     public:
         // Construction and destruction
-        Departure(Vehicle const* iVehicle, POI const* iPOI);
+        Departure(Id iId);
 
-        // Auxiliary structures
-        enum Roles {
+        // Auxiliary structure
+        struct Id
+        {
+            Stop const* origin;
+            Vehicle const* vehicle;
+        };
+        enum Roles
+        {
           VehicleRole = Qt::UserRole+1,
-          POIRole
+          StopRole
         };
 
         // Basic I/O
-        Vehicle const* vehicle() const;
-        POI const* poi() const;
+        Id id() const;
 
         // Operators
         friend bool operator==(const Departure& lhs, const Departure& rhs);
@@ -43,8 +47,7 @@ namespace iRail
 
     private:
         Q_DISABLE_COPY(Departure);
-        Vehicle const* mVehicle;
-        POI const* mPOI;
+        Id mId;
     };
 
     bool operator==(const Departure& lhs, const Departure& rhs);
@@ -54,5 +57,6 @@ namespace iRail
 }
 
 Q_DECLARE_METATYPE(iRail::Departure)
+Q_DECLARE_METATYPE(iRail::Departure::Id)
 
 #endif // DEPARTURE_H

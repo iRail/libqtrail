@@ -15,16 +15,21 @@
 #include <QAbstractListModel>
 #include "api/exception.h"
 #include "api/data/station.h"
+#include "api/containercache.h"
 
 namespace iRail
 {
     class StationList : public QAbstractListModel
     {
     Q_OBJECT
-    public:
+    private:
         // Construction and destruction
         StationList(QObject* iParent = 0);
         ~StationList();
+        friend class ContainerCache;
+
+    public:
+        // Basic I/O
 
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
@@ -48,7 +53,7 @@ namespace iRail
         QMap<QString, Station*> mStations;
     };
 
-    typedef QSharedPointer<StationList> StationListPointer;
+    typedef QSharedStopnter<StationList> StationListStopnter;
 
     QDataStream &operator<<(QDataStream& iStream, const StationList& iStationList);
     QDataStream &operator>>(QDataStream& iStream, StationList& iStationList);

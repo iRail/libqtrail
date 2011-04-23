@@ -11,7 +11,7 @@
 #include <QMetaType>
 #include <QString>
 #include <QPair>
-#include "location.h"
+#include "auxiliary/location.h"
 
 namespace iRail
 {
@@ -23,6 +23,7 @@ namespace iRail
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Auxiliary structures
+        typedef QString Id;
         enum Roles {
           IdRole = Qt::UserRole+1,
           NameRole,
@@ -30,11 +31,11 @@ namespace iRail
         };
 
         // Construction and destruction
-        Station(QString iId);
+        Station(Id iId);
         ~Station();
 
         // Basic I/O
-        QString id() const;
+        Id id() const;
         QString name() const;
         void setName(const QString& iName);
         Location const* location() const;
@@ -48,7 +49,7 @@ namespace iRail
 
     private:
         Q_DISABLE_COPY(Station);
-        QString mId;
+        Id mId;
         QString mName;
         Location const* mLocation;
     };

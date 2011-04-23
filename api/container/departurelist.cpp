@@ -22,7 +22,7 @@ DepartureList::DepartureList(const Station& iStation, QObject* iParent) : mStati
 
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Departure::VehicleRole] = "vehicle";
-    tRoleNames[Departure::POIRole] = "poi";
+    tRoleNames[Departure::StopRole] = "poi";
     setRoleNames(tRoleNames);
 }
 
@@ -59,8 +59,8 @@ QVariant DepartureList::data(const QModelIndex& iIndex, int iRole) const
     case Qt::DisplayRole:
     case Departure::VehicleRole:
         return QVariant::fromValue(oDeparture->vehicle());
-    case Departure::POIRole:
-        return QVariant::fromValue(oDeparture->poi());
+    case Departure::StopRole:
+        return QVariant::fromValue(oDeparture->stop());
     default:
         return QVariant();
     }

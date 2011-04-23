@@ -15,16 +15,21 @@
 #include <QAbstractListModel>
 #include "api/exception.h"
 #include "api/data/vehicle.h"
+#include "api/containercache.h"
 
 namespace iRail
 {
     class VehicleList : public QAbstractListModel
     {
     Q_OBJECT
-    public:
+    private:
         // Construction and destruction
         VehicleList(QObject* iParent = 0);
         ~VehicleList();
+        friend class ContainerCache;
+
+    public:
+        // Basic I/O
 
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;

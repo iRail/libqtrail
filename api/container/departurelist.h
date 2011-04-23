@@ -17,17 +17,20 @@
 #include "api/requesthelper.h"
 #include "api/data/station.h"
 #include "api/data/departure.h"
+#include "api/containercache.h"
 
 namespace iRail
 {
     class DepartureList : public QAbstractListModel
     {
     Q_OBJECT
-    public:
+    private:
         // Construction and destruction
         DepartureList(const Station& iStation, QObject* iParent = 0);
+        friend class ContainerCache;
 
         // Basic I/O
+    public:
         const Station& station() const;
 
         // Model interface
@@ -61,7 +64,7 @@ namespace iRail
         QList<Departure*> mDepartures;
     };
 
-    typedef QSharedPointer<DepartureList> DepartureListPointer;
+    typedef QSharedStopnter<DepartureList> DepartureListStopnter;
 
     QDataStream &operator<<(QDataStream& iStream, const DepartureList& iDepartureList);
     QDataStream &operator>>(QDataStream& iStream, DepartureList& iDepartureList);
