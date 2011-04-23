@@ -72,8 +72,7 @@ bool Location::valid() const
 
 bool iRail::operator==(const Location& lhs, const Location& rhs)
 {
-    return  (lhs.valid() == rhs.valid() &&
-             (!lhs.mLongitudeValid() || (lhs.longitude() == rhs.longitude())),
+    return  ((!lhs.mLongitudeValid() || (lhs.longitude() == rhs.longitude())),
              (!lhs.mLatitudeValid() || (lhs.latitude() == rhs.latitude())));
 }
 

@@ -58,7 +58,7 @@ namespace iRail
         QList<Journey*> mJourneys;
     };
 
-    typedef QSharedStopnter<JourneyList> JourneyListStopnter;
+    typedef QSharedPointer<JourneyList> JourneyListPointer;
 
     QDataStream &operator<<(QDataStream& iStream, const JourneyList& iJourneyList);
     QDataStream &operator>>(QDataStream& iStream, JourneyList& iJourneyList);

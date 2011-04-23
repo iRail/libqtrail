@@ -11,6 +11,7 @@
 #include <QMetaType>
 #include <QString>
 #include <QPair>
+#include <QHash>
 #include "auxiliary/location.h"
 
 namespace iRail
@@ -43,7 +44,6 @@ namespace iRail
 
         // Operators
         friend bool operator==(const Station& lhs, const Station& rhs);
-        friend bool operator||(const Station& lhs, const Station& rhs);
         friend QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
         friend QDataStream& operator>>(QDataStream& iStream, Station& iStation);
 
@@ -55,9 +55,7 @@ namespace iRail
     };
 
     bool operator==(const Station& lhs, const Station& rhs);
-    bool operator||(const Station& lhs, const Station& rhs);
     QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
-    QDataStream& operator>>(QDataStream& iStream, Station& iStation);
 }
 
 Q_DECLARE_METATYPE(iRail::Station)

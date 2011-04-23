@@ -25,9 +25,19 @@ Departure::Departure(Id iId) : mId(iId)
 // Basic I/O
 //
 
-Departure::Id id() const
+Departure::Id Departure::id() const
 {
     return mId;
+}
+
+unsigned int Departure::delay() const
+{
+    return mDelay;
+}
+
+void Departure::setDelay(unsigned int iDelay)
+{
+    mDelay = iDelay;
 }
 
 
@@ -37,32 +47,17 @@ Departure::Id id() const
 
 bool iRail::operator==(const Departure& lhs, const Departure& rhs)
 {
-    return  (lhs.vehicle() == rhs.vehicle() &&
-             lhs.Stop() == rhs.Stop());
+    return  (lhs.id().vehicle == rhs.id().vehicle &&
+             lhs.id().origin == rhs.id().origin);
 }
 
-bool iRail::operator||(const Departure& lhs, const Departure& rhs)
+inline unsigned int qHash(const Departure::Id& iDepartureId)
 {
-    return  (lhs.vehicle() || rhs.vehicle() &&
-             lhs.Stop() || rhs.Stop());
+    return qHash(iDepartureId.origin) ^ qHash(iDepartureId.vehicle);
 }
 
-QDataStream& iRail::operator<<(QDataStream& iStream, const Departure& iDeparture)
+bool iRail::operator==(const Departure::Id& lhs, const Departure::Id& rhs)
 {
-    iStream << iDeparture.mVehicle;
-    iStream << iDeparture.mStop;
-
-    return iStream;
-}
-QDataStream& iRail::operator>>(QDataStream& iStream, Departure& iDeparture)
-{    
-    Vehicle* tVehicle = new Vehicle("dummy");
-    iStream >> tVehicle;
-    iDeparture.mVehicle = tVehicle;
-
-    Stop* tStop = new Stop(new Station("dummy"), QDateTime());
-    iStream >> tDeparture;
-    iConnection.mStop = tStop;
-
-    return iStream;
+    return  (lhs.vehicle->id() == rhs.vehicle->id() &&
+             lhs.origin->id() == rhs.origin->id());
 }

@@ -11,6 +11,7 @@
 #include <QMetaType>
 #include <QString>
 #include <QDateTime>
+#include <QHash>
 #include "api/data/station.h"
 
 namespace iRail
@@ -19,7 +20,6 @@ namespace iRail
     {
     Q_OBJECT
     Q_PROPERTY(Id id READ id CONSTANT)
-    Q_PROPERTY(uint delay READ relay WRITE setDelay)
     Q_PROPERTY(uint platform READ platform WRITE setPlatform)
     public:
         // Construction and destruction
@@ -31,39 +31,32 @@ namespace iRail
         {
             Station const* station;
             QDateTime datetime;
+            friend inline unsigned int qHash(const Stop::Id& iStopId);
+            bool operator==(const Stop::Id& lhs, const Stop::Id& rhs);
         };
         enum Roles
         {
           StationRole = Qt::UserRole+1,
           DatetimeRole,
-          DelayRole,
           PlatformRole
         };
 
         // Basic I/O
         Id id() const;
-        unsigned int delay() const;
-        void setDelay(unsigned int iDelay);
         unsigned int platform() const;
         void setPlatform(unsigned int iPlatform);
 
         // Operators
         friend bool operator==(const Stop& lhs, const Stop& rhs);
-        friend bool operator||(const Stop& lhs, const Stop& rhs);
-        friend QDataStream& operator<<(QDataStream& iStream, const Stop& iStop);
-        friend QDataStream& operator>>(QDataStream& iStream, Stop& iStop);
 
     private:
         Q_DISABLE_COPY(Stop);
         Id mId;
-        unsigned int mDelay;
         unsigned int mPlatform;
     };
 
     bool operator==(const Stop& lhs, const Stop& rhs);
-    bool operator||(const Stop& lhs, const Stop& rhs);
-    QDataStream& operator<<(QDataStream& iStream, const Stop& iStop);
-    QDataStream& operator>>(QDataStream& iStream, Stop& iStop);
+    inline unsigned int qHash(const Stop::Id& iStopId);
 }
 
 Q_DECLARE_METATYPE(iRail::Stop)

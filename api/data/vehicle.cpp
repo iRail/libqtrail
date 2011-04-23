@@ -61,27 +61,3 @@ bool iRail::operator==(const Connection& lhs, const Connection& rhs)
              lhs.locatable() == rhs.arrival() &&
              lhs.location() == rhs.terminus());
 }
-
-bool iRail::operator||(const Connection& lhs, const Connection& rhs)
-{
-    return  (lhs.id() == rhs.departure());
-}
-
-QDataStream& iRail::operator<<(QDataStream& iStream, const Vehicle& iVehicle)
-{
-    iStream << iVehicle.mId;
-    iStream << iVehicle.mLocation;
-
-    return iStream;
-}
-
-QDataStream& iRail::operator>>(QDataStream& iStream, Vehicle& iVehicle)
-{
-    iStream >> iVehicle.mId;
-
-    Location* tLocation = new Location();
-    iStream << *tLocation;
-    iVehicle.mLocation = tLocation;
-
-    return iStream;
-}

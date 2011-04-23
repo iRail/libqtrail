@@ -12,6 +12,7 @@
 #include <QString>
 #include <QPair>
 #include <QDebug>
+#include <QHash>
 #include <QDateTime>
 #include "station.h"
 #include "auxiliary/location.h"
@@ -43,9 +44,6 @@ namespace iRail
 
         // Operators
         friend bool operator==(const Vehicle& lhs, const Vehicle& rhs);
-        friend bool operator||(const Vehicle& lhs, const Vehicle& rhs);
-        friend QDataStream& operator<<(QDataStream& iStream, const Vehicle& iVehicle);
-        friend QDataStream& operator>>(QDataStream& iStream, Vehicle& iVehicle);
 
     private:
         Q_DISABLE_COPY(Vehicle);
@@ -54,9 +52,6 @@ namespace iRail
     };
 
     bool operator==(const Vehicle& lhs, const Vehicle& rhs);
-    bool operator||(const Vehicle& lhs, const Vehicle& rhs);
-    QDataStream& operator<<(QDataStream& iStream, const Vehicle& iVehicle);
-    QDataStream& operator>>(QDataStream& iStream, Vehicle& iVehicle);
 }
 
 Q_DECLARE_METATYPE(iRail::Vehicle)

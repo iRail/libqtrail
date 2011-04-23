@@ -10,6 +10,7 @@
 #include <QObject>
 #include <QMetaType>
 #include <QString>
+#include <QHash>
 #include "stop.h"
 #include "station.h"
 #include "vehicle.h"
@@ -19,9 +20,7 @@ namespace iRail
     class Journey : public QObject
     {
     Q_OBJECT
-    Q_PROPERTY(Stop departure READ departure CONSTANT)
-    Q_PROPERTY(Stop arrival READ arrival CONSTANT)
-    Q_PROPERTY(uint connections READ connections CONSTANT)
+    Q_PROPERTY(Id id READ id CONSTANT)
     public:
         // Construction and destruction
         Journey(Stop const* iDeparture, Stop const* iArrival);
@@ -29,8 +28,10 @@ namespace iRail
         // Auxiliary structures
         struct Id
         {
-            Stop const* departure;
-            Stop const* arrival;
+            Stop const* origin;
+            Stop const* destination;
+            friend inline unsigned int qHash(const Journey::Id& iJourneyId);
+            bool operator==(const Journey::Id& lhs, const Journey::Id& rhs);
         };
 
         enum Roles
@@ -40,14 +41,10 @@ namespace iRail
         };
 
         // Basic I/O
-        Stop const* departure() const;
-        Stop const* arrival() const;
+        Id id() const;
 
         // Operators
         friend bool operator==(const Journey& lhs, const Journey& rhs);
-        friend bool operator||(const Journey& lhs, const Journey& rhs);
-        friend QDataStream &operator<<(QDataStream& iStream, const Journey& iJourney);
-        friend QDataStream &operator>>(QDataStream& iStream, Journey& iJourney);
 
     private:
         Q_DISABLE_COPY(Journey);
@@ -55,9 +52,7 @@ namespace iRail
     };
 
     bool operator==(const Journey& lhs, const Journey& rhs);
-    bool operator||(const Journey& lhs, const Journey& rhs);
-    QDataStream &operator<<(QDataStream& iStream, const Journey& iJourney);
-    QDataStream &operator>>(QDataStream& iStream, Journey& iJourney);
+    inline unsigned int qHash(const Journey::Id& iJourneyId);
 }
 
 Q_DECLARE_METATYPE(iRail::Journey)

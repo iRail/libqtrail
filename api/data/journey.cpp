@@ -37,35 +37,17 @@ Journey::Id id() const
 
 bool iRail::operator==(const Journey& lhs, const Journey& rhs)
 {
-    return  (lhs.departure() == rhs.departure() &&
-             lhs.arrival() == rhs.arrival() &&
-             lhs.connections() == rhs.connections());
-    // TODO
+    return  (lhs.id().origin || rhs.id().origin &&
+             lhs.id().destination || rhs.id().destination);
 }
 
-bool iRail::operator==(const Journey& lhs, const Journey& rhs)
+unsigned int qHash(const Journey::Id& iJourneyId)
 {
-    return  (lhs.departure() || rhs.departure() &&
-             lhs.arrival() || rhs.arrival() &&
-             lhs.connections() == rhs.connections());
+    return (3*qHash(iJourneyId.origin)) ^ (5*qHash(iJourneyId.destination));
 }
 
-QDataStream& iRail::operator<<(QDataStream& iStream, const Journey& iJourney)
+bool iRail::operator==(const Journey::Id& lhs, const Journey::Id& rhs)
 {
-    iStream << iJourney.mDeparture;
-    iStream << iJourney.mArrival;
-
-    return iStream;
-}
-QDataStream& iRail::operator>>(QDataStream& iStream, Journey& iJourney)
-{
-    Stop* tDeparture = new Stop(new Station("dummy"), QDateTime());
-    iStream >> tDeparture;
-    iJourney.mDeparture = tDeparture;
-
-    Stop* tArrival = new Stop(new Station("dummy"), QDateTime());
-    iStream >> tDeparture;
-    iJourney.mArrival = tArrival;
-
-    return iStream;
+    return  (lhs.origin->id() == rhs.origin->id() &&
+             lhs.destination->id() == rhs.destination->id());
 }

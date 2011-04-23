@@ -50,6 +50,16 @@ void Connection::setVehicle(const Vehicl& iVehicle)
     mVehicle = iVehicle;
 }
 
+unsigned int Connection::delay() const
+{
+    return mDelay;
+}
+
+void Connection::setDelay(unsigned int iDelay)
+{
+    mDelay = iDelay;
+}
+
 
 //
 // Operators
@@ -63,38 +73,13 @@ bool iRail::operator==(const Connection& lhs, const Connection& rhs)
              lhs.vehicle() == rhs.vehicle());
 }
 
-bool iRail::operator||(const Connection& lhs, const Connection& rhs)
+inline unsigned int qHash(const Connection::Id& iConnection)
 {
-    return  (lhs.departure() || rhs.departure() &&
-             lhs.arrival() || rhs.arrival());
+    return (3*qHash(iConnection.origin)) ^ (5*qHash(iConnection.destination));
 }
 
-QDataStream& iRail::operator<<(QDataStream& iStream, const Connection& iConnection)
+bool iRail::operator==(const Connection::Id& lhs, const Connection::Id& rhs)
 {
-    iStream << iConnection.mDeparture;
-    iStream << iConnection.mArrival;
-    iStream << iConnection.mTerminus;
-    iStream << iConnection.mVehicle;
-
-    return iStream;
-}
-QDataStream& iRail::operator>>(QDataStream& iStream, Connection& iConnection)
-{
-    Stop* tDeparture = new Stop(new Station("dummy"), QDateTime());
-    iStream >> tDeparture;
-    iConnection.mDeparture = tDeparture;
-
-    Stop* tArrival = new Stop(new Station("dummy"), QDateTime());
-    iStream >> tDeparture;
-    iConnection.mArrival = tArrival;
-
-    Station* tTerminus = new Station("dummy");
-    iStream >> tTerminus;
-    iConnection.mTerminus = tTerminus;
-
-    Vehicle* tVehicle = new Vehicle("dummy");
-    iStream >> tVehicle;
-    iConnection.mVehicle = tVehicle;
-
-    return iStream;
+    return  (lhs.origin->id() == rhs.origin->id() &&
+             lhs.destination->id() == rhs.destination->id());
 }

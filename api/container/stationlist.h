@@ -53,7 +53,7 @@ namespace iRail
         QMap<QString, Station*> mStations;
     };
 
-    typedef QSharedStopnter<StationList> StationListStopnter;
+    typedef QSharedPointer<StationList> StationListPointer;
 
     QDataStream &operator<<(QDataStream& iStream, const StationList& iStationList);
     QDataStream &operator>>(QDataStream& iStream, StationList& iStationList);

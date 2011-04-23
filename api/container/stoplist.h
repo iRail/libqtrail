@@ -56,7 +56,7 @@ namespace iRail
         QList<Stop*> mStops;
     };
 
-    typedef QSharedStopnter<StopList> StopListStopnter;
+    typedef QSharedPointer<StopList> StopListPointer;
 
     QDataStream &operator<<(QDataStream& iStream, const StopList& iStopList);
     QDataStream &operator>>(QDataStream& iStream, StopList& iStopList);

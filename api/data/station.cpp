@@ -70,20 +70,14 @@ bool iRail::operator==(const Station& lhs, const Station& rhs)
 {
     return  (lhs.id() == rhs.id() &&
              lhs.name() == rhs.name() &&
-             lhs.locatable() == rhs.locatable() &&
-             lhs.location() == rhs.location());
-}
-
-bool iRail::operator||(const Station& lhs, const Station& rhs)
-{
-    return  (lhs.id() == rhs.id());
+             *(lhs.location()) == *(rhs.location()));
 }
 
 QDataStream& iRail::operator<<(QDataStream& iStream, const Station& iStation)
 {
     iStream << iStation.mId;
     iStream << iStation.mName;
-    iStream << iStation.mLocation;
+    iStream << *(iStation.mLocation);
 
     return iStream;
 }
@@ -100,3 +94,7 @@ QDataStream& iRail::operator>>(QDataStream& iStream, Station& iStation)
     return iStream;
 }
 
+inline unsigned int iRail::qHash(const Station &iStation)
+{
+    return qHash(iStation.id());
+}

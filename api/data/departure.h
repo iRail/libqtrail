@@ -11,6 +11,7 @@
 #include <QMetaType>
 #include <QString>
 #include <QDebug>
+#include <QHash>
 #include "stop.h"
 #include "vehicle.h"
 
@@ -20,6 +21,7 @@ namespace iRail
     {
     Q_OBJECT
     Q_PROPERTY(Id id READ id CONSTANT)
+    Q_PROPERTY(uint delay READ relay WRITE setDelay)
     public:
         // Construction and destruction
         Departure(Id iId);
@@ -29,31 +31,32 @@ namespace iRail
         {
             Stop const* origin;
             Vehicle const* vehicle;
+            friend inline unsigned int qHash(const Departure::Id& iDepartureId);
+            friend bool operator==(const Departure::Id& lhs, const Departure::Id& rhs);
         };
         enum Roles
         {
-          VehicleRole = Qt::UserRole+1,
-          StopRole
+            VehicleRole = Qt::UserRole+1,
+            StopRole,
+            DelayRole
         };
 
         // Basic I/O
         Id id() const;
+        unsigned int delay() const;
+        void setDelay(unsigned int iDelay);
 
         // Operators
         friend bool operator==(const Departure& lhs, const Departure& rhs);
-        friend bool operator||(const Departure& lhs, const Departure& rhs);
-        friend QDataStream& operator<<(QDataStream& iStream, const Departure& iDeparture);
-        friend QDataStream& operator>>(QDataStream& iStream, Departure& iDeparture);
 
     private:
         Q_DISABLE_COPY(Departure);
         Id mId;
+        unsigned int mDelay;
     };
 
     bool operator==(const Departure& lhs, const Departure& rhs);
-    bool operator||(const Departure& lhs, const Departure& rhs);
-    QDataStream& operator<<(QDataStream& iStream, const Departure& iDeparture);
-    QDataStream& operator>>(QDataStream& iStream, Departure& iDeparture);
+    inline unsigned int qHash(const Departure::Id& iDepartureId);
 }
 
 Q_DECLARE_METATYPE(iRail::Departure)

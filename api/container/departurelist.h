@@ -64,7 +64,7 @@ namespace iRail
         QList<Departure*> mDepartures;
     };
 
-    typedef QSharedStopnter<DepartureList> DepartureListStopnter;
+    typedef QSharedPointer<DepartureList> DepartureListPointer;
 
     QDataStream &operator<<(QDataStream& iStream, const DepartureList& iDepartureList);
     QDataStream &operator>>(QDataStream& iStream, DepartureList& iDepartureList);
