@@ -11,7 +11,7 @@
 #include <QDateTime>
 #include "api/reader.h"
 #include "api/data/journey.h"
-#include "api/data/poi.h"
+#include "api/data/stop.h"
 #include "api/data/connection.h"
 #include "api/data/vehicle.h"
 #include "api/data/station.h"
@@ -31,16 +31,16 @@ namespace iRail
         // Basic I/O
         double version() const;
         QDateTime timestamp() const;
-        QList<Journey> journeys() const;
+        QHash<Journey::Id, Journey*> journeys() const;
     private:
         // Member data
         double mVersion;
         QDateTime mTimestamp;
-        QList<Journey> mJourneys;
+        QHash<Journey::Id, Journey*> mJourneys;
 
         // Tag readers
         void allocate();
-        void readConnections();
+        QHash<Journey::Id, Journey*> readConnections();
         Journey* readConnection();
         POI readPOI(QString& iVehicle, QString& iDirection);
         Vehicle readVehicle();

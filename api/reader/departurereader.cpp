@@ -31,7 +31,7 @@ void DepartureReader::readDocument()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "liveboard")
-                mLiveboard = new LiveboardPointer(readLiveboard());
+                readLiveboard();
             else if (mReader.name() == "error")
                 readError();
             else
@@ -141,18 +141,16 @@ Station DepartureReader::readStation()
 QHash<Departure::Id, Departure*> DepartureReader::readDepartures()
 {
     // Process the attributes
-    int tNumber;
+    QHash<Departure::Id, Departure*> oDepartures;
     if (mReader.attributes().hasAttribute("number"))
     {
-        QStringRef tNumberString = mReader.attributes().value("number");
-
-        tNumber = tNumberString.toString().toInt();
+        QStringRef tCountString = mReader.attributes().value("number");
+        int tCount = tCountString.toString().toInt();
+        if (tCount > 0)
+            oDepartures.reserve(tCount);
     }
-    else
-        mReader.raiseError("could not find departures count attribute");
 
     // Process the tags
-    QHash<Departure::Id, Departure*> oDepartures;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -176,8 +174,6 @@ QHash<Departure::Id, Departure*> DepartureReader::readDepartures()
             mReader.readNext();
     }
 
-    if (oDepartures.size() != tNumber)
-        mReader.raiseError("advertised nubmer of departures did not match the actual amount");
     return oDepartures;
 }
 

@@ -32,7 +32,7 @@ void StationReader::readDocument()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "stations")
-                readStations();
+                mStations = readStations();
             else if (mReader.name() == "error")
                 readError();
             else
@@ -69,9 +69,10 @@ QMap<QString, Station*> StationReader::stations() const
 // Tag readers
 //
 
-void StationReader::readStations()
+QHash<Station::Id, Station*> StationReader::readStations()
 {
     // Process the attributes
+    QHash<Station::Id, Station*> oStations;
     if (mReader.attributes().hasAttribute("timestamp"))
     {
         QStringRef tTimestampString = mReader.attributes().value("timestamp");
@@ -88,6 +89,13 @@ void StationReader::readStations()
     }
     else
         mReader.raiseError("could not find connections version attribute");
+    if (mReader.attributes().hasAttribute("number"))
+    {
+        QStringRef tCountString = mReader.attributes().value("number");
+        int tCount = tCountString.toString().toInt();
+        if (tCount > 0)
+            oStations.reserve(tCount);
+    }
 
     // Process the tags
     mReader.readNext();
@@ -113,6 +121,7 @@ void StationReader::readStations()
             mReader.readNext();
     }
 
+    return oStations;
 }
 
 Station* StationReader::readStation()

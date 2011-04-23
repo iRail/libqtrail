@@ -7,10 +7,10 @@
 #define STOPREADER_H
 
 // Includes
-#include <QList>
+#include <QHash>
 #include <QDateTime>
 #include "api/reader.h"
-#include "api/data/poi.h"
+#include "api/data/stop.h"
 #include "api/data/vehicle.h"
 
 namespace iRail
@@ -29,19 +29,19 @@ namespace iRail
         double version() const;
         QDateTime timestamp() const;
         Vehicle* mVehicle() const;
-        QList<POI*> stops() const;
+        QHash<Stop::Id, Stop*> stops() const;
     private:
         // Member data
         double mVersion;
         QDateTime mTimestamp;
         Vehicle* mVehicle;
-        QList<POI*> mStops;
+        QHash<Stop::Id, Stop*> mStops;
 
         // Tag readers
         void allocate();
         void readVehicleInformation();
         Vehicle* readVehicle();
-        QList<POI*> readStops();
+        QHash<Stop::Id, Stop*> readStops();
         POI* readStop();
         Station* readStation();
         QDateTime readDatetime();

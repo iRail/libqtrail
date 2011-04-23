@@ -31,7 +31,7 @@ void JourneyReader::readDocument()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "connections")
-                readConnections();
+                mConnections = readConnections();
             else if (mReader.name() == "error")
                 readError();
             else
@@ -68,9 +68,10 @@ QList<Journey> JourneyReader::journeys() const
 // Tag readers
 //
 
-void JourneyReader::readConnections()
+QHash<Journey::Id, Journey*> JourneyReader::readConnections()
 {
     // Process the attributes
+    QHash<Journey::Id, Journey*> oConnections;
     if (mReader.attributes().hasAttribute("timestamp"))
     {
         QStringRef tTimestampString = mReader.attributes().value("timestamp");
@@ -86,7 +87,14 @@ void JourneyReader::readConnections()
        mVersion = tVersionString.toString().toDouble();
     }
     else
-        mReader.raiseError("could not find connections version attribute");
+        mReader.raiseError("could not find connections version attribute");    
+    if (mReader.attributes().hasAttribute("number"))
+    {
+        QStringRef tCountString = mReader.attributes().value("number");
+        int tCount = tCountString.toString().toInt();
+        if (tCount > 0)
+            oConnections.reserve(tCount);
+    }
 
     // Process the tags
     mReader.readNext();
@@ -101,7 +109,10 @@ void JourneyReader::readConnections()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "connection")
-                mConnections << readConnection();
+            {
+                Connection* tConnection = readConnection();
+                oConnections.insert(tConnection->id(), tConnection);
+            }
             else
                 skipUnknownElement();
         }
@@ -109,6 +120,7 @@ void JourneyReader::readConnections()
             mReader.readNext();
     }
 
+    return oConnection;
 }
 
 Journey JourneyReader::readConnection()

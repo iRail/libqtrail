@@ -36,7 +36,7 @@ namespace iRail
 
         // Tag readers
         void allocate();
-        void readStations();
+        QHash<Station::Id, Station*> readStations();
         Station* readStation();
     };
 }

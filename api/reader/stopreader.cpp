@@ -31,7 +31,7 @@ void StopReader::readDocument()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "vehicleinformation")
-                mVehicle = new VehiclePointer(readVehicleInformation());
+                readVehicleInformation();
             else if (mReader.name() == "error")
                 readError();
             else
@@ -63,7 +63,7 @@ Vehicle* StopReader::vehicle() const
     return mVehicle;
 }
 
-QList<POI*> StopReader::stops() const
+QHash<Stop::Id, Stop*> StopReader::stops() const
 {
     return mStops;
 }
@@ -148,10 +148,19 @@ Vehicle* StopReader::readVehicle()
     return oVehicle;
 }
 
-QList<POI*> StopReader::readStops()
+QHash<Stop::Id, Stop*> StopReader::readStops()
 {
+    // Process the attributes
+    QHash<Stop::Id, Stop*> oStops;
+    if (mReader.attributes().hasAttribute("number"))
+    {
+        QStringRef tCountString = mReader.attributes().value("number");
+        int tCount = tCountString.toString().toInt();
+        if (tCount > 0)
+            oStops.reserve(tCount);
+    }
+
     // Process the tags
-    QList<POI*> oStops;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -164,7 +173,10 @@ QList<POI*> StopReader::readStops()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "stop")
-                oStops << readStop();
+            {
+                Stop* tStop = readStop();
+                oStops.insert(tStop->id(), tStop);
+            }
             else
                 skipUnknownElement();
         }
@@ -172,11 +184,10 @@ QList<POI*> StopReader::readStops()
             mReader.readNext();
     }
 
-    // Construct the object
     return oStops;
 }
 
-POI* StopReader::readStop()
+Stop* StopReader::readStop()
 {
     // Process the attributes
     double tDelay;
@@ -213,12 +224,12 @@ POI* StopReader::readStop()
     }
 
     // Construct the object
-    POI* oStop = new POI(tStation, tDatetime);
-    oStop->setDelay(tDelay);
+    Stop::Id tStopId(tStation, tDatetime);
+    Stop* oStop = new Stop(tStopId);
     return oStop;
 }
 
-Station StopReader::readStation()   // TODO: fill station object
+Station* StopReader::readStation()   // TODO: fill station object
 {
     // Process the attributes
     QString oStationId;
