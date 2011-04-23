@@ -29,19 +29,19 @@ namespace iRail
         double version() const;
         QDateTime timestamp() const;
         Station station() const;
-        QHash<Departure::Id&, Departure*> departures() const;
+        QHash<Departure::Id, Departure*> departures() const;
     private:
         // Member data
         double mVersion;
         QDateTime mTimestamp;
         Station mStation;
-        QHash<Departure::Id&, Departure*> mDepartures;
+        QHash<Departure::Id, Departure*> mDepartures;
 
         // Tag readers
         void allocate();
         void readLiveboard();
         QString readStation();
-        QHash<Departure::Id&, Departure*> readDepartures();
+        QHash<Departure::Id, Departure*> readDepartures();
         Departure* readDeparture();
         QString readVehicle();
         QDateTime readDatetime();

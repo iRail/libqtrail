@@ -68,10 +68,10 @@ QList<Journey> ConnectionsReader::journeys() const
 // Tag readers
 //
 
-QHash<Journey::Id&, Journey*> ConnectionsReader::readConnections()
+QHash<Journey::Id, Journey*> ConnectionsReader::readConnections()
 {
     // Process the attributes
-    QHash<Journey::Id&, Journey*> oConnections;
+    QHash<Journey::Id, Journey*> oConnections;
     if (mReader.attributes().hasAttribute("timestamp"))
     {
         QStringRef tTimestampString = mReader.attributes().value("timestamp");
@@ -231,7 +231,7 @@ Stop* ConnectionsReader::readStop(QString& iVehicle, Station& iTerminus)
     }
 
     // Construct the object
-    Stop::Id& tStopId;
+    Stop::Id tStopId;
     tStopId.datetime = tDateTime;
     tStopId.station = tStation;
     Stop oStop(tStopId);

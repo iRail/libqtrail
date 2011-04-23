@@ -27,16 +27,16 @@ namespace iRail
         // Basic I/O
         double version() const;
         QDateTime timestamp() const;
-        QHash<Station::Id&, Station*> stations() const;
+        QHash<Station::Id, Station*> stations() const;
     private:
         // Member data
         double mVersion;
         QDateTime mTimestamp;
-        QHash<Station::Id&, Station*> mStations;
+        QHash<Station::Id, Station*> mStations;
 
         // Tag readers
         void allocate();
-        QHash<Station::Id&, Station*> readStations();
+        QHash<Station::Id, Station*> readStations();
         Station* readStation();
     };
 }

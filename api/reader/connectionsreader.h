@@ -31,16 +31,16 @@ namespace iRail
         // Basic I/O
         double version() const;
         QDateTime timestamp() const;
-        QHash<Journey::Id&, Journey*> journeys() const;
+        QHash<Journey::Id, Journey*> journeys() const;
     private:
         // Member data
         double mVersion;
         QDateTime mTimestamp;
-        QHash<Journey::Id&, Journey*> mJourneys;
+        QHash<Journey::Id, Journey*> mJourneys;
 
         // Tag readers
         void allocate();
-        QHash<Journey::Id&, Journey*> readConnections();
+        QHash<Journey::Id, Journey*> readConnections();
         Journey* readConnection();
         Stop* readStop(QString& iVehicle, QString& iDirection);
         Vehicle* readVehicle();

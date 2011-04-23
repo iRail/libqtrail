@@ -63,7 +63,7 @@ Vehicle* VehicleReader::vehicle() const
     return mVehicle;
 }
 
-QHash<Stop::Id&, Stop*> VehicleReader::stops() const
+QHash<Stop::Id, Stop*> VehicleReader::stops() const
 {
     return mStops;
 }
@@ -148,10 +148,10 @@ Vehicle* VehicleReader::readVehicle()
     return oVehicle;
 }
 
-QHash<Stop::Id&, Stop*> VehicleReader::readStops()
+QHash<Stop::Id, Stop*> VehicleReader::readStops()
 {
     // Process the attributes
-    QHash<Stop::Id&, Stop*> oStops;
+    QHash<Stop::Id, Stop*> oStops;
     if (mReader.attributes().hasAttribute("number"))
     {
         QStringRef tCountString = mReader.attributes().value("number");
@@ -224,7 +224,7 @@ Stop* VehicleReader::readStop()
     }
 
     // Construct the object
-    Stop::Id& tStopId(tStation, tDatetime);
+    Stop::Id tStopId(tStation, tDatetime);
     Stop* oStop = new Stop(tStopId);
     return oStop;
 }
