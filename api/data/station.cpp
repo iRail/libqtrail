@@ -17,6 +17,7 @@ using namespace iRail;
 Station::Station(Station::Id iId) : mId(iId)
 {
     qRegisterMetaType<Station>("Station");
+    qRegisterMetaType<Station>("Station::Id");
 
     mName = "";
 }

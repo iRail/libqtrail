@@ -41,7 +41,7 @@ namespace iRail
         QString name() const;
         void setName(const QString& iName);
         const Location& location() const;
-        void setLocation(Location const* iLocation);
+        void setLocation(const Location& iLocation);
 
         // Operators
         friend bool operator==(const Station& lhs, const Station& rhs);
@@ -62,5 +62,6 @@ namespace iRail
 }
 
 Q_DECLARE_METATYPE(iRail::Station)
+Q_DECLARE_METATYPE(iRail::Station::Id)
 
 #endif // STATION_H
