@@ -60,6 +60,7 @@ namespace iRail
         RequestHelper mRequestHelper;
         QDateTime mTimestamp;
         QHash<Station::Id, Station*> mStations;
+        QList<Station::Id> mStationIds;
     };
 
     typedef QSharedPointer<StationList> StationListPointer;

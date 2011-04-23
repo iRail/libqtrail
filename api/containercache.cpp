@@ -30,7 +30,8 @@ ContainerCache& ContainerCache::instance()
 
 ContainerCache::~ContainerCache()
 {
-
+    // TODO: do the QHashes need to be qDeleteAll'd in here, or do the values
+    // get destructed automatically?
 }
 
 

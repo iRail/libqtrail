@@ -31,8 +31,7 @@ StationList::StationList(QObject* iParent) : QAbstractListModel(iParent)
 
 StationList::~StationList()
 {
-    qDeleteAll(mStations.values());
-    mStations.clear();
+    qDeleteAll(mStations.values()); // TODO: neccesary?
 }
 
 
@@ -42,18 +41,18 @@ StationList::~StationList()
 
 int StationList::rowCount(const QModelIndex& iParent) const
 {
-    return mStations.size();
+    return mStationIds.size();
 }
 
 QVariant StationList::data(const QModelIndex& iIndex, int iRole) const
 {
     if (!iIndex.isValid())
         return QVariant();
-    if (iIndex.row() > (mStations.size()-1) )
+    if (iIndex.row() > (mStationIds.size()-1) )
         return QVariant();
 
-    // TODO: sort through virtual mapping structure
-    Station* oStation = mStations.values().at(iIndex.row());
+    Station::Id tStationId = mStationIds.at(iIndex.row());
+    Station* oStation = mStations.value(tStationId);
     switch (iRole)
     {
     case Station::IdRole:
@@ -71,9 +70,9 @@ QVariant StationList::data(const QModelIndex& iIndex, int iRole) const
 QModelIndex StationList::indexFromItem(const Station* iStation) const
 {
     Q_ASSERT(iStation);
-    for(int tRow = 0; tRow < mStations.size(); ++tRow)
+    for(int tRow = 0; tRow < mStationIds.size(); ++tRow)
     {
-      if(mStations.values().at(tRow) == item)
+      if(mStationIds.at(tRow) == iStation->id())
           return index(tRow);
     }
     return QModelIndex();
@@ -116,19 +115,18 @@ void StationList::process()
     }
     catch (ParserException& iException)
             emit failure(iException);
-    QHash<Station::Id, Station*> tStationsNew = tReader.departures();
+    QHash<Station::Id, Station*> tStationsReceived = tReader.departures();
 
     // Process the stations
-    QList<Station::Id> tStationsRemoved = mStations.keys();
-    foreach (Station::Id tId, tStationsNew.keys())
+    QList<Station::Id> tStationsRemoved = mStationIds, tStationsAdded;
+    foreach (Station::Id tId, tStationsReceived.keys())
     {
-        if (mStations.contains(tId))
+        // Station already present, check if we need to update the data
+        if (mStationIds.contains(tId))
         {
-            if (mStations[tId] != tStationsNew[tId])
+            if (mStations[tId] != tStationsReceived[tId])
             {
-                // OPM: als een reader diepere wijzigingen kan veroorzaken (vb. een deel van de id()),
-                // moet die ook veranderd worden. Hoe? aangzien const...
-                (*mStations[tId]) = *(tStationsNew[tId]);
+                (*mStations[tId]) = *(tStationsReceived[tId]);
 
                 QModelIndex tIndex = indexFromItem(mStations[tId]);
                 if(tIndex.isValid())
@@ -136,18 +134,31 @@ void StationList::process()
             }
             tStationsRemoved.removeOne(tId);
         }
+
+        // Station not yet present, add it later in a batch
         else
-        {
-            mStations.insert(tId, tStationsNew[tId]);
-            tStationsNew.removeOne(tId);
-        }
+            tStationsAdded << tId;
     }
 
-    // Remove redundant or removed data
-    foreach (Station::Id tId, tStationsNew.keys())
-        delete tStationsNew[tId];
+    // Add new data
+    beginInsertRows(QModelIndex(), rowCount(), rowCount()+tStationsAdded.size()-1);
+    foreach (Station::Id tId, tStationsAdded)
+    {
+        mStationIds << tId;
+        mStations <<  tStationsReceived.take(tId);
+    }
+    endInsertRows();
+
+    // Delete used or removed data
+    foreach (Station::Id tId, tStationsReceived.keys())
+        delete tStationsReceived[tId];
     foreach (Station::Id tId, tStationsRemoved.keys())
+    {
+        QModelIndex tIndex = indexFromItem(mStations[tId]);
+        beginRemoveRows(QModelIndex(), tIndex.row(), tIndex.row());
         delete mStations.take(tId);
+        endRemoveRows();
+    }
 
     // Clean up
     mRequestHelper.networkCleanup();
