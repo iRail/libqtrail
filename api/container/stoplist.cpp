@@ -4,6 +4,7 @@
 
 // Includes
 #include "stoplist.h"
+#include "api/reader/vehiclereader.h"
 #include <QString>
 
 // Namespaces
@@ -62,9 +63,9 @@ QVariant StopList::data(const QModelIndex& iIndex, int iRole) const
     {
     case Qt::DisplayRole:
     case Stop::StationRole:
-        return QVariant::fromValue(oStop->station());
+        return QVariant::fromValue(oStop->id().station);
     case Stop::DatetimeRole:
-        return QVariant::fromValue(oStop->datetime());
+        return QVariant::fromValue(oStop->id().datetime);
     case Stop::PlatformRole:
         return QVariant::fromValue(oStop->platform());
     default:

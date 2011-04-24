@@ -4,7 +4,7 @@
 
 // Includes
 #include "stationlist.h"
-#include "api/reader/stationreader.h"
+#include "api/reader/stationsreader.h"
 #include <QString>
 
 // Namespaces
@@ -18,7 +18,7 @@ using namespace iRail;
 StationList::StationList(QObject* iParent) : QAbstractListModel(iParent)
 {
     QHash<int, QByteArray> tRoleNames;
-    tRoleNames[Station::IIdRole] = "id";
+    tRoleNames[Station::GUIDRole] = "guid";
     tRoleNames[Station::NameRole] = "name";
     tRoleNames[Station::LocationRole] = "location";
     setRoleNames(tRoleNames);
@@ -50,8 +50,8 @@ QVariant StationList::data(const QModelIndex& iIndex, int iRole) const
     Station* oStation = mStations.value(tStationId);
     switch (iRole)
     {
-    case Station::IIdRole:
-        return QVariant::fromValue(oStation->id());
+    case Station::GUIDRole:
+        return QVariant::fromValue(oStation->id().guid);
     case Qt::DisplayRole:
     case Station::NameRole:
         return QVariant::fromValue(oStation->name());
@@ -87,7 +87,7 @@ void StationList::fetch()
     // Create a request
     try
     {
-        network_request(getRequest(tURL), this, SLOT(process()));
+        mRequestHelper.networkRequest(mRequestHelper.getRequest(tURL), this, SLOT(process()));
     }
     catch (NetworkException& iException)
     {
@@ -106,11 +106,13 @@ void StationList::process()
     StationsReader tReader;
     try
     {
-        tReader.read(mNetworkReply);
+        tReader.read(mRequestHelper.networkReply());
     }
     catch (ParserException& iException)
+    {
             emit failure(iException);
-    QHash<Station::Id, Station*> tStationsReceived = tReader.departures();
+    }
+    QHash<Station::Id, Station*> tStationsReceived = tReader.stations();
 
     // Process the stations
     QList<Station::Id> tStationsRemoved = mStationIds, tStationsAdded;
@@ -139,15 +141,15 @@ void StationList::process()
     beginInsertRows(QModelIndex(), rowCount(), rowCount()+tStationsAdded.size()-1);
     foreach (Station::Id tId, tStationsAdded)
     {
-        mStationIds << tId;
-        mStations <<  tStationsReceived.take(tId);
+        mStationIds.append(tId);
+        mStations.insert(tId, tStationsReceived.take(tId));
     }
     endInsertRows();
 
     // Delete used or removed data
     foreach (Station::Id tId, tStationsReceived.keys())
         delete tStationsReceived[tId];
-    foreach (Station::Id tId, tStationsRemoved.keys())
+    foreach (Station::Id tId, tStationsRemoved)
     {
         QModelIndex tIndex = indexFromItem(mStations[tId]);
         beginRemoveRows(QModelIndex(), tIndex.row(), tIndex.row());
@@ -183,7 +185,7 @@ QDataStream& iRail::operator>>(QDataStream& iStream, StationList& iStationList)
     {
         Station* tStation;
         iStream >> *tStation;
-        iJourneyList.mStations << tStation;
+        iStationList.mStations.insert(tStation->id(), tStation);
     }
 
     return iStream;

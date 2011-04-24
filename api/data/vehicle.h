@@ -36,7 +36,7 @@ namespace iRail
         };
         enum Roles
         {
-            IdRole = Qt::UserRole+1,
+            GUIDRole = Qt::UserRole+1,
             LocationRole
         };
 
@@ -45,7 +45,7 @@ namespace iRail
         ~Vehicle();
 
         // Basic I/O
-        Id& id() const;
+        const Id& id() const;
         const Location& location() const;
         void setLocation(const Location& iLocation);
 
@@ -58,4 +58,7 @@ namespace iRail
         Location mLocation;
     };
 }
+
+Q_DECLARE_METATYPE(const iRail::Vehicle*)
+
 #endif // STATION_H

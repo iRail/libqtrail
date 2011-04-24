@@ -28,7 +28,7 @@ Vehicle::~Vehicle()
 // Basic I/O
 //
 
-Vehicle::Id& Vehicle::id() const
+const Vehicle::Id& Vehicle::id() const
 {
     return mId;
 }
@@ -51,9 +51,8 @@ void Vehicle::setLocation(const Location& iLocation)
 bool Vehicle::equals(const Data& data) const
 {
     const Vehicle& other = dynamic_cast<const Vehicle&>(data);
-    return  (id() == other.departure() &&
-             locatable() == other.arrival() &&
-             location() == other.terminus());
+    return  (id() == other.id() &&
+             location() == other.location());
 }
 
 Data& Vehicle::assign(const Data& data)

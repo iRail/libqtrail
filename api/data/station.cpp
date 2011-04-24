@@ -29,7 +29,7 @@ Station::~Station()
 // Basic I/O
 //
 
-Station::Id& Station::id() const
+const Station::Id& Station::id() const
 {
     return mId;
 }
@@ -64,7 +64,7 @@ bool Station::equals(const Data& data) const
     const Station& other = dynamic_cast<const Station&>(data);
     return  (id() == other.id() &&
              name() == other.name() &&
-             *(location()) == *(other.location()));
+             location() == other.location());
 }
 
 Data& Station::assign(const Data& data)
@@ -91,6 +91,11 @@ bool Station::Id::equals(const AbstractId& data) const
     return  (guid == other.guid);
 }
 
+
+//
+// Operators
+//
+
 QDataStream& iRail::operator<<(QDataStream& iStream, const Station& iStation)
 {
     iStream << iStation.mId;
@@ -105,6 +110,20 @@ QDataStream& iRail::operator>>(QDataStream& iStream, Station& iStation)
     iStream >> iStation.mId;
     iStream >> iStation.mName;
     iStream >> iStation.mLocation;
+
+    return iStream;
+}
+
+QDataStream& operator<<(QDataStream& iStream, const Station::Id& iStationId)
+{
+    iStream << iStationId.guid;
+
+    return iStream;
+}
+
+QDataStream& operator>>(QDataStream& iStream, Station::Id& iStationId)
+{
+    iStream >> iStationId.guid;
 
     return iStream;
 }

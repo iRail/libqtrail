@@ -30,7 +30,7 @@ namespace iRail
         };
 
         // Basic I/O
-        virtual AbstractId& id() const = 0;
+        virtual const AbstractId& id() const = 0;
 
         // Operator implementation
         virtual bool equals(const Data& data) const = 0;

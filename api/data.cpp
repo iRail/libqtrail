@@ -13,7 +13,7 @@ using namespace iRail;
 // Operators
 //
 
-unsigned int iRail::qHash(const Data::AbstractId& id)
+unsigned int qHash(const Data::AbstractId& id)
 {
     return id.hash();
 }

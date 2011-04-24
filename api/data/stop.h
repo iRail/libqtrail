@@ -44,7 +44,7 @@ namespace iRail
         ~Stop();
 
         // Basic I/O
-        Id& id() const;
+        const Id& id() const;
         unsigned int platform() const;
         void setPlatform(unsigned int iPlatform);
 
@@ -57,5 +57,7 @@ namespace iRail
         unsigned int mPlatform;
     };
 }
+
+Q_DECLARE_METATYPE(const iRail::Stop*)
 
 #endif // STOP_H

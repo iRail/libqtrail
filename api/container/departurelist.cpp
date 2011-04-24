@@ -5,7 +5,7 @@
 // Includes
 #include "departurelist.h"
 #include <QString>
-#include "api/reader/departurereader.h"
+#include "api/reader/liveboardreader.h"
 
 // Namespaces
 using namespace iRail;
@@ -35,7 +35,7 @@ DepartureList::~DepartureList()
 // Basic I/O
 //
 
-const Station& DepartureList::stationId() const
+const Station::Id& DepartureList::stationId() const
 {
     return mStationId;
 }
@@ -63,9 +63,9 @@ QVariant DepartureList::data(const QModelIndex& iIndex, int iRole) const
     {
     case Qt::DisplayRole:
     case Departure::VehicleRole:
-        return QVariant::fromValue(oDeparture->vehicle());
+        return QVariant::fromValue(oDeparture->id().vehicle);
     case Departure::OriginRole:
-        return QVariant::fromValue(oDeparture->stop());
+        return QVariant::fromValue(oDeparture->id().origin);
     case Departure::DelayRole:
         return QVariant::fromValue(oDeparture->delay());
     default:
@@ -85,12 +85,12 @@ void DepartureList::fetch()
     tURL.setPath("liveboard/");
 
     // Set the parameters
-    tURL.addQueryItem("id", stationId().id());
+    tURL.addQueryItem("id", stationId().guid);
 
     // Create a request
     try
     {
-        network_request(getRequest(tURL), this, SLOT(process()));
+        mRequestHelper.networkRequest(mRequestHelper.getRequest(tURL), this, SLOT(process()));
     }
     catch (NetworkException& iException)
     {
@@ -105,17 +105,19 @@ void DepartureList::fetch(const QDateTime& iDatetime)
     tURL.setPath("liveboard/");
 
     // Set the parameters
-    tURL.addQueryItem("id", stationId().id());
+    tURL.addQueryItem("id", stationId().guid);
     tURL.addQueryItem("date", iDatetime.date().toString("ddMMyy"));
     tURL.addQueryItem("time", iDatetime.time().toString("hhmm"));
 
     // Create a request
     try
     {
-        network_request(getRequest(tURL), this, SLOT(process()));
+        mRequestHelper.networkRequest(mRequestHelper.getRequest(tURL), this, SLOT(process()));
     }
     catch (NetworkException& iException)
+    {
         emit failure(iException);
+    }
 }
 
 
@@ -129,11 +131,13 @@ void DepartureList::process()
     LiveboardReader tReader;
     try
     {
-        tReader.read(mNetworkReply);
+        tReader.read(mRequestHelper.networkReply());
     }
     catch (ParserException& iException)
+    {
             emit failure(iException);
-    QList<Departure> tDeparturesNew = tReader.departures();
+    }
+    QHash<Departure::Id, Departure*> tDeparturesNew = tReader.departures();
 
     // TODO
 

@@ -36,6 +36,7 @@ namespace iRail
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
         QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const;
+        QModelIndex indexFromItem(const Station* iStation) const;
 
         // Data request methods
         void fetch();

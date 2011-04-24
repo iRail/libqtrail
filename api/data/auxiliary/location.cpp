@@ -15,8 +15,6 @@ using namespace iRail;
 //
 Location::Location(qreal iLongitude, qreal iLatitude)
 {
-    this();
-
     setLongitude(iLongitude);
     setLatitude(iLatitude);
 }
@@ -73,8 +71,8 @@ bool Location::valid() const
 
 bool iRail::operator==(const Location& lhs, const Location& rhs)
 {
-    return  ((!lhs.mLongitudeValid() || (lhs.longitude() == rhs.longitude())),
-             (!lhs.mLatitudeValid() || (lhs.latitude() == rhs.latitude())));
+    return  ((!lhs.mLongitudeValid || (lhs.longitude() == rhs.longitude())) &&
+             (!lhs.mLatitudeValid || (lhs.latitude() == rhs.latitude())));
 }
 
 Location& Location::operator=(const Location& other)

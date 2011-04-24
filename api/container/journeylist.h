@@ -14,7 +14,6 @@
 #include <QAbstractListModel>
 #include <QHash>
 #include "api/exception.h"
-#include "api/data/stop.h"
 #include "api/data/journey.h"
 
 namespace iRail
@@ -53,7 +52,7 @@ namespace iRail
         // Member data
         QDateTime mTimestamp;
         Station::Id mOrigin, mDestination;
-        QHash<Journey::AbstractId, Journey*> mJourneys;
+        QHash<Journey::Id, Journey*> mJourneys;
     };
 }
 

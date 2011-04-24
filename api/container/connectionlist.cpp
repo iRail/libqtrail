@@ -36,7 +36,7 @@ ConnectionList::~ConnectionList()
 // Basic I/O
 //
 
-const Journey& ConnectionList::journeyId() const
+const Journey::Id& ConnectionList::journeyId() const
 {
     return mJourneyId;
 }
@@ -55,7 +55,7 @@ QVariant ConnectionList::data(const QModelIndex& iIndex, int iRole) const
 {
     if (!iIndex.isValid())
         return QVariant();
-    if (iIndex.row() > (mDepartures.size()-1) )
+    if (iIndex.row() > (mConnections.size()-1) )
         return QVariant();
 
     // TODO: sort through virtual mapping structure

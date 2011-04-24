@@ -32,7 +32,7 @@ namespace iRail
 
         // Basic I/O
     public:
-        const Journey::AbstractId& journeyId() const;
+        const Journey::Id& journeyId() const;
 
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;

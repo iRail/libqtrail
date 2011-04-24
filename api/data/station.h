@@ -31,10 +31,14 @@ namespace iRail
             // Operator implementation
             bool equals(const AbstractId& id) const;
             unsigned int hash() const;
+
+            // Operators
+            friend QDataStream& operator<<(QDataStream& iStream, const Station::Id& iStationId);
+            friend QDataStream& operator>>(QDataStream& iStream, Station::Id& iStationId);
         };
         enum Roles
         {
-            IdRole = Qt::UserRole+1,
+            GUIDRole = Qt::UserRole+1,
             NameRole,
             LocationRole
         };
@@ -44,7 +48,7 @@ namespace iRail
         ~Station();
 
         // Basic I/O
-        Id& id() const;
+        const Id& id() const;
         QString name() const;
         void setName(const QString& iName);
         const Location& location() const;
@@ -63,6 +67,11 @@ namespace iRail
     };
 
     QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
+    QDataStream& operator>>(QDataStream& iStream, Station& iStation);
+    QDataStream& operator<<(QDataStream& iStream, const Station::Id& iStationId);
+    QDataStream& operator>>(QDataStream& iStream, Station::Id& iStationId);
 }
+
+Q_DECLARE_METATYPE(const iRail::Station*)
 
 #endif // STATION_H

@@ -26,27 +26,27 @@ Connection::Connection(Id iId) : mId(iId)
 // Basic I/O
 //
 
-Connection::Id& Connection::id() const
+const Connection::Id& Connection::id() const
 {
     return mId;
 }
 
-Station Connection::terminus() const
+Station const* Connection::terminus() const
 {
     return mTerminus;
 }
 
-void Connection::setTerminus(const Station& iTerminus)
+void Connection::setTerminus(Station const* iTerminus)
 {
     mTerminus = iTerminus;
 }
 
-Vehicle Connection::vehicle() const
+Vehicle const* Connection::vehicle() const
 {
     return mVehicle;
 }
 
-void Connection::setVehicle(const Vehicl& iVehicle)
+void Connection::setVehicle(Vehicle const* iVehicle)
 {
     mVehicle = iVehicle;
 }
@@ -69,10 +69,10 @@ void Connection::setDelay(unsigned int iDelay)
 bool Connection::equals(const Data& data) const
 {
     const Connection& other = dynamic_cast<const Connection&>(data);
-    return  (departure() == other.departure() &&
-             arrival() == other.arrival() &&
+    return  (id() == other.id() &&
              terminus() == other.terminus() &&
-             vehicle() == other.vehicle());
+             vehicle() == other.vehicle() &&
+             delay() == other.delay());
 }
 
 Data& Connection::assign(const Data& data)

@@ -4,6 +4,7 @@
 
 // Includes
 #include "journeylist.h"
+#include "api/reader/connectionsreader.h"
 #include <QString>
 
 // Namespaces
@@ -68,9 +69,9 @@ QVariant JourneyList::data(const QModelIndex& iIndex, int iRole) const
     {
     case Qt::DisplayRole:
     case Journey::OriginRole:
-        return QVariant::fromValue(oJourney->origin());
+        return QVariant::fromValue(oJourney->id().origin);
     case Journey::DestinationRole:
-        return QVariant::fromValue(oJourney->destination());
+        return QVariant::fromValue(oJourney->id().destination);
     case Journey::DelayRole:
         return QVariant::fromValue(oJourney->delay());
     default:

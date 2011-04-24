@@ -7,7 +7,6 @@
 #define AUXILIARY_H
 
 // Includes
-#include "api/station.h"
 #include <QString>
 #include <QMap>
 #include <QStringBuilder>
@@ -34,14 +33,6 @@ namespace iRail
         }
 
         return oString;
-    }
-
-    inline QString stationName(const QMap<QString, StationPointer>& iStations, const QString& iStationId)
-    {
-        if (iStations.contains(iStationId))
-            return iStations[iStationId]->name();
-        else
-            return QString("Unknown station") % " (" % iStationId % ")";
     }
 }
 

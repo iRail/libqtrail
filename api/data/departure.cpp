@@ -24,7 +24,7 @@ Departure::Departure(Id iId) : mId(iId)
 // Basic I/O
 //
 
-Departure::Id& Departure::id() const
+const Departure::Id& Departure::id() const
 {
     return mId;
 }
@@ -44,11 +44,11 @@ void Departure::setDelay(unsigned int iDelay)
 // Operator implementation
 //
 
-bool Departure::equals(const Data& data)
+bool Departure::equals(const Data& data) const
 {
     const Departure& other = dynamic_cast<const Departure&>(data);
-    return  (id().vehicle == other.id().vehicle &&
-             id().origin == other.id().origin);
+    return  (id() == other.id() &&
+             delay() == other.delay());
 }
 
 Data& Departure::assign(const Data& data)
