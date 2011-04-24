@@ -46,7 +46,7 @@ namespace iRail
         // Member data
         QDateTime mTimestamp;
         Journey::Id mJourneyId;
-        QHash<Connection::AbstractId, Connection*> mConnections;
+        QHash<Connection::Id, Connection*> mConnections;
     };
 }
 

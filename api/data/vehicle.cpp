@@ -33,9 +33,9 @@ const Vehicle::Id& Vehicle::id() const
     return mId;
 }
 
-const Location& Vehicle::location() const
+Location const* Vehicle::location() const
 {
-    return mLocation;
+    return &mLocation;
 }
 
 void Vehicle::setLocation(const Location& iLocation)
@@ -62,7 +62,7 @@ Data& Vehicle::assign(const Data& data)
     {
         Q_ASSERT(this->id() == other.id());
 
-        setLocation(other.location());
+        setLocation(*other.location());
     }
     return *this;
 }

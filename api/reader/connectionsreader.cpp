@@ -31,7 +31,7 @@ void ConnectionsReader::readDocument()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "connections")
-                mConnections = readConnections();
+                mJourneys = readConnections();
             else if (mReader.name() == "error")
                 readError();
             else
@@ -58,7 +58,7 @@ QDateTime ConnectionsReader::timestamp() const
     return mTimestamp;
 }
 
-QList<Journey> ConnectionsReader::journeys() const
+QHash<Journey::Id, Journey*> ConnectionsReader::journeys() const
 {
     return mJourneys;
 }
@@ -71,7 +71,7 @@ QList<Journey> ConnectionsReader::journeys() const
 QHash<Journey::Id, Journey*> ConnectionsReader::readConnections()
 {
     // Process the attributes
-    QHash<Journey::Id, Journey*> oConnections;
+    QHash<Journey::Id, Journey*> oJourneys;
     if (mReader.attributes().hasAttribute("timestamp"))
     {
         QStringRef tTimestampString = mReader.attributes().value("timestamp");
@@ -93,7 +93,7 @@ QHash<Journey::Id, Journey*> ConnectionsReader::readConnections()
         QStringRef tCountString = mReader.attributes().value("number");
         int tCount = tCountString.toString().toInt();
         if (tCount > 0)
-            oConnections.reserve(tCount);
+            oJourneys.reserve(tCount);
     }
 
     // Process the tags
@@ -110,8 +110,8 @@ QHash<Journey::Id, Journey*> ConnectionsReader::readConnections()
         {
             if (mReader.name() == "connection")
             {
-                Connection* tConnection = readConnection();
-                oConnections.insert(tConnection->id(), tConnection);
+                Journey* tJourney = readConnection();
+                oJourneys.insert(tJourney->id(), tJourney);
             }
             else
                 skipUnknownElement();
@@ -120,10 +120,10 @@ QHash<Journey::Id, Journey*> ConnectionsReader::readConnections()
             mReader.readNext();
     }
 
-    return oConnection;
+    return oJourneys;
 }
 
-Journey ConnectionsReader::readConnection()
+Journey* ConnectionsReader::readConnection()
 {
     // Process the attributes
     unsigned int tId;
@@ -137,7 +137,7 @@ Journey ConnectionsReader::readConnection()
         mReader.raiseError("could not find connection id attribute");
 
     // Process the tags
-    POI tDeparture, tArrival;
+    Stop *tDeparture = 0, *tArrival = 0;
     QList<Connection> tLines;
     tLines << Connection();
     QString tVehicleDeparture, tVehicleArrival;     //  NOTE TO READER: the iRail API _really_ sucks

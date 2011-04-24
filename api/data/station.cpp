@@ -44,9 +44,9 @@ void Station::setName(const QString &iName)
     mName = iName;
 }
 
-const Location& Station::location() const
+Location const* Station::location() const
 {
-    return mLocation;
+    return &mLocation;
 }
 
 void Station::setLocation(const Location& iLocation)
@@ -75,7 +75,7 @@ Data& Station::assign(const Data& data)
         Q_ASSERT(this->id() == other.id());
 
         setName(other.name());
-        setLocation(other.location());
+        setLocation(*other.location());
     }
     return *this;
 }

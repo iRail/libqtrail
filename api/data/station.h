@@ -51,7 +51,7 @@ namespace iRail
         const Id& id() const;
         QString name() const;
         void setName(const QString& iName);
-        const Location& location() const;
+        Location const* location() const;
         void setLocation(const Location& iLocation);
 
         // Operator implementation

@@ -8,6 +8,7 @@
 
 // Includes
 #include <QObject>
+#include <QMetaType>
 #include <QString>
 #include <QPair>
 
@@ -47,5 +48,7 @@ namespace iRail
     QDataStream& operator<<(QDataStream& iStream, const Location& iLocation);
     QDataStream& operator>>(QDataStream& iStream, Location& iLocation);
 }
+
+Q_DECLARE_METATYPE(const iRail::Location*)
 
 #endif // LOCATION_H

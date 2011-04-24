@@ -47,6 +47,7 @@ const Station::Id& DepartureList::stationId() const
 
 int DepartureList::rowCount(const QModelIndex& iParent) const
 {
+    Q_UNUSED(iParent);
     return mDepartures.size();
 }
 

@@ -32,6 +32,7 @@ ContainerCache& ContainerCache::instance()
 
 ContainerCache::~ContainerCache()
 {
+    // TODO: doesn't this happen automatically through QObject(parent)?
     delete mStationList;
     delete mVehicleList;
     delete mStopList;
@@ -46,28 +47,28 @@ ContainerCache::~ContainerCache()
 // Container request methods
 //
 
-StationList* ContainerCache::stationList() const
+StationList* ContainerCache::stationList()
 {
     if (mStationList == 0)
         mStationList = new StationList(this);
     return mStationList;
 }
 
-VehicleList* ContainerCache::vehicleList() const
+VehicleList* ContainerCache::vehicleList()
 {
     if (mVehicleList == 0)
-        mVehicleList = new StationList(this);
+        mVehicleList = new VehicleList(this);
     return mVehicleList;
 }
 
-StopList* ContainerCache::stopList() const
+StopList* ContainerCache::stopList()
 {
     if (mStopList == 0)
-        mStopList = new StopList();
+        mStopList = new StopList(this);
     return mStopList;
 }
 
-StopList* ContainerCache::stopList(const Vehicle::AbstractId& iVehicleId) const
+StopList* ContainerCache::stopList(const Vehicle::Id& iVehicleId)
 {
     if (mStopLists.contains(iVehicleId))
         return mStopLists[iVehicleId];
@@ -79,7 +80,7 @@ StopList* ContainerCache::stopList(const Vehicle::AbstractId& iVehicleId) const
     }
 }
 
-DepartureList* ContainerCache::departureList(const Station::AbstractId& iStationId) const
+DepartureList* ContainerCache::departureList(const Station::Id& iStationId)
 {
     if (mDepartureLists.contains(iStationId))
         return mDepartureLists[iStationId];
@@ -91,9 +92,9 @@ DepartureList* ContainerCache::departureList(const Station::AbstractId& iStation
     }
 }
 
-JourneyList* ContainerCache::journeyList(const Station::AbstractId& iOrigin, const Station::AbstractId& iDestination) const
+JourneyList* ContainerCache::journeyList(const Station::Id& iOrigin, const Station::Id& iDestination)
 {
-    (QPair<Station::AbstractId, Station::AbstractId> iIdPair(iOrigin, iDestination);
+    QPair<Station::AbstractId, Station::AbstractId> iIdPair(iOrigin, iDestination);
     if (mJourneyLists.contains(iIdPair))
         return mJourneyLists[iIdPair];
     else
@@ -104,7 +105,7 @@ JourneyList* ContainerCache::journeyList(const Station::AbstractId& iOrigin, con
     }
 }
 
-ConnectionList* ContainerCache::connectionList(const Journey::AbstractId& iJourneyId) const
+ConnectionList* ContainerCache::connectionList(const Journey::Id& iJourneyId)
 {
     if (mConnectionLists.contains(iJourneyId))
         return mConnectionLists[iJourneyId];

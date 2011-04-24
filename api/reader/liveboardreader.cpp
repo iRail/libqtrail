@@ -58,7 +58,7 @@ QDateTime LiveboardReader::timestamp() const
     return mTimestamp;
 }
 
-Station LiveboardReader::station() const
+Station* LiveboardReader::station() const
 {
     return mStation;
 }
@@ -117,13 +117,13 @@ void LiveboardReader::readLiveboard()
     }
 }
 
-Station LiveboardReader::readStation()
+Station* LiveboardReader::readStation()
 {
     // Process the attributes
-    QString oStationId;
+    QString tStationGuid;
     if (mReader.attributes().hasAttribute("id"))
     {
-        oStationId = mReader.attributes().value("id").toString();
+        tStationGuid = mReader.attributes().value("id").toString();
     }
     else
         mReader.raiseError("station without id");
@@ -134,7 +134,9 @@ Station LiveboardReader::readStation()
         mReader.readNext();
 
     // Construct the object
-    return Station(oStationId);
+    Station::Id tStationId;
+    tStationId.guid = tStationGuid;
+    return new Station(tStationId);
     // TODO: load from cache? do request? hmm
 }
 
@@ -164,7 +166,7 @@ QHash<Departure::Id, Departure*> LiveboardReader::readDepartures()
         {
             if (mReader.name() == "departure")
             {
-                Departure* tDeparture = readDeparture;
+                Departure* tDeparture = readDeparture();
                 oDepartures.insert(tDeparture->id(), tDeparture);
             }
             else
@@ -187,7 +189,8 @@ Departure* LiveboardReader::readDeparture()
     }
 
     // Process the tags
-    QString tStation, tVehicle;
+    Station* tStation = 0;
+    Vehicle* tVehicle = 0;
     QDateTime tDateTime;
     int tPlatform = 0;
     mReader.readNext();

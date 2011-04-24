@@ -48,6 +48,7 @@ const Journey::Id& ConnectionList::journeyId() const
 
 int ConnectionList::rowCount(const QModelIndex& iParent) const
 {
+    Q_UNUSED(iParent);
     return mConnections.size();
 }
 
@@ -66,9 +67,9 @@ QVariant ConnectionList::data(const QModelIndex& iIndex, int iRole) const
     case Connection::VehicleRole:
         return QVariant::fromValue(oConnections->vehicle());
     case Connection::OriginRole:
-        return QVariant::fromValue(oConnections->departure());
+        return QVariant::fromValue(oConnections->id().origin);
     case Connection::DestinationRole:
-        return QVariant::fromValue(oConnections->arrival());
+        return QVariant::fromValue(oConnections->id().destination);
     case Connection::TerminusRole:
         return QVariant::fromValue(oConnections->terminus());
     case Connection::DelayRole:

@@ -35,6 +35,7 @@ VehicleList::~VehicleList()
 
 int VehicleList::rowCount(const QModelIndex& iParent) const
 {
+    Q_UNUSED(iParent);
     return mVehicles.size();
 }
 

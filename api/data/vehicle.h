@@ -46,7 +46,7 @@ namespace iRail
 
         // Basic I/O
         const Id& id() const;
-        const Location& location() const;
+        Location const* location() const;
         void setLocation(const Location& iLocation);
 
         // Operator implementation

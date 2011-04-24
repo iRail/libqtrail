@@ -53,6 +53,7 @@ const Station::Id& JourneyList::destination() const
 
 int JourneyList::rowCount(const QModelIndex& iParent) const
 {
+    Q_UNUSED(iParent);
     return mJourneys.size();
 }
 

@@ -9,6 +9,7 @@
 // Includes
 #include <QString>
 #include <QHash>
+#include <QObject>
 #include "api/container/stationlist.h"
 #include "api/container/vehiclelist.h"
 #include "api/container/stoplist.h"
@@ -18,8 +19,9 @@
 
 namespace iRail
 {
-    class ContainerCache
+    class ContainerCache : public QObject
     {
+    Q_OBJECT
     public:
         // Construction and destruction
     private:
@@ -29,23 +31,23 @@ namespace iRail
         ~ContainerCache();
 
         // Container request methods
-        StationList* stationList() const;
-        VehicleList* vehicleList() const;
-        StopList* stopList() const;
-        StopList* stopList(const Vehicle::AbstractId& iVehicleId) const;
-        DepartureList* departureList(const Station::AbstractId& iStationId) const;
-        JourneyList* journeyList(const Station::AbstractId& iOriginId, const Station::AbstractId& iDestinationId) const;
-        ConnectionList* connectionList(const Journey::AbstractId& iJourneyId) const;
+        StationList* stationList();
+        VehicleList* vehicleList();
+        StopList* stopList();
+        StopList* stopList(const Vehicle::Id& iVehicleId);
+        DepartureList* departureList(const Station::Id& iStationId);
+        JourneyList* journeyList(const Station::Id& iOriginId, const Station::Id& iDestinationId);
+        ConnectionList* connectionList(const Journey::Id& iJourneyId);
 
     private:
         // Member data
         StationList* mStationList;
         VehicleList* mVehicleList;
         StopList* mStopList;
-        QHash<Vehicle::AbstractId, StopList*> mStopLists;
-        QHash<Station::AbstractId, DepartureList*> mDepartureLists;
-        QHash<QPair<Station::AbstractId, Station::AbstractId>, JourneyList*> mJourneyLists;
-        QHash<Journey::AbstractId, ConnectionList*> mConnectionLists;
+        QHash<Vehicle::Id, StopList*> mStopLists;
+        QHash<Station::Id, DepartureList*> mDepartureLists;
+        QHash<QPair<Station::Id, Station::Id>, JourneyList*> mJourneyLists;
+        QHash<Journey::Id, ConnectionList*> mConnectionLists;
 
         // Singleton
         static ContainerCache* mInstance;

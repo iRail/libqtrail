@@ -15,6 +15,18 @@ using namespace iRail;
 // Construction and destruction
 //
 
+StopList::StopList(QObject *iParent) : QAbstractListModel(iParent)
+{
+    mVehicleId.guid = "anonymous";
+
+    // TODO: remove duplicate code
+    QHash<int, QByteArray> tRoleNames;
+    tRoleNames[Stop::StationRole] = "station";
+    tRoleNames[Stop::DatetimeRole] = "datetime";
+    tRoleNames[Stop::PlatformRole] = "platform";
+    setRoleNames(tRoleNames);
+}
+
 StopList::StopList(const Vehicle::Id& iVehicleId, QObject* iParent) : mVehicleId(iVehicleId), QAbstractListModel(iParent)
 {
     QHash<int, QByteArray> tRoleNames;
@@ -47,6 +59,7 @@ const Vehicle::Id& StopList::vehicleId() const
 
 int StopList::rowCount(const QModelIndex& iParent) const
 {
+    Q_UNUSED(iParent);
     return mStops.size();
 }
 

@@ -36,6 +36,7 @@ StationList::~StationList()
 
 int StationList::rowCount(const QModelIndex& iParent) const
 {
+    Q_UNUSED(iParent);
     return mStationIds.size();
 }
 
