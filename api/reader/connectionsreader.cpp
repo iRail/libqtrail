@@ -138,8 +138,8 @@ Journey* ConnectionsReader::readConnection()
 
     // Process the tags
     Stop *tDeparture = 0, *tArrival = 0;
-    QList<Connection> tLines;
-    tLines << Connection();
+    QHash<Connection::Id, Connection*> tConnections;
+    tConnections << Connection();
     QString tVehicleDeparture, tVehicleArrival;     //  NOTE TO READER: the iRail API _really_ sucks
     QList<QString> tVehicles;                       //  when it comes to connections and via's...
     QString tDirectionDeparture, tDirectionArrival; //  Same applies to the directions.
@@ -160,7 +160,7 @@ Journey* ConnectionsReader::readConnection()
             else if (mReader.name() == "arrival")
                 tArrival = readStop(tVehicleArrival, tDirectionArrival);
             else if (mReader.name() == "vias")
-                tLines = readVias(tVehicles, tDirections);
+                tConnections = readVias(tVehicles, tDirections);
             else
                 skipUnknownElement();
         }
@@ -171,18 +171,18 @@ Journey* ConnectionsReader::readConnection()
     // Fix the via/connection vehicle counterintuitiveness
     tVehicles << tVehicleArrival;
     tDirections << tDirectionArrival;
-    Q_ASSERT(tVehicles.size() == tLines.size());
-    Q_ASSERT(tDirections.size() == tLines.size());
-    for (int i = 0; i < tLines.size(); i++)
+    Q_ASSERT(tVehicles.size() == tConnections.size());
+    Q_ASSERT(tDirections.size() == tConnections.size());
+    for (int i = 0; i < tConnections.size(); i++)
     {
-        tLines[i].vehicle = tVehicles.at(i);        // Did I say I really
-        tLines[i].terminus = tDirections.at(i);     // hate this mess?
+        tConnections[i].vehicle = tVehicles.at(i);        // Did I say I really
+        tConnections[i].terminus = tDirections.at(i);     // hate this mess?
     }
 
     // Construct the object
     Journey oJourney(tDeparture, tArrival);
-    tLines.first().departure = tDeparture;
-    tLines.last().arrival = tArrival;
+    tConnections.first().departure = tDeparture;
+    tConnections.last().arrival = tArrival;
     // TODO oJourney->setLines(tLines);
     return oJourney;
 }
