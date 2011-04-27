@@ -24,9 +24,9 @@ Journey::Journey(Id iId) : mId(iId)
 // Basic I/O
 //
 
-const Journey::Id& Journey::id() const
+Journey::Id const* Journey::id() const
 {
-    return mId;
+    return &mId;
 }
 
 unsigned int Journey::delay() const
@@ -47,8 +47,8 @@ void Journey::setDelay(unsigned int iDelay)
 bool Journey::equals(const Data& data) const
 {
     const Journey& other = dynamic_cast<const Journey&>(data);
-    return  (id().origin == other.id().origin &&
-             id().destination == other.id().destination &&
+    return  (id()->origin == other.id()->origin &&
+             id()->destination == other.id()->destination &&
              delay() == other.delay());
 }
 

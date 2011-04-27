@@ -28,9 +28,9 @@ Vehicle::~Vehicle()
 // Basic I/O
 //
 
-const Vehicle::Id& Vehicle::id() const
+Vehicle::Id const* Vehicle::id() const
 {
-    return mId;
+    return &mId;
 }
 
 Location const* Vehicle::location() const

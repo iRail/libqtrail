@@ -63,7 +63,7 @@ Station* LiveboardReader::station() const
     return mStation;
 }
 
-QHash<Departure::Id, Departure*> LiveboardReader::departures() const
+QList<Departure*> LiveboardReader::departures() const
 {
     return mDepartures;
 }
@@ -140,10 +140,10 @@ Station* LiveboardReader::readStation()
     // TODO: load from cache? do request? hmm
 }
 
-QHash<Departure::Id, Departure*> LiveboardReader::readDepartures()
+QList<Departure*> LiveboardReader::readDepartures()
 {
     // Process the attributes
-    QHash<Departure::Id, Departure*> oDepartures;
+    QList<Departure*> oDepartures;
     if (mReader.attributes().hasAttribute("number"))
     {
         QStringRef tCountString = mReader.attributes().value("number");
@@ -165,10 +165,7 @@ QHash<Departure::Id, Departure*> LiveboardReader::readDepartures()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-            {
-                Departure* tDeparture = readDeparture();
-                oDepartures.insert(tDeparture->id(), tDeparture);
-            }
+                oDepartures << readDeparture();
             else
                 skipUnknownElement();
         }
@@ -237,12 +234,17 @@ Departure* LiveboardReader::readDeparture()
     return oDeparture;
 }
 
-QString LiveboardReader::readVehicle()
+Vehicle* LiveboardReader::readVehicle()
 {
     // Process the contents
-    QString oVehicle = mReader.readElementText();
+    QString tVehicleGUID = mReader.readElementText();
     if (mReader.isEndElement())
         mReader.readNext();
+
+    // Construct object
+    Vehicle::Id tVehicleId;
+    tVehicleId.guid = tVehicleGUID;
+    Vehicle* oVehicle = new Vehicle(tVehicleId);
 
     return oVehicle;
 }

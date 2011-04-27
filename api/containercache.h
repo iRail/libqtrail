@@ -34,10 +34,10 @@ namespace iRail
         StationList* stationList();
         VehicleList* vehicleList();
         StopList* stopList();
-        StopList* stopList(const Vehicle::Id& iVehicleId);
-        DepartureList* departureList(const Station::Id& iStationId);
-        JourneyList* journeyList(const Station::Id& iOriginId, const Station::Id& iDestinationId);
-        ConnectionList* connectionList(const Journey::Id& iJourneyId);
+        StopList* stopList(Vehicle::Id const* iVehicleId);
+        DepartureList* departureList(Station::Id const* iStationId);
+        JourneyList* journeyList(Station::Id const* iOriginId, Station::Id const* iDestinationId);
+        ConnectionList* connectionList(Journey::Id const* iJourneyId);
 
     private:
         // Member data

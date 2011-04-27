@@ -68,51 +68,51 @@ StopList* ContainerCache::stopList()
     return mStopList;
 }
 
-StopList* ContainerCache::stopList(const Vehicle::Id& iVehicleId)
+StopList* ContainerCache::stopList(Vehicle::Id const* iVehicleId)
 {
-    if (mStopLists.contains(iVehicleId))
-        return mStopLists[iVehicleId];
+    if (mStopLists.contains(*iVehicleId))
+        return mStopLists[*iVehicleId];
     else
     {
-        StopList* oStopList = new StopList(iVehicleId);
-        mStopLists.insert(iVehicleId, oStopList);
+        StopList* oStopList = new StopList(*iVehicleId);
+        mStopLists.insert(*iVehicleId, oStopList);
         return oStopList;
     }
 }
 
-DepartureList* ContainerCache::departureList(const Station::Id& iStationId)
+DepartureList* ContainerCache::departureList(Station::Id const* iStationId)
 {
-    if (mDepartureLists.contains(iStationId))
-        return mDepartureLists[iStationId];
+    if (mDepartureLists.contains(*iStationId))
+        return mDepartureLists[*iStationId];
     else
     {
-        DepartureList* oDepartureList = new DepartureList(iStationId);
-        mDepartureLists.insert(iStationId, oDepartureList);
+        DepartureList* oDepartureList = new DepartureList(*iStationId);
+        mDepartureLists.insert(*iStationId, oDepartureList);
         return oDepartureList;
     }
 }
 
-JourneyList* ContainerCache::journeyList(const Station::Id& iOrigin, const Station::Id& iDestination)
+JourneyList* ContainerCache::journeyList(Station::Id const* iOrigin, Station::Id const* iDestination)
 {
-    QPair<Station::AbstractId, Station::AbstractId> iIdPair(iOrigin, iDestination);
+    QPair<Station::Id, Station::Id> iIdPair(*iOrigin, *iDestination);
     if (mJourneyLists.contains(iIdPair))
         return mJourneyLists[iIdPair];
     else
     {
-        JourneyList* oJourneyList = new JourneyList(iOrigin, iDestination);
+        JourneyList* oJourneyList = new JourneyList(*iOrigin, *iDestination);
         mJourneyLists.insert(iIdPair, oJourneyList);
         return oJourneyList;
     }
 }
 
-ConnectionList* ContainerCache::connectionList(const Journey::Id& iJourneyId)
+ConnectionList* ContainerCache::connectionList(Journey::Id const* iJourneyId)
 {
-    if (mConnectionLists.contains(iJourneyId))
-        return mConnectionLists[iJourneyId];
+    if (mConnectionLists.contains(*iJourneyId))
+        return mConnectionLists[*iJourneyId];
     else
     {
-        ConnectionList* oConnectionList(new ConnectionList(iJourneyId));
-        mConnectionLists.insert(iJourneyId, oConnectionList);
+        ConnectionList* oConnectionList(new ConnectionList(*iJourneyId));
+        mConnectionLists.insert(*iJourneyId, oConnectionList);
         return oConnectionList;
     }
 }

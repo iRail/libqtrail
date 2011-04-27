@@ -63,7 +63,7 @@ Vehicle* VehicleReader::vehicle() const
     return mVehicle;
 }
 
-QHash<Stop::Id, Stop*> VehicleReader::stops() const
+QList<Stop*> VehicleReader::stops() const
 {
     return mStops;
 }
@@ -138,20 +138,23 @@ Vehicle* VehicleReader::readVehicle()
     }
 
     // Process the contents
-    QString tVehicleId = mReader.readElementText();
+    QString tVehicleGUID = mReader.readElementText();
     if (mReader.isEndElement())
         mReader.readNext();
 
     // Construct the object
+    Vehicle::Id tVehicleId;
+    tVehicleId.guid = tVehicleGUID;
     Vehicle* oVehicle = new Vehicle(tVehicleId);
     oVehicle->setLocation(tLocation);
+
     return oVehicle;
 }
 
-QHash<Stop::Id, Stop*> VehicleReader::readStops()
+QList<Stop*> VehicleReader::readStops()
 {
     // Process the attributes
-    QHash<Stop::Id, Stop*> oStops;
+    QList<Stop*> oStops;
     if (mReader.attributes().hasAttribute("number"))
     {
         QStringRef tCountString = mReader.attributes().value("number");
@@ -173,10 +176,7 @@ QHash<Stop::Id, Stop*> VehicleReader::readStops()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "stop")
-            {
-                Stop* tStop = readStop();
-                oStops.insert(tStop->id(), tStop);
-            }
+                oStops << readStop();
             else
                 skipUnknownElement();
         }
@@ -200,7 +200,7 @@ Stop* VehicleReader::readStop()
 
     // Process the tags
     Station* tStation;
-    QDateTime tDateTime;
+    QDateTime tDatetime;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -215,7 +215,7 @@ Stop* VehicleReader::readStop()
             if (mReader.name() == "station")
                 tStation = readStation();
             if (mReader.name() == "time")
-                tDateTime = readDatetime();
+                tDatetime = readDatetime();
             else
                 skipUnknownElement();
         }
@@ -224,18 +224,19 @@ Stop* VehicleReader::readStop()
     }
 
     // Construct the object
-    Stop::Id tStopId(tStation, tDatetime);
-    Stop* oStop = new Stop(tStopId);
-    return oStop;
+    Stop::Id tStopId;
+    tStopId.station = tStation;
+    tStopId.datetime = tDatetime;
+    return new Stop(tStopId);
 }
 
-Station* VehicleReader::readStation()   // TODO: fill station object
+Station* VehicleReader::readStation()
 {
     // Process the attributes
-    QString oStationId;
+    QString tStationGuid;
     if (mReader.attributes().hasAttribute("id"))
     {
-        oStationId = mReader.attributes().value("id").toString();
+        tStationGuid = mReader.attributes().value("id").toString();
     }
     else
         mReader.raiseError("station without id");
@@ -246,7 +247,9 @@ Station* VehicleReader::readStation()   // TODO: fill station object
         mReader.readNext();
 
     // Construct the object
-    return Station(oStationId);
+    Station::Id tStationId;
+    tStationId.guid = tStationGuid;
+    return new Station(tStationId); // TODO: lookup
 }
 
 QDateTime VehicleReader::readDatetime()

@@ -44,7 +44,7 @@ namespace iRail
         ~Stop();
 
         // Basic I/O
-        const Id& id() const;
+        Id const* id() const;
         unsigned int platform() const;
         void setPlatform(unsigned int iPlatform);
 

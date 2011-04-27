@@ -47,9 +47,9 @@ StopList::~StopList()
 // Basic I/O
 //
 
-const Vehicle::Id& StopList::vehicleId() const
+Vehicle::Id const* StopList::vehicleId() const
 {
-    return mVehicleId;
+    return &mVehicleId;
 }
 
 
@@ -76,9 +76,9 @@ QVariant StopList::data(const QModelIndex& iIndex, int iRole) const
     {
     case Qt::DisplayRole:
     case Stop::StationRole:
-        return QVariant::fromValue(oStop->id().station);
+        return QVariant::fromValue(oStop->id()->station);
     case Stop::DatetimeRole:
-        return QVariant::fromValue(oStop->id().datetime);
+        return QVariant::fromValue(oStop->id()->datetime);
     case Stop::PlatformRole:
         return QVariant::fromValue(oStop->platform());
     default:

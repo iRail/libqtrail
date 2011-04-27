@@ -52,7 +52,7 @@ QVariant VehicleList::data(const QModelIndex& iIndex, int iRole) const
     {
     case Qt::DisplayRole:
     case Vehicle::GUIDRole:
-        return QVariant::fromValue(oVehicle->id().guid);
+        return QVariant::fromValue(oVehicle->id()->guid);
     case Vehicle::LocationRole:
         return QVariant::fromValue(oVehicle->location());
     default:

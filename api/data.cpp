@@ -10,13 +10,23 @@ using namespace iRail;
 
 
 //
-// Operators
+// Construction and destruction
 //
 
-unsigned int qHash(const Data::AbstractId& id)
+Data::VirtualId::VirtualId(const Data::AbstractId *iId) : id(iId)
 {
-    return id.hash();
+
 }
+
+Data::VirtualId::VirtualId(const VirtualId &iVirtualId)
+{
+    id = iVirtualId.id;
+}
+
+
+//
+// Operators
+//
 
 bool iRail::operator==(const Data::AbstractId& lhs, const Data::AbstractId& rhs)
 {
@@ -26,4 +36,9 @@ bool iRail::operator==(const Data::AbstractId& lhs, const Data::AbstractId& rhs)
 bool iRail::operator==(const Data& lhs, const Data& rhs)
 {
     return lhs.equals(rhs);
+}
+
+bool iRail::operator==(const Data::VirtualId& lhs, const Data::VirtualId& rhs)
+{
+    return *(lhs.id) == *(rhs.id); // this is why VirtualId is needed, dereferencing while comparing
 }

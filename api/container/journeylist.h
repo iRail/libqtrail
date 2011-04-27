@@ -31,8 +31,8 @@ namespace iRail
 
         // Basic I/O
     public:
-        const Station::Id& origin() const;
-        const Station::Id& destination() const;
+        Station::Id const* origin() const;
+        Station::Id const* destination() const;
 
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;

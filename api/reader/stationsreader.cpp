@@ -59,7 +59,7 @@ QDateTime StationsReader::timestamp() const
     return mTimestamp;
 }
 
-QMap<QString, Station*> StationsReader::stations() const
+QList<Station*> StationsReader::stations() const
 {
     return mStations;
 }
@@ -69,10 +69,10 @@ QMap<QString, Station*> StationsReader::stations() const
 // Tag readers
 //
 
-QHash<Station::Id, Station*> StationsReader::readStations()
+QList<Station*> StationsReader::readStations()
 {
     // Process the attributes
-    QHash<Station::Id, Station*> oStations;
+    QList<Station*> oStations;
     if (mReader.attributes().hasAttribute("timestamp"))
     {
         QStringRef tTimestampString = mReader.attributes().value("timestamp");
@@ -110,10 +110,7 @@ QHash<Station::Id, Station*> StationsReader::readStations()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "station")
-            {
-                Station* tStation = readStation();
-                mStations.insert(tStation->id(), tStation);
-            }
+                mStations << readStation();
             else
                 skipUnknownElement();
         }
@@ -129,7 +126,7 @@ Station* StationsReader::readStation()
     // Process the attributes
     if (! mReader.attributes().hasAttribute("id"))
         mReader.raiseError("station without id");
-    QString tId = mReader.attributes().value("id").toString();
+    QString tGuid = mReader.attributes().value("id").toString();
     Location tLocation;
     if (mReader.attributes().hasAttribute("location"))
     {
@@ -153,6 +150,8 @@ Station* StationsReader::readStation()
         mReader.readNext();
 
     // Construct the object
+    Station::Id tId;
+    tId.guid = tGuid;
     Station* oStation = new Station(tId);
     oStation->setName(tName);
     oStation->setLocation(tLocation);

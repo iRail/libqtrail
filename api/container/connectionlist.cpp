@@ -36,9 +36,9 @@ ConnectionList::~ConnectionList()
 // Basic I/O
 //
 
-const Journey::Id& ConnectionList::journeyId() const
+Journey::Id const* ConnectionList::journeyId() const
 {
-    return mJourneyId;
+    return &mJourneyId;
 }
 
 
@@ -67,9 +67,9 @@ QVariant ConnectionList::data(const QModelIndex& iIndex, int iRole) const
     case Connection::VehicleRole:
         return QVariant::fromValue(oConnections->vehicle());
     case Connection::OriginRole:
-        return QVariant::fromValue(oConnections->id().origin);
+        return QVariant::fromValue(oConnections->id()->origin);
     case Connection::DestinationRole:
-        return QVariant::fromValue(oConnections->id().destination);
+        return QVariant::fromValue(oConnections->id()->destination);
     case Connection::TerminusRole:
         return QVariant::fromValue(oConnections->terminus());
     case Connection::DelayRole:

@@ -35,9 +35,9 @@ DepartureList::~DepartureList()
 // Basic I/O
 //
 
-const Station::Id& DepartureList::stationId() const
+Station::Id const* DepartureList::stationId() const
 {
-    return mStationId;
+    return &mStationId;
 }
 
 
@@ -64,9 +64,9 @@ QVariant DepartureList::data(const QModelIndex& iIndex, int iRole) const
     {
     case Qt::DisplayRole:
     case Departure::VehicleRole:
-        return QVariant::fromValue(oDeparture->id().vehicle);
+        return QVariant::fromValue(oDeparture->id()->vehicle);
     case Departure::OriginRole:
-        return QVariant::fromValue(oDeparture->id().origin);
+        return QVariant::fromValue(oDeparture->id()->origin);
     case Departure::DelayRole:
         return QVariant::fromValue(oDeparture->delay());
     default:
@@ -86,7 +86,7 @@ void DepartureList::fetch()
     tURL.setPath("liveboard/");
 
     // Set the parameters
-    tURL.addQueryItem("id", stationId().guid);
+    tURL.addQueryItem("id", stationId()->guid);
 
     // Create a request
     try
@@ -106,7 +106,7 @@ void DepartureList::fetch(const QDateTime& iDatetime)
     tURL.setPath("liveboard/");
 
     // Set the parameters
-    tURL.addQueryItem("id", stationId().guid);
+    tURL.addQueryItem("id", stationId()->guid);
     tURL.addQueryItem("date", iDatetime.date().toString("ddMMyy"));
     tURL.addQueryItem("time", iDatetime.time().toString("hhmm"));
 
@@ -138,7 +138,7 @@ void DepartureList::process()
     {
             emit failure(iException);
     }
-    QHash<Departure::Id, Departure*> tDeparturesNew = tReader.departures();
+    QHash<Data::VirtualId, Departure*> tDeparturesNew = tReader.departures();
 
     // TODO
 

@@ -29,9 +29,9 @@ Station::~Station()
 // Basic I/O
 //
 
-const Station::Id& Station::id() const
+Station::Id const* Station::id() const
 {
-    return mId;
+    return &mId;
 }
 
 QString Station::name() const

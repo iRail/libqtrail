@@ -36,14 +36,14 @@ JourneyList::~JourneyList()
 //
 
 
-const Station::Id& JourneyList::origin() const
+Station::Id const* JourneyList::origin() const
 {
-    return mOrigin;
+    return &mOrigin;
 }
 
-const Station::Id& JourneyList::destination() const
+Station::Id const* JourneyList::destination() const
 {
-    return mDestination;
+    return &mDestination;
 }
 
 
@@ -70,9 +70,9 @@ QVariant JourneyList::data(const QModelIndex& iIndex, int iRole) const
     {
     case Qt::DisplayRole:
     case Journey::OriginRole:
-        return QVariant::fromValue(oJourney->id().origin);
+        return QVariant::fromValue(oJourney->id()->origin);
     case Journey::DestinationRole:
-        return QVariant::fromValue(oJourney->id().destination);
+        return QVariant::fromValue(oJourney->id()->destination);
     case Journey::DelayRole:
         return QVariant::fromValue(oJourney->delay());
     default:

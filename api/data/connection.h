@@ -48,7 +48,7 @@ namespace iRail
         Connection(Id iId);
 
         // Basic I/O
-        const Id& id() const;
+        Id const* id() const;
         Station const* terminus() const;
         void setTerminus(Station const* iTerminus);
         Vehicle const* vehicle() const;

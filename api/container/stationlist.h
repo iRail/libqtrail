@@ -36,10 +36,6 @@ namespace iRail
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
         QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const;
-        QModelIndex indexFromItem(const Station* iStation) const;
-
-        // Data request methods
-        void fetch();
 
         // Operators
         friend QDataStream &operator<<(QDataStream& iStream, const StationList& iStationList);
@@ -52,14 +48,12 @@ namespace iRail
 
         // Data processing methods
     private slots:
-        void process();
 
     private:
         // Member data
-        RequestHelper mRequestHelper;
         QDateTime mTimestamp;
-        QHash<Station::Id, Station*> mStations;
-        QList<Station::Id> mStationIds;
+        QHash<Station::Id const*, Station*> mStations;
+        QList<Station::Id const*> mStationIds;
     };
 
     QDataStream &operator<<(QDataStream& iStream, const StationList& iStationList);

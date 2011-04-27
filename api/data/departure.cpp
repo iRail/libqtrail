@@ -24,9 +24,9 @@ Departure::Departure(Id iId) : mId(iId)
 // Basic I/O
 //
 
-const Departure::Id& Departure::id() const
+Departure::Id const* Departure::id() const
 {
-    return mId;
+    return &mId;
 }
 
 unsigned int Departure::delay() const

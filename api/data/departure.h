@@ -44,7 +44,7 @@ namespace iRail
         Departure(Id iId);
 
         // Basic I/O
-        const Id& id() const;
+        Id const* id() const;
         unsigned int delay() const;
         void setDelay(unsigned int iDelay);
 

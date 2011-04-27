@@ -58,7 +58,7 @@ QDateTime ConnectionsReader::timestamp() const
     return mTimestamp;
 }
 
-QHash<Journey::Id, Journey*> ConnectionsReader::journeys() const
+QList<Journey*> ConnectionsReader::journeys() const
 {
     return mJourneys;
 }
@@ -68,10 +68,10 @@ QHash<Journey::Id, Journey*> ConnectionsReader::journeys() const
 // Tag readers
 //
 
-QHash<Journey::Id, Journey*> ConnectionsReader::readConnections()
+QList<Journey*> ConnectionsReader::readConnections()
 {
     // Process the attributes
-    QHash<Journey::Id, Journey*> oJourneys;
+    QList<Journey*> oJourneys;
     if (mReader.attributes().hasAttribute("timestamp"))
     {
         QStringRef tTimestampString = mReader.attributes().value("timestamp");
@@ -109,10 +109,7 @@ QHash<Journey::Id, Journey*> ConnectionsReader::readConnections()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "connection")
-            {
-                Journey* tJourney = readConnection();
-                oJourneys.insert(tJourney->id(), tJourney);
-            }
+                oJourneys << readConnection();
             else
                 skipUnknownElement();
         }
@@ -137,13 +134,13 @@ Journey* ConnectionsReader::readConnection()
         mReader.raiseError("could not find connection id attribute");
 
     // Process the tags
-    Stop *tDeparture = 0, *tArrival = 0;
-    QHash<Connection::Id, Connection*> tConnections;
-    tConnections << Connection();
-    QString tVehicleDeparture, tVehicleArrival;     //  NOTE TO READER: the iRail API _really_ sucks
-    QList<QString> tVehicles;                       //  when it comes to connections and via's...
-    QString tDirectionDeparture, tDirectionArrival; //  Same applies to the directions.
-    QList<QString> tDirections;                     //  Please bug Pieter about this.
+    Stop *tOrigin = 0, *tDestination = 0;
+    QList<Connection*> tConnections;
+    tConnections << new Connection(Connection::Id());
+    Vehicle *tVehicleDeparture, *tVehicleArrival;       //  NOTE TO READER: the iRail API _really_ sucks
+    QList<Vehicle*> tVehicles;                          //  when it comes to connections and via's...
+    Station *tDirectionOrigin, *tDirectionDestination;  //  Same applies to the directions.
+    QList<Station*> tDirections;                        //  Please bug Pieter about this.
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -156,9 +153,9 @@ Journey* ConnectionsReader::readConnection()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-                tDeparture = readStop(tVehicleDeparture, tDirectionDeparture);
+                tOrigin = readStop(tVehicleDeparture, tDirectionOrigin);
             else if (mReader.name() == "arrival")
-                tArrival = readStop(tVehicleArrival, tDirectionArrival);
+                tDestination = readStop(tVehicleArrival, tDirectionDestination);
             else if (mReader.name() == "vias")
                 tConnections = readVias(tVehicles, tDirections);
             else
@@ -170,24 +167,43 @@ Journey* ConnectionsReader::readConnection()
 
     // Fix the via/connection vehicle counterintuitiveness
     tVehicles << tVehicleArrival;
-    tDirections << tDirectionArrival;
+    tDirections << tDirectionDestination;
     Q_ASSERT(tVehicles.size() == tConnections.size());
     Q_ASSERT(tDirections.size() == tConnections.size());
     for (int i = 0; i < tConnections.size(); i++)
     {
-        tConnections[i].vehicle = tVehicles.at(i);        // Did I say I really
-        tConnections[i].terminus = tDirections.at(i);     // hate this mess?
+        tConnections[i]->setVehicle(tVehicles.at(i));        // Did I say I really
+        tConnections[i]->setTerminus(tDirections.at(i));     // hate this mess?
     }
 
+    // Fix the first connection
+    Connection::Id tConnectionFirstId;
+    tConnectionFirstId.origin = tOrigin;
+    tConnectionFirstId.destination = tConnections.first()->id()->destination;
+    Connection* tConnectionFirst = new Connection(tConnectionFirstId);
+    *tConnectionFirst = *tConnections.first();
+    delete tConnections.first();
+    tConnections.replace(0, tConnectionFirst);
+
+    // Fix the last connection
+    Connection::Id tConnectionLastId;
+    tConnectionLastId.origin = tConnections.first()->id()->origin;
+    tConnectionLastId.destination = tDestination;
+    Connection* tConnectionLast = new Connection(tConnectionLastId);
+    *tConnectionLast = *tConnections.last();
+    delete tConnections.last();
+    tConnections.replace(tConnections.size()-1, tConnectionLast);
+
     // Construct the object
-    Journey oJourney(tDeparture, tArrival);
-    tConnections.first().departure = tDeparture;
-    tConnections.last().arrival = tArrival;
+    Journey::Id tJourneyId;
+    tJourneyId.origin = tOrigin;
+    tJourneyId.destination = tDestination;
+    Journey* oJourney = new Journey(tJourneyId);
     // TODO oJourney->setLines(tLines);
     return oJourney;
 }
 
-Stop* ConnectionsReader::readStop(QString& iVehicle, Station& iTerminus)
+Stop* ConnectionsReader::readStop(Vehicle*& iVehicle, Station*& iTerminus)
 {
     // Process the attributes
     int tDelay = 0;
@@ -232,21 +248,24 @@ Stop* ConnectionsReader::readStop(QString& iVehicle, Station& iTerminus)
 
     // Construct the object
     Stop::Id tStopId;
-    tStopId.datetime = tDateTime;
+    tStopId.datetime = tDatetime;
     tStopId.station = tStation;
-    Stop oStop(tStopId);
-    oStop.setPlatform(tPlatform);
+    Stop *oStop = new Stop(tStopId);
+    oStop->setPlatform(tPlatform);
     return oStop;
 }
 
-Vehicle* ConnectionsReader::readVehicle()    // TODO: fill with data
+Vehicle* ConnectionsReader::readVehicle()
 {
     // Process the contents
-    QString tVehicleId = mReader.readElementText();
+    QString tVehicleGuid = mReader.readElementText();
     if (mReader.isEndElement())
         mReader.readNext();
 
-    return Vehicle(tVehicleId);
+    // Construct the object
+    Vehicle::Id tVehicleId;
+    tVehicleId.guid = tVehicleGuid;
+    return new Vehicle(tVehicleId);   // TODO: look up
 }
 
 int ConnectionsReader::readPlatform()
@@ -284,13 +303,13 @@ QDateTime ConnectionsReader::readDatetime()
     return QDateTime::fromTime_t(tUnixtime.toUInt());
 }
 
-Station* ConnectionsReader::readStation()        // TODO: fill with data
+Station* ConnectionsReader::readStation()
 {
     // Process the attributes
-    QString tStationId;
+    QString tStationGuid;
     if (mReader.attributes().hasAttribute("id"))
     {
-        tStationId = mReader.attributes().value("id").toString();
+        tStationGuid = mReader.attributes().value("id").toString();
     }
     else
         mReader.raiseError("station without id");
@@ -301,10 +320,12 @@ Station* ConnectionsReader::readStation()        // TODO: fill with data
         mReader.readNext();
 
     // Construct the object
-    return Station(tStationId);
+    Station::Id tStationId;
+    tStationId.guid = tStationGuid;
+    return new Station(tStationId); // TODO: lookup
 }
 
-QList<Connection> ConnectionsReader::readVias(QList<QString>& iVehicles, QList<QString>& iDirections)
+QList<Connection*> ConnectionsReader::readVias(QList<Vehicle*>& iVehicles, QList<Station*>& iDirections)
 {
     // Process the attributes
     int tNumber;
@@ -318,9 +339,10 @@ QList<Connection> ConnectionsReader::readVias(QList<QString>& iVehicles, QList<Q
         mReader.raiseError("could not find vias count attribute");
 
     // Process the tags
-    QList<Connection> tLines;
-    QString tVehicle, tDirection;
-    tLines << Connection();
+    QList<Connection*> tConnections;
+    Vehicle* tVehicle;
+    Station* tDirection;
+    tConnections << new Connection(Connection::Id());
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -334,12 +356,19 @@ QList<Connection> ConnectionsReader::readVias(QList<QString>& iVehicles, QList<Q
         {
             if (mReader.name() == "via")
             {
-                Connection tLine = readVia(tVehicle, tDirection);
+                Connection* tConnection = readVia(tVehicle, tDirection);
                 iVehicles << tVehicle;
                 iDirections << tDirection;
-                tLines.last().arrival = tLine.arrival;
-                tLine.arrival = POI();
-                tLines << tLine;
+
+                Connection::Id tConnectionLastId;
+                tConnectionLastId.origin = tConnections.last()->id()->origin;
+                tConnectionLastId.destination = tConnection->id()->destination;
+                Connection* tConnectionLast = new Connection(tConnectionLastId);
+                *tConnectionLast = *tConnections.last();
+                delete tConnections.last();
+                tConnections.replace(tConnections.size()-1, tConnectionLast);
+
+                tConnections << tConnection;
             }
             else
                 skipUnknownElement();
@@ -348,12 +377,12 @@ QList<Connection> ConnectionsReader::readVias(QList<QString>& iVehicles, QList<Q
             mReader.readNext();
     }
 
-    if (tLines.size() != tNumber+1)
+    if (tConnections.size() != tNumber+1)
         mReader.raiseError("advertised nubmer of vias did not match the actual amount");
-    return tLines;
+    return tConnections;
 }
 
-Connection ConnectionsReader::readVia(QString& iVehicle, QString& iDirection)
+Connection* ConnectionsReader::readVia(Vehicle*& iVehicle, Station*& iDirection)
 {
     // Process the attributes
     unsigned int tId;   // TODO: do something with this
@@ -367,9 +396,9 @@ Connection ConnectionsReader::readVia(QString& iVehicle, QString& iDirection)
         mReader.raiseError("could not find via id attribute");
 
     // Process the tags
-    POI tArrival, tDeparture, tTerminus;
+    Station *tArrival, *tDeparture;
     QString tVehicleDummy, tDepartureDummy;
-    Station tStation, tTerminus;
+    Station *tStation, *tTerminus;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -402,7 +431,7 @@ Connection ConnectionsReader::readVia(QString& iVehicle, QString& iDirection)
     tArrival.station = tStation;
     tDeparture.station = tStation;
     tTerminus.station = tTerminus;
-    Connection oLine;
+    Connection* oLine;
     oLine.departure = tDeparture;
     oLine.arrival = tArrival;
     return oLine;

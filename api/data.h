@@ -25,12 +25,20 @@ namespace iRail
             virtual unsigned int hash() const = 0;
 
             // Operators
-            friend unsigned int qHash(const AbstractId& id);
             friend bool operator==(const AbstractId& lhs, const AbstractId& rhs);
+        };        
+        struct VirtualId
+        {
+            // Construction and destruction
+            VirtualId(Data::AbstractId const* iId);
+            VirtualId(const VirtualId& iVirtualId);
+
+            // Data members
+            Data::AbstractId const* id;
         };
 
         // Basic I/O
-        virtual const AbstractId& id() const = 0;
+        virtual AbstractId const* id() const = 0;
 
         // Operator implementation
         virtual bool equals(const Data& data) const = 0;
@@ -43,6 +51,13 @@ namespace iRail
         }
         friend bool operator==(const Data& lhs, const Data& rhs);
     };
+
+    bool operator==(const Data& lhs, const Data& rhs);
+    bool operator==(const Data::AbstractId& lhs, const Data::AbstractId& rhs);
+    bool operator==(const Data::VirtualId& lhs, const Data::VirtualId& rhs);
+
+    inline uint qHash(const Data::VirtualId& id) { return id.id->hash(); }
+    inline uint qHash(const Data::AbstractId& id) { return id.hash(); }
 }
 
 #endif // DATA_H

@@ -9,8 +9,9 @@
 // Includes
 #include <QObject>
 #include <QAbstractListModel>
-#include <QHash>
+#include <QList>
 #include "api/data.h"
+#include "data/station.h"
 
 namespace iRail
 {
@@ -31,8 +32,7 @@ namespace iRail
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
         QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const;
-        QModelIndex indexFromItem(const Station* iStation) const;
-        void mergeNarrow(QHash<Data::AbstractId, Data*>& iData);
+        QModelIndex indexFromItem(const Data* iData) const;
 
         // Container interface
         virtual QHash<int, QByteArray> roleNames() const = 0;
@@ -41,8 +41,7 @@ namespace iRail
 
     private:
         // Member data
-        QHash<Data::AbstractId, Data*> mData;
-        QList<Data::AbstractId> mDataIds;
+        QList<Data*> mData;
     };
 }
 

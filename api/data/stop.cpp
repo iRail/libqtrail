@@ -29,9 +29,9 @@ Stop::~Stop()
 // Basic I/O
 //
 
-const Stop::Id& Stop::id() const
+Stop::Id const* Stop::id() const
 {
-    return mId;
+    return &mId;
 }
 
 unsigned int Stop::platform() const
@@ -52,8 +52,8 @@ void Stop::setPlatform(unsigned int iPlatform)
 bool Stop::equals(const Data& data) const
 {
     const Stop& other = dynamic_cast<const Stop&>(data);
-    return  (id().station == other.id().station &&
-             id().datetime == other.id().datetime &&
+    return  (id()->station == other.id()->station &&
+             id()->datetime == other.id()->datetime &&
              platform() == other.platform());
 }
 
@@ -71,7 +71,7 @@ Data& Stop::assign(const Data& data)
 
 unsigned int Stop::Id::hash() const
 {
-    return qHash(station->id()) ^ qHash(datetime.toMSecsSinceEpoch());
+    return qHash(*station->id()) ^ ::qHash(datetime.toMSecsSinceEpoch());
 }
 
 bool Stop::Id::equals(const AbstractId& data) const

@@ -26,9 +26,9 @@ Connection::Connection(Id iId) : mId(iId)
 // Basic I/O
 //
 
-const Connection::Id& Connection::id() const
+Connection::Id const* Connection::id() const
 {
-    return mId;
+    return &mId;
 }
 
 Station const* Connection::terminus() const
