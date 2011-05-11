@@ -20,10 +20,10 @@ namespace iRail
     class Container : public QAbstractListModel
     {
     Q_OBJECT
-    private:
+    protected:
         // Construction and destruction
         Container(QObject* iParent = 0);
-        ~Container();
+        virtual ~Container();
         friend class ContainerCache;
 
     public:

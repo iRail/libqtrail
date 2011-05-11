@@ -120,6 +120,22 @@ QList<Journey*> ConnectionsReader::readConnections()
     return oJourneys;
 }
 
+struct ConnectionData
+{
+    ConnectionData()
+    {
+        delay = 0;
+        finished = false;
+    }
+
+    Stop const* origin;
+    Stop const* destination;
+    Station const* terminus;
+    Vehicle const* vehicle;
+    uint delay;
+    bool finished;
+};
+
 Journey* ConnectionsReader::readConnection()
 {
     // Process the attributes
@@ -134,13 +150,7 @@ Journey* ConnectionsReader::readConnection()
         mReader.raiseError("could not find connection id attribute");
 
     // Process the tags
-    Stop *tOrigin = 0, *tDestination = 0;
-    QList<Connection*> tConnections;
-    tConnections << new Connection(Connection::Id());
-    Vehicle *tVehicleDeparture, *tVehicleArrival;       //  NOTE TO READER: the iRail API _really_ sucks
-    QList<Vehicle*> tVehicles;                          //  when it comes to connections and via's...
-    Station *tDirectionOrigin, *tDirectionDestination;  //  Same applies to the directions.
-    QList<Station*> tDirections;                        //  Please bug Pieter about this.
+    QList<ConnectionData> tConnectionData;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -153,46 +163,17 @@ Journey* ConnectionsReader::readConnection()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "departure")
-                tOrigin = readStop(tVehicleDeparture, tDirectionOrigin);
+                readConnectionOrigin(tConnectionData);
             else if (mReader.name() == "arrival")
-                tDestination = readStop(tVehicleArrival, tDirectionDestination);
+                readConnectionDestination(tConnectionData);
             else if (mReader.name() == "vias")
-                tConnections = readVias(tVehicles, tDirections);
+                readVias(tConnectionData);
             else
                 skipUnknownElement();
         }
         else
             mReader.readNext();
     }
-
-    // Fix the via/connection vehicle counterintuitiveness
-    tVehicles << tVehicleArrival;
-    tDirections << tDirectionDestination;
-    Q_ASSERT(tVehicles.size() == tConnections.size());
-    Q_ASSERT(tDirections.size() == tConnections.size());
-    for (int i = 0; i < tConnections.size(); i++)
-    {
-        tConnections[i]->setVehicle(tVehicles.at(i));        // Did I say I really
-        tConnections[i]->setTerminus(tDirections.at(i));     // hate this mess?
-    }
-
-    // Fix the first connection
-    Connection::Id tConnectionFirstId;
-    tConnectionFirstId.origin = tOrigin;
-    tConnectionFirstId.destination = tConnections.first()->id()->destination;
-    Connection* tConnectionFirst = new Connection(tConnectionFirstId);
-    *tConnectionFirst = *tConnections.first();
-    delete tConnections.first();
-    tConnections.replace(0, tConnectionFirst);
-
-    // Fix the last connection
-    Connection::Id tConnectionLastId;
-    tConnectionLastId.origin = tConnections.first()->id()->origin;
-    tConnectionLastId.destination = tDestination;
-    Connection* tConnectionLast = new Connection(tConnectionLastId);
-    *tConnectionLast = *tConnections.last();
-    delete tConnections.last();
-    tConnections.replace(tConnections.size()-1, tConnectionLast);
 
     // Construct the object
     Journey::Id tJourneyId;
@@ -203,21 +184,18 @@ Journey* ConnectionsReader::readConnection()
     return oJourney;
 }
 
-Stop* ConnectionsReader::readStop(Vehicle*& iVehicle, Station*& iTerminus)
+void ConnectionsReader::readStopFields(uint& oDelay, Station*& oStation, QDateTime& oDatetime, Vehicle*& oVehicle, uint& oPlatform, Station*& oTerminus)
 {
     // Process the attributes
-    int tDelay = 0;
+    oDelay = 0;
     if (mReader.attributes().hasAttribute("delay"))
     {
         QStringRef tDelayString = mReader.attributes().value("delay");
 
-        tDelay = tDelayString.toString().toInt();
+        oDelay = tDelayString.toString().toInt();
     }
 
     // Process the tags
-    Station* tStation;
-    int tPlatform;
-    QDateTime tDatetime;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -229,16 +207,134 @@ Stop* ConnectionsReader::readStop(Vehicle*& iVehicle, Station*& iTerminus)
 
         if (mReader.isStartElement())
         {
-            if (mReader.name() == "vehicle")            // These fields should _not_
-                iVehicle = readVehicle();               // be present in a POI.
-            else if (mReader.name() == "direction")     // Please bug Pieter as frequently
-                iTerminus = readStation();              // ase possible about this.
+            if (mReader.name() == "vehicle")
+                oVehicle = readVehicle();
+            else if (mReader.name() == "direction")
+                oTerminus = readStation();
             else if (mReader.name() == "platform")
-                tPlatform = readPlatform();
+                oPlatform = readPlatform();
             else if (mReader.name() == "time")
-                tDatetime = readDatetime();
+                oDatetime = readDatetime();
             else if (mReader.name() == "station")
-                tStation = readStation();
+                oStation = readStation();
+            else
+                skipUnknownElement();
+        }
+        else
+            mReader.readNext();
+    }
+}
+
+
+void ConnectionsReader::readConnectionOrigin(QList<ConnectionData>& iConnectionData)
+{
+    // Read fields
+    uint& tDelay;
+    Station* tStation;
+    DateTime tDatetime;
+    ehicle* tVehicle;
+    uint tPlatform;
+    Station* tTerminus;
+    readStopFields(tDelay, tStation, tDatetime, tVehicle, tPlatform, tTerminus);
+
+    // Construct the stop
+    Stop::Id tStopId;
+    tStopId.datetime = tDatetime;
+    tStopId.station = tStation;
+    Stop *oStop = new Stop(tStopId);
+    oStop->setPlatform(tPlatform);
+
+    // Construct the data
+    ConnectionData tDepartureData;
+    tDepartureData.delay = tDelay;
+    tDepartureData.terminus = tTerminus;
+    tDepartureData.vehicle = tVehicle;
+    tDepartureData.origin = oStop;
+    tDepartureData.finished = false;    // destination not yet filled in
+    Q_ASSERT(iConnectionData.size() == 0);
+    iConnectionData << tDepartureData;
+}
+
+void ConnectionsReader::readConnectionDestination(QList<ConnectionData>& iConnectionData)
+{
+    // Read fields
+    uint& tDelay;
+    Station* tStation;
+    DateTime tDatetime;
+    ehicle* tVehicle;
+    uint tPlatform;
+    Station* tTerminus;
+    readStopFields(tDelay, tStation, tDatetime, tVehicle, tPlatform, tTerminus);
+
+    // Construct the stop
+    Stop::Id tStopId;
+    tStopId.datetime = tDatetime;
+    tStopId.station = tStation;
+    Stop *oStop = new Stop(tStopId);
+    oStop->setPlatform(tPlatform);
+
+    // Construct the data
+    ConnectionData tDepartureData;
+    tDepartureData.delay = tDelay;
+    tDepartureData.terminus = tTerminus;
+    tDepartureData.vehicle = tVehicle;
+    tDepartureData.destination = oStop;
+    tDepartureData.finished = false;    // origin not yet filled in
+    Q_ASSERT(iConnectionData.size() == 1);
+    iConnectionData << tDepartureData;
+}
+
+void ConnectionsReader::readVias(QList<ConnectionData>& iConnectionData)
+{
+    // Process the attributes
+    int tNumber;
+    if (mReader.attributes().hasAttribute("number"))
+    {
+        QStringRef tNumberString = mReader.attributes().value("number");
+
+        tNumber = tNumberString.toString().toInt();
+    }
+    else
+        mReader.raiseError("could not find vias count attribute");
+
+    // Process the tags
+    mReader.readNext();
+    while (!mReader.atEnd())
+    {
+        if (mReader.isEndElement())
+        {
+            mReader.readNext();
+            break;
+        }
+
+        if (mReader.isStartElement())
+        {
+            if (mReader.name() == "via")
+            {
+                Stop* tViArrival, tViaDeparture;
+                Station* tTerminus;
+                Vehicle* tVehicle;
+                readVia(tViArrival, tViaDeparture, tTerminus, tVehicle);
+
+                // Look for the first unfinished item
+                int i = 0;
+                while (i < iConnectionData.size() && iConnectionData.at(i).finished)
+                    i++;
+                Q_ASSERT(i < iConnectionData.size()-1);
+
+                // Update it with the via origin
+                iConnectionData.at(i).destination = tViArrival;
+                iConnectionData.at(i).finished = true;
+
+                // Insert the via destination
+                ConnectionData tConnectionData;
+                tConnectionData.delay = 0;
+                tConnectionData.terminus = tTerminus;
+                tConnectionData.vehicle = tVehicle;
+                tConnectionData.origin = tViaDeparture;
+                tConnectionData.finished = false;    // destination not yet filled in
+                iConnectionData.insert(i+1, tConnectionData);
+            }
             else
                 skipUnknownElement();
         }
@@ -246,13 +342,85 @@ Stop* ConnectionsReader::readStop(Vehicle*& iVehicle, Station*& iTerminus)
             mReader.readNext();
     }
 
-    // Construct the object
-    Stop::Id tStopId;
-    tStopId.datetime = tDatetime;
-    tStopId.station = tStation;
-    Stop *oStop = new Stop(tStopId);
-    oStop->setPlatform(tPlatform);
-    return oStop;
+    // Merge the two last ConnectionData entries
+    iConnectionData.last().origin = iConnectionData.at(iConnectionData.size()-2);
+    iConnectionData.pop_front();
+    iConnectionData.last().finished = true;
+
+    if (iConnectionData.size() != tNumber+1)
+        mReader.raiseError("advertised nubmer of vias did not match the actual amount");
+}
+
+void ConnectionsReader::readVia(Stop::Id*& oViaArrival, Stop::Id*& oViaDeparture, Station*& oTerminus, Vehicle*& oVehicle)
+{
+    // Process the attributes
+    unsigned int tId;   // TODO: do something with this
+    if (mReader.attributes().hasAttribute("id"))
+    {
+        QStringRef tIdString = mReader.attributes().value("id");
+
+        tId = tIdString.toString().toInt();
+    }
+    else
+        mReader.raiseError("could not find via id attribute");
+
+    // Process the tags
+    Station* tStation;
+    QDateTime tDatetimeDeparture, tDatetimeArrival;
+    uint tPlatformDeparture, tPlatformArrival;
+    mReader.readNext();
+    while (!mReader.atEnd())
+    {
+        if (mReader.isEndElement())
+        {
+            mReader.readNext();
+            break;
+        }
+
+        if (mReader.isStartElement())
+        {
+            if (mReader.name() == "departure")
+            {
+                uint& tDummyDelay;
+                Station* tDummyStation;
+                Vehicle* tDummyVehicle;
+                Station* tDummyTerminus;
+                readStopFields(tDummyDelay, tDummyStation, tDatetimeDeparture, tDummyVehicle, tPlatformDeparture, tDummyTerminus);
+            }
+            else if (mReader.name() == "arrival")
+            {
+                uint& tDummyDelay;
+                Station* tDummyStation;
+                Vehicle* tDummyVehicle;
+                Station* tDummyTerminus;
+                readStopFields(tDummyDelay, tDummyStation, tDatetimeArrival, tDummyVehicle, tPlatformArrival, tDummyTerminus);
+            }
+            else if (mReader.name() == "vehicle")
+                oVehicle = readVehicle();
+            else if (mReader.name() == "station")
+                tStation = readStation();
+            else if (mReader.name() == "direction")
+                oTerminus = readStation();
+            else
+                skipUnknownElement();
+        }
+        else
+            mReader.readNext();
+    }
+
+    // Construct the arrival stop
+    Stop::Id tStopArrivalId;
+    tStopArrivalId.datetime = tDatetimeArrival;
+    tStopArrivalId.station = tStation;
+    oViaArrival = new Stop(tStopArrivalId);
+    oViaArrival->setPlatform(tPlatformArrival);
+
+    // Construct the departure stop
+    Stop::Id tStopDepartureId;
+    tStopDepartureId.datetime = tDatetimeDeparture;
+    tStopDepartureId.station = tStation;
+    oViaDeparture = new Stop(tStopDepartureId);
+    oViaDeparture->setPlatform(tPlatformDeparture);
 }
 
 Vehicle* ConnectionsReader::readVehicle()
@@ -324,116 +492,3 @@ Station* ConnectionsReader::readStation()
     tStationId.guid = tStationGuid;
     return new Station(tStationId); // TODO: lookup
 }
-
-QList<Connection*> ConnectionsReader::readVias(QList<Vehicle*>& iVehicles, QList<Station*>& iDirections)
-{
-    // Process the attributes
-    int tNumber;
-    if (mReader.attributes().hasAttribute("number"))
-    {
-        QStringRef tNumberString = mReader.attributes().value("number");
-
-        tNumber = tNumberString.toString().toInt();
-    }
-    else
-        mReader.raiseError("could not find vias count attribute");
-
-    // Process the tags
-    QList<Connection*> tConnections;
-    Vehicle* tVehicle;
-    Station* tDirection;
-    tConnections << new Connection(Connection::Id());
-    mReader.readNext();
-    while (!mReader.atEnd())
-    {
-        if (mReader.isEndElement())
-        {
-            mReader.readNext();
-            break;
-        }
-
-        if (mReader.isStartElement())
-        {
-            if (mReader.name() == "via")
-            {
-                Connection* tConnection = readVia(tVehicle, tDirection);
-                iVehicles << tVehicle;
-                iDirections << tDirection;
-
-                Connection::Id tConnectionLastId;
-                tConnectionLastId.origin = tConnections.last()->id()->origin;
-                tConnectionLastId.destination = tConnection->id()->destination;
-                Connection* tConnectionLast = new Connection(tConnectionLastId);
-                *tConnectionLast = *tConnections.last();
-                delete tConnections.last();
-                tConnections.replace(tConnections.size()-1, tConnectionLast);
-
-                tConnections << tConnection;
-            }
-            else
-                skipUnknownElement();
-        }
-        else
-            mReader.readNext();
-    }
-
-    if (tConnections.size() != tNumber+1)
-        mReader.raiseError("advertised nubmer of vias did not match the actual amount");
-    return tConnections;
-}
-
-Connection* ConnectionsReader::readVia(Vehicle*& iVehicle, Station*& iDirection)
-{
-    // Process the attributes
-    unsigned int tId;   // TODO: do something with this
-    if (mReader.attributes().hasAttribute("id"))
-    {
-        QStringRef tIdString = mReader.attributes().value("id");
-
-        tId = tIdString.toString().toInt();
-    }
-    else
-        mReader.raiseError("could not find via id attribute");
-
-    // Process the tags
-    Station *tArrival, *tDeparture;
-    QString tVehicleDummy, tDepartureDummy;
-    Station *tStation, *tTerminus;
-    mReader.readNext();
-    while (!mReader.atEnd())
-    {
-        if (mReader.isEndElement())
-        {
-            mReader.readNext();
-            break;
-        }
-
-        if (mReader.isStartElement())
-        {
-            if (mReader.name() == "departure")
-                tDeparture = readStop(tVehicleDummy, tDepartureDummy);
-            else if (mReader.name() == "arrival")
-                tArrival = readStop(tVehicleDummy, tDepartureDummy);
-            else if (mReader.name() == "vehicle")
-                iVehicle = readVehicle();
-            else if (mReader.name() == "station")
-                tStation = readStation();
-            else if (mReader.name() == "direction")
-                iDirection = readStation();
-            else
-                skipUnknownElement();
-        }
-        else
-            mReader.readNext();
-    }
-
-    // Construct the object
-    tArrival.station = tStation;
-    tDeparture.station = tStation;
-    tTerminus.station = tTerminus;
-    Connection* oLine;
-    oLine.departure = tDeparture;
-    oLine.arrival = tArrival;
-    return oLine;
-}
-

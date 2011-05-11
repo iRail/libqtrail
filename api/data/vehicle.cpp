@@ -28,6 +28,20 @@ Vehicle::~Vehicle()
 // Basic I/O
 //
 
+QVariant Vehicle::field(int iRole) const
+{
+    switch (iRole)
+    {
+    case Qt::DisplayRole:
+    case Vehicle::GUIDRole:
+        return QVariant::fromValue(id()->guid);
+    case Vehicle::LocationRole:
+        return QVariant::fromValue(location());
+    default:
+        return QVariant();
+    }
+}
+
 Vehicle::Id const* Vehicle::id() const
 {
     return &mId;

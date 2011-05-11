@@ -29,6 +29,22 @@ Station::~Station()
 // Basic I/O
 //
 
+QVariant Station::field(int iRole) const
+{
+    switch (iRole)
+    {
+    case Station::GUIDRole:
+        return QVariant::fromValue(id()->guid);
+    case Qt::DisplayRole:
+    case Station::NameRole:
+        return QVariant::fromValue(name());
+    case Station::LocationRole:
+        return QVariant::fromValue(location());
+    default:
+        return QVariant();
+    }
+}
+
 Station::Id const* Station::id() const
 {
     return &mId;

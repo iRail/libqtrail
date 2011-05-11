@@ -37,8 +37,13 @@ namespace iRail
             Data::AbstractId const* id;
         };
 
+        // Construction and destruction
+        Data();
+        virtual ~Data();
+
         // Basic I/O
         virtual AbstractId const* id() const = 0;
+        virtual QVariant field(int iRole) const;
 
         // Operator implementation
         virtual bool equals(const Data& data) const = 0;

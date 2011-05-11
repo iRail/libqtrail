@@ -10,7 +10,7 @@
 #include <QObject>
 #include <QMetaType>
 #include <QString>
-#include <QHash>
+#include <QVariant>
 #include "api/data.h"
 #include "stop.h"
 #include "station.h"
@@ -45,6 +45,7 @@ namespace iRail
         Journey(Id iId);
 
         // Basic I/O
+        QVariant field(int iRole) const;
         Id const* id() const;
         unsigned int delay() const;
         void setDelay(unsigned int iDelay);

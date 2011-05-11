@@ -24,6 +24,22 @@ Journey::Journey(Id iId) : mId(iId)
 // Basic I/O
 //
 
+QVariant Journey::field(int iRole) const
+{
+    switch (iRole)
+    {
+    case Qt::DisplayRole:
+    case Journey::OriginRole:
+        return QVariant::fromValue(id()->origin);
+    case Journey::DestinationRole:
+        return QVariant::fromValue(id()->destination);
+    case Journey::DelayRole:
+        return QVariant::fromValue(delay());
+    default:
+        return QVariant();
+    }
+}
+
 Journey::Id const* Journey::id() const
 {
     return &mId;

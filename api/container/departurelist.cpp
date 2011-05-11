@@ -15,7 +15,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-DepartureList::DepartureList(const Station::Id& iStationId, QObject* iParent) : mStationId(iStationId), QAbstractListModel(iParent)
+DepartureList::DepartureList(const Station::Id& iStationId, QObject* iParent) : mStationId(iStationId), Container(iParent)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Departure::VehicleRole] = "vehicle";
@@ -26,8 +26,6 @@ DepartureList::DepartureList(const Station::Id& iStationId, QObject* iParent) : 
 
 DepartureList::~DepartureList()
 {
-    qDeleteAll(mDepartures.values());
-    mDepartures.clear();
 }
 
 
@@ -38,40 +36,6 @@ DepartureList::~DepartureList()
 Station::Id const* DepartureList::stationId() const
 {
     return &mStationId;
-}
-
-
-//
-// Model interface
-//
-
-int DepartureList::rowCount(const QModelIndex& iParent) const
-{
-    Q_UNUSED(iParent);
-    return mDepartures.size();
-}
-
-QVariant DepartureList::data(const QModelIndex& iIndex, int iRole) const
-{
-    if (!iIndex.isValid())
-        return QVariant();
-    if (iIndex.row() > (mDepartures.size()-1) )
-        return QVariant();
-
-    // TODO: sort through virtual mapping structure
-    Departure* oDeparture = mDepartures.values().at(iIndex.row());
-    switch (iRole)
-    {
-    case Qt::DisplayRole:
-    case Departure::VehicleRole:
-        return QVariant::fromValue(oDeparture->id()->vehicle);
-    case Departure::OriginRole:
-        return QVariant::fromValue(oDeparture->id()->origin);
-    case Departure::DelayRole:
-        return QVariant::fromValue(oDeparture->delay());
-    default:
-        return QVariant();
-    }
 }
 
 

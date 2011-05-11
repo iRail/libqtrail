@@ -11,7 +11,7 @@
 #include <QMetaType>
 #include <QString>
 #include <QDateTime>
-#include <QHash>
+#include <QVariant>
 #include "api/data.h"
 #include "api/data/station.h"
 
@@ -44,6 +44,7 @@ namespace iRail
         ~Stop();
 
         // Basic I/O
+        QVariant field(int iRole) const;
         Id const* id() const;
         unsigned int platform() const;
         void setPlatform(unsigned int iPlatform);

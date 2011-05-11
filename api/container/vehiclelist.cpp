@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-VehicleList::VehicleList(QObject* iParent) : QAbstractListModel(iParent)
+VehicleList::VehicleList(QObject* iParent) : Container(iParent)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Station::GUIDRole] = "guid";
@@ -24,38 +24,4 @@ VehicleList::VehicleList(QObject* iParent) : QAbstractListModel(iParent)
 
 VehicleList::~VehicleList()
 {
-    qDeleteAll(mVehicles.values());
-    mVehicles.clear();
-}
-
-
-//
-// Model interface
-//
-
-int VehicleList::rowCount(const QModelIndex& iParent) const
-{
-    Q_UNUSED(iParent);
-    return mVehicles.size();
-}
-
-QVariant VehicleList::data(const QModelIndex& iIndex, int iRole) const
-{
-    if (!iIndex.isValid())
-        return QVariant();
-    if (iIndex.row() > (mVehicles.size()-1) )
-        return QVariant();
-
-    // TODO: sort through virtual mapping structure
-    Vehicle* oVehicle = mVehicles.values().at(iIndex.row());
-    switch (iRole)
-    {
-    case Qt::DisplayRole:
-    case Vehicle::GUIDRole:
-        return QVariant::fromValue(oVehicle->id()->guid);
-    case Vehicle::LocationRole:
-        return QVariant::fromValue(oVehicle->location());
-    default:
-        return QVariant();
-    }
 }

@@ -15,7 +15,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-StationList::StationList(QObject* iParent) : QAbstractListModel(iParent)
+StationList::StationList(QObject* iParent) : Container(iParent)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Station::GUIDRole] = "guid";
@@ -26,42 +26,8 @@ StationList::StationList(QObject* iParent) : QAbstractListModel(iParent)
 
 StationList::~StationList()
 {
-    qDeleteAll(mStations.values()); // TODO: neccesary?
 }
 
-
-//
-// Model interface
-//
-
-int StationList::rowCount(const QModelIndex& iParent) const
-{
-    Q_UNUSED(iParent);
-    return mStationIds.size();
-}
-
-QVariant StationList::data(const QModelIndex& iIndex, int iRole) const
-{
-    if (!iIndex.isValid())
-        return QVariant();
-    if (iIndex.row() > (mStationIds.size()-1) )
-        return QVariant();
-
-    Station::Id const* tStationId = mStationIds.at(iIndex.row());
-    Station* oStation = mStations.value(tStationId);
-    switch (iRole)
-    {
-    case Station::GUIDRole:
-        return QVariant::fromValue(oStation->id()->guid);
-    case Qt::DisplayRole:
-    case Station::NameRole:
-        return QVariant::fromValue(oStation->name());
-    case Station::LocationRole:
-        return QVariant::fromValue(oStation->location());
-    default:
-        return QVariant();
-    }
-}
 
 
 //

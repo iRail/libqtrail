@@ -26,6 +26,26 @@ Connection::Connection(Id iId) : mId(iId)
 // Basic I/O
 //
 
+QVariant Connection::field(int iRole) const
+{
+    switch (iRole)
+    {
+    case Qt::DisplayRole:
+    case Connection::VehicleRole:
+        return QVariant::fromValue(vehicle());
+    case Connection::OriginRole:
+        return QVariant::fromValue(id()->origin);
+    case Connection::DestinationRole:
+        return QVariant::fromValue(id()->destination);
+    case Connection::TerminusRole:
+        return QVariant::fromValue(terminus());
+    case Connection::DelayRole:
+        return QVariant::fromValue(delay());
+    default:
+        return QVariant();
+    }
+}
+
 Connection::Id const* Connection::id() const
 {
     return &mId;

@@ -29,6 +29,22 @@ Stop::~Stop()
 // Basic I/O
 //
 
+QVariant Stop::field(int iRole) const
+{
+    switch (iRole)
+    {
+    case Qt::DisplayRole:
+    case Stop::StationRole:
+        return QVariant::fromValue(id()->station);
+    case Stop::DatetimeRole:
+        return QVariant::fromValue(id()->datetime);
+    case Stop::PlatformRole:
+        return QVariant::fromValue(platform());
+    default:
+        return QVariant();
+    }
+}
+
 Stop::Id const* Stop::id() const
 {
     return &mId;

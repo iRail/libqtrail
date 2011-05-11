@@ -24,6 +24,22 @@ Departure::Departure(Id iId) : mId(iId)
 // Basic I/O
 //
 
+QVariant Departure::field(int iRole) const
+{
+    switch (iRole)
+    {
+    case Qt::DisplayRole:
+    case Departure::VehicleRole:
+        return QVariant::fromValue(id()->vehicle);
+    case Departure::OriginRole:
+        return QVariant::fromValue(id()->origin);
+    case Departure::DelayRole:
+        return QVariant::fromValue(delay());
+    default:
+        return QVariant();
+    }
+}
+
 Departure::Id const* Departure::id() const
 {
     return &mId;

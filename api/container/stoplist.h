@@ -11,18 +11,16 @@
 #include <QMetaType>
 #include <QString>
 #include <QDateTime>
-#include <QAbstractListModel>
 #include <QHash>
 #include "api/exception.h"
 #include "api/data/vehicle.h"
 #include "api/data/connection.h"
 #include "api/data/stop.h"
+#include "api/container.h"
 
 namespace iRail
 {
-    class ContainerCache;
-
-    class StopList : public QAbstractListModel
+    class StopList : public Container
     {
     Q_OBJECT
     private:
@@ -30,19 +28,10 @@ namespace iRail
         StopList(QObject* iParent = 0);
         StopList(const Vehicle::Id& iVehicleId, QObject* iParent = 0);
         ~StopList();
-        friend class ContainerCache;
 
         // Basic I/O
     public:
         Vehicle::Id const* vehicleId() const;
-
-        // Model interface
-        int rowCount(const QModelIndex& iParent = QModelIndex()) const;
-        QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const;
-
-        // Operators
-        friend QDataStream &operator<<(QDataStream& iStream, const StopList& iStopList);
-        friend QDataStream &operator>>(QDataStream& iStream, StopList& iStopList);
 
     signals:
         // Data reply signals
@@ -53,7 +42,6 @@ namespace iRail
     private:
         // Member data
         Vehicle::Id mVehicleId;
-        QHash<Stop::Id, Stop*> mStops;
     };
 }
 

@@ -10,7 +10,7 @@
 #include <QObject>
 #include <QMetaType>
 #include <QString>
-#include <QHash>
+#include <QVariant>
 #include "api/data.h"
 #include "stop.h"
 #include "station.h"
@@ -48,6 +48,7 @@ namespace iRail
         Connection(Id iId);
 
         // Basic I/O
+        QVariant field(int iRole) const;
         Id const* id() const;
         Station const* terminus() const;
         void setTerminus(Station const* iTerminus);

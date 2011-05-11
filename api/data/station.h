@@ -10,8 +10,7 @@
 #include <QObject>
 #include <QMetaType>
 #include <QString>
-#include <QPair>
-#include <QHash>
+#include <QVariant>
 #include "auxiliary/location.h"
 #include "api/data.h"
 
@@ -48,6 +47,7 @@ namespace iRail
         ~Station();
 
         // Basic I/O
+        QVariant field(int iRole) const;
         Id const* id() const;
         QString name() const;
         void setName(const QString& iName);
