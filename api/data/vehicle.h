@@ -24,13 +24,13 @@ namespace iRail
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Auxiliary structures
-        struct Id : AbstractId
+        struct Id
         {
             QString guid;
 
-            // Operator implementation
-            bool equals(const AbstractId& id) const;
-            unsigned int hash() const;
+            // Operators
+            friend inline unsigned int qHash(const Vehicle::Id& tVehicleId);
+            friend bool operator==(const Vehicle::Id& lhs, const Vehicle::Id& rhs);
         };
         enum Roles
         {
@@ -48,14 +48,18 @@ namespace iRail
         Location const* location() const;
         void setLocation(const Location& iLocation);
 
-        // Operator implementation
-        bool equals(const Data& data) const;
-        Data& assign(const Data& data);
+        // Operators
+        friend bool operator==(const Vehicle& lhs, const Vehicle& rhs);
+        Vehicle& operator=(const Vehicle& other);
 
     private:
         Id mId;
         Location mLocation;
     };
+
+    bool operator==(const Vehicle& lhs, const Vehicle& rhs);
+    inline unsigned int qHash(const Vehicle::Id& tVehicleId);
+    bool operator==(const Vehicle::Id& lhs, const Vehicle::Id& rhs);
 }
 
 Q_DECLARE_METATYPE(const iRail::Vehicle*)

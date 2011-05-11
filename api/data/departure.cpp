@@ -57,19 +57,17 @@ void Departure::setDelay(unsigned int iDelay)
 
 
 //
-// Operator implementation
+// Operators
 //
 
-bool Departure::equals(const Data& data) const
+bool iRail::operator==(const Departure& lhs, const Departure& rhs)
 {
-    const Departure& other = dynamic_cast<const Departure&>(data);
-    return  (id() == other.id() &&
-             delay() == other.delay());
+    return  (lhs.id().vehicle == rhs.id().vehicle &&
+             lhs.id().origin == rhs.id().origin);
 }
 
-Data& Departure::assign(const Data& data)
+Departure& Departure::operator=(const Departure& other)
 {
-    const Departure& other = dynamic_cast<const Departure&>(data);
     if (this != &other)
     {
         Q_ASSERT(this->id() == other.id());
@@ -79,14 +77,13 @@ Data& Departure::assign(const Data& data)
     return *this;
 }
 
-unsigned int Departure::Id::hash() const
+inline unsigned int qHash(const Departure::Id& iDepartureId)
 {
-    return qHash(origin) ^ qHash(vehicle);
+    return qHash(iDepartureId.origin) ^ qHash(iDepartureId.vehicle);
 }
 
-bool Departure::Id::equals(const AbstractId& data) const
+bool iRail::operator==(const Departure::Id& lhs, const Departure::Id& rhs)
 {
-    const Departure::Id& other = dynamic_cast<const Departure::Id&>(data);
-    return  (vehicle->id() == other.vehicle->id() &&
-             origin->id() == other.origin->id());
+    return  (lhs.vehicle->id() == rhs.vehicle->id() &&
+             lhs.origin->id() == rhs.origin->id());
 }

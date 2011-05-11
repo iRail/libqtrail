@@ -22,7 +22,7 @@ namespace iRail
     class ConnectionList : public Container
     {
     Q_OBJECT
-    private:
+    public:
         // Construction and destruction
         ConnectionList(const Journey::Id& iJourney, QObject* iParent = 0);
         ~ConnectionList();

@@ -59,19 +59,18 @@ void Vehicle::setLocation(const Location& iLocation)
 
 
 //
-// Operator implementation
+// Operators
 //
 
-bool Vehicle::equals(const Data& data) const
+bool iRail::operator==(const Vehicle& lhs, const Vehicle& rhs)
 {
-    const Vehicle& other = dynamic_cast<const Vehicle&>(data);
-    return  (id() == other.id() &&
-             location() == other.location());
+    return  (lhs.id() == rhs.departure() &&
+             lhs.locatable() == rhs.arrival() &&
+             lhs.location() == rhs.terminus());
 }
 
-Data& Vehicle::assign(const Data& data)
+Vehicle& Vehicle::operator=(const Vehicle& other)
 {
-    const Vehicle& other = dynamic_cast<const Vehicle&>(data);
     if (this != &other)
     {
         Q_ASSERT(this->id() == other.id());
@@ -81,13 +80,12 @@ Data& Vehicle::assign(const Data& data)
     return *this;
 }
 
-unsigned int Vehicle::Id::hash() const
+inline unsigned int qHash(const Vehicle::Id& iVehicleId)
 {
-    return qHash(guid);
+    return qHash(iVehicleId);
 }
 
-bool Vehicle::Id::equals(const AbstractId& data) const
+bool iRail::operator==(const Vehicle::Id& lhs, const Vehicle::Id& rhs)
 {
-    const Vehicle::Id& other = dynamic_cast<const Vehicle::Id&>(data);
-    return  (guid == other.guid);
+    return  (lhs.guid == rhs.guid);
 }

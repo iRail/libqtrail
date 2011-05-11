@@ -23,15 +23,13 @@ namespace iRail
     Q_PROPERTY(Location location READ location WRITE setLocation)
     public:
         // Auxiliary structures
-        struct Id : AbstractId
+        struct Id
         {
             QString guid;
 
-            // Operator implementation
-            bool equals(const AbstractId& id) const;
-            unsigned int hash() const;
-
             // Operators
+            friend inline unsigned int qHash(const Station::Id& iStationId);
+            friend bool operator==(const Station::Id& lhs, const Station::Id& rhs);
             friend QDataStream& operator<<(QDataStream& iStream, const Station::Id& iStationId);
             friend QDataStream& operator>>(QDataStream& iStream, Station::Id& iStationId);
         };
@@ -54,9 +52,9 @@ namespace iRail
         Location const* location() const;
         void setLocation(const Location& iLocation);
 
-        // Operator implementation
-        bool equals(const Data& data) const;
-        Data& assign(const Data& data);
+        // Operators
+        friend bool operator==(const Station& lhs, const Station& rhs);
+        Station& operator=(const Station& other);
         friend QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
         friend QDataStream& operator>>(QDataStream& iStream, Station& iStation);
 
@@ -66,6 +64,9 @@ namespace iRail
         Location mLocation;
     };
 
+    bool operator==(const Station& lhs, const Station& rhs);
+    inline unsigned int qHash(const Station::Id& iStationId);
+    bool operator==(const Station::Id& lhs, const Station::Id& rhs);
     QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
     QDataStream& operator>>(QDataStream& iStream, Station& iStation);
     QDataStream& operator<<(QDataStream& iStream, const Station::Id& iStationId);

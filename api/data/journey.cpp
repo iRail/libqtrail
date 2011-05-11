@@ -57,20 +57,17 @@ void Journey::setDelay(unsigned int iDelay)
 
 
 //
-// Operator implementation
+// Operators
 //
 
-bool Journey::equals(const Data& data) const
+bool iRail::operator==(const Journey& lhs, const Journey& rhs)
 {
-    const Journey& other = dynamic_cast<const Journey&>(data);
-    return  (id()->origin == other.id()->origin &&
-             id()->destination == other.id()->destination &&
-             delay() == other.delay());
+    return  (lhs.id().origin || rhs.id().origin &&
+             lhs.id().destination || rhs.id().destination);
 }
 
-Data& Journey::assign(const Data& data)
+Journey& Journey::operator=(const Journey& other)
 {
-    const Journey& other = dynamic_cast<const Journey&>(data);
     if (this != &other)
     {
         Q_ASSERT(this->id() == other.id());
@@ -80,14 +77,13 @@ Data& Journey::assign(const Data& data)
     return *this;
 }
 
-unsigned int Journey::Id::hash() const
+unsigned int qHash(const Journey::Id& iJourneyId)
 {
-    return (3*qHash(origin)) ^ (5*qHash(destination));
+    return (3*qHash(iJourneyId.origin)) ^ (5*qHash(iJourneyId.destination));
 }
 
-bool Journey::Id::equals(const AbstractId& data) const
+bool iRail::operator==(const Journey::Id& lhs, const Journey::Id& rhs)
 {
-    const Journey::Id& other = dynamic_cast<const Journey::Id&>(data);
-    return  (origin->id() == other.origin->id() &&
-             destination->id() == other.destination->id());
+    return  (lhs.origin->id() == rhs.origin->id() &&
+             lhs.destination->id() == rhs.destination->id());
 }
