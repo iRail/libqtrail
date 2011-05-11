@@ -67,9 +67,7 @@ void Stop::setPlatform(unsigned int iPlatform)
 
 bool iRail::operator==(const Stop& lhs, const Stop& rhs)
 {
-    return  (lhs.id().station == rhs.id().station &&
-             lhs.id().datetime == rhs.id().datetime &&
-             lhs.delay() == rhs.delay() &&
+    return  (*lhs.id() == *rhs.id() &&
              lhs.platform() == rhs.platform());
 }
 
@@ -86,11 +84,11 @@ Stop& Stop::operator=(const Stop& other)
 
 inline unsigned int qHash(const Stop::Id& iStopId)
 {
-    return qHash(iStopId.station) ^ qHash(iStopId.datetime);
+    return qHash(*iStopId.station->id()) ^ qHash(iStopId.datetime);
 }
 
 bool iRail::operator==(const Stop::Id& lhs, const Stop::Id& rhs)
 {
-    return  (lhs.station->id() == rhs.station->id() &&
+    return  (*lhs.station->id() == *rhs.station->id() &&
              lhs.datetime == rhs.datetime);
 }

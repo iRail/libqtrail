@@ -88,10 +88,10 @@ void Connection::setDelay(unsigned int iDelay)
 
 bool iRail::operator==(const Connection& lhs, const Connection& rhs)
 {
-    return  (lhs.departure() == rhs.departure() &&
-             lhs.arrival() == rhs.arrival() &&
-             lhs.terminus() == rhs.terminus() &&
-             lhs.vehicle() == rhs.vehicle());
+    return  (*lhs.id() == *rhs.id() &&
+             *lhs.terminus() == *rhs.terminus() &&
+             *lhs.vehicle() == *rhs.vehicle() &&
+             lhs.delay() == rhs.delay());
 }
 
 Connection& Connection::operator=(const Connection& other)
@@ -109,11 +109,11 @@ Connection& Connection::operator=(const Connection& other)
 
 inline unsigned int qHash(const Connection::Id& iConnection)
 {
-    return (3*qHash(iConnection.origin)) ^ (5*qHash(iConnection.destination));
+    return (3*qHash(*iConnection.origin->id())) ^ (5*qHash(*iConnection.destination->id()));
 }
 
 bool iRail::operator==(const Connection::Id& lhs, const Connection::Id& rhs)
 {
-    return  (lhs.origin->id() == rhs.origin->id() &&
-             lhs.destination->id() == rhs.destination->id());
+    return  (*lhs.origin->id() == *rhs.origin->id() &&
+             *lhs.destination->id() == *rhs.destination->id());
 }

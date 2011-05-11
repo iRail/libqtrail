@@ -15,7 +15,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-StopList::StopList(QObject *iParent) : QAbstractListModel(iParent)
+StopList::StopList(QObject *iParent) : Container(iParent)
 {
     mVehicleId.guid = "anonymous";
 

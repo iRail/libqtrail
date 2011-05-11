@@ -12,12 +12,11 @@
 #include <QString>
 #include <QDateTime>
 #include <QVariant>
-#include "api/data.h"
 #include "api/data/station.h"
 
 namespace iRail
 {
-    class Stop : public Data
+    class Stop
     {
     Q_OBJECT
     Q_PROPERTY(uint platform READ platform WRITE setPlatform)

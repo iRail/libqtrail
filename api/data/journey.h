@@ -11,14 +11,13 @@
 #include <QMetaType>
 #include <QString>
 #include <QVariant>
-#include "api/data.h"
 #include "stop.h"
 #include "station.h"
 #include "vehicle.h"
 
 namespace iRail
 {
-    class Journey : public Data
+    class Journey
     {
     Q_OBJECT
     Q_PROPERTY(uint delay READ delay WRITE setDelay)

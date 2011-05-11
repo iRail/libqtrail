@@ -62,8 +62,8 @@ void Journey::setDelay(unsigned int iDelay)
 
 bool iRail::operator==(const Journey& lhs, const Journey& rhs)
 {
-    return  (lhs.id().origin || rhs.id().origin &&
-             lhs.id().destination || rhs.id().destination);
+    return  (*lhs.id() == *rhs.id() &&
+             lhs.delay() == rhs.delay());
 }
 
 Journey& Journey::operator=(const Journey& other)
@@ -79,11 +79,11 @@ Journey& Journey::operator=(const Journey& other)
 
 unsigned int qHash(const Journey::Id& iJourneyId)
 {
-    return (3*qHash(iJourneyId.origin)) ^ (5*qHash(iJourneyId.destination));
+    return (3*qHash(*iJourneyId.origin->id())) ^ (5*qHash(*iJourneyId.destination->id()));
 }
 
 bool iRail::operator==(const Journey::Id& lhs, const Journey::Id& rhs)
 {
-    return  (lhs.origin->id() == rhs.origin->id() &&
-             lhs.destination->id() == rhs.destination->id());
+    return  (*lhs.origin->id() == *rhs.origin->id() &&
+             *lhs.destination->id() == *rhs.destination->id());
 }

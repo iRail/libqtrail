@@ -19,7 +19,7 @@
 
 namespace iRail
 {
-    class StationList : public Container
+    class StationList : public Container<Station>
     {
     Q_OBJECT
     private:
@@ -29,10 +29,6 @@ namespace iRail
 
     public:
         // Basic I/O
-
-        // Operators
-        friend QDataStream &operator<<(QDataStream& iStream, const StationList& iStationList);
-        friend QDataStream &operator>>(QDataStream& iStream, StationList& iStationList);
 
     signals:
         // Data reply signals
@@ -46,9 +42,6 @@ namespace iRail
         // Member data
         QDateTime mTimestamp;
     };
-
-    QDataStream &operator<<(QDataStream& iStream, const StationList& iStationList);
-    QDataStream &operator>>(QDataStream& iStream, StationList& iStationList);
 }
 
 #endif // STATIONLIST_H

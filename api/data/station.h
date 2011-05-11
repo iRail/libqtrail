@@ -12,11 +12,10 @@
 #include <QString>
 #include <QVariant>
 #include "auxiliary/location.h"
-#include "api/data.h"
 
 namespace iRail
 {
-    class Station : public Data
+    class Station
     {
     Q_OBJECT
     Q_PROPERTY(QString name READ name WRITE setName)

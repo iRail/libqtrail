@@ -62,8 +62,8 @@ void Departure::setDelay(unsigned int iDelay)
 
 bool iRail::operator==(const Departure& lhs, const Departure& rhs)
 {
-    return  (lhs.id().vehicle == rhs.id().vehicle &&
-             lhs.id().origin == rhs.id().origin);
+    return  (*lhs.id() == *rhs.id() &&
+             lhs.delay() == rhs.delay());
 }
 
 Departure& Departure::operator=(const Departure& other)
@@ -79,11 +79,11 @@ Departure& Departure::operator=(const Departure& other)
 
 inline unsigned int qHash(const Departure::Id& iDepartureId)
 {
-    return qHash(iDepartureId.origin) ^ qHash(iDepartureId.vehicle);
+    return qHash(*iDepartureId.origin->id()) ^ qHash(*iDepartureId.vehicle->id());
 }
 
 bool iRail::operator==(const Departure::Id& lhs, const Departure::Id& rhs)
 {
-    return  (lhs.vehicle->id() == rhs.vehicle->id() &&
-             lhs.origin->id() == rhs.origin->id());
+    return  (*lhs.vehicle->id() == *rhs.vehicle->id() &&
+             *lhs.origin->id() == *rhs.origin->id());
 }

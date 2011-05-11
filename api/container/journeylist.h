@@ -18,7 +18,7 @@
 
 namespace iRail
 {
-    class JourneyList : public Container
+    class JourneyList : public Container<Journey>
     {
     Q_OBJECT
     private:

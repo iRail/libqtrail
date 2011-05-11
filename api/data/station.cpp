@@ -77,9 +77,9 @@ void Station::setLocation(const Location& iLocation)
 
 bool iRail::operator==(const Station& lhs, const Station& rhs)
 {
-    return  (lhs.id() == rhs.id() &&
+    return  (*lhs.id() == *rhs.id() &&
              lhs.name() == rhs.name() &&
-             *(lhs.location()) == *(rhs.location()));
+             *lhs.location() == *rhs.location());
 }
 
 Station& Station::operator=(const Station& other)
@@ -96,7 +96,7 @@ Station& Station::operator=(const Station& other)
 
 inline unsigned int qHash(const Station::Id& iStationId)
 {
-    return qHash(iStationId);
+    return qHash(iStationId.guid);
 }
 
 bool iRail::operator==(const Station::Id& lhs, const Station::Id& rhs)

@@ -11,14 +11,13 @@
 #include <QMetaType>
 #include <QString>
 #include <QVariant>
-#include "api/data.h"
 #include "stop.h"
 #include "station.h"
 #include "vehicle.h"
 
 namespace iRail
 {
-    class Connection : public Data
+    class Connection
     {
     Q_OBJECT
     Q_PROPERTY(Station terminus READ terminus)

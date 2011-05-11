@@ -19,7 +19,7 @@
 
 namespace iRail
 {
-    class ConnectionList : public Container
+    class ConnectionList : public Container<Connection>
     {
     Q_OBJECT
     public:

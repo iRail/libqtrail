@@ -18,7 +18,7 @@
 
 namespace iRail
 {
-    class VehicleList : public Container
+    class VehicleList : public Container<Vehicle>
     {
     Q_OBJECT
     private:

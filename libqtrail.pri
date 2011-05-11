@@ -8,7 +8,6 @@ RESOURCES += api/parser.qrc
 SOURCES += \
     api/progressindicator.cpp \
     api/reader.cpp \
-    api/data.cpp \
     api/data/station.cpp \
     api/data/vehicle.cpp \
     api/data/departure.cpp \
@@ -37,7 +36,6 @@ HEADERS += \
     api/exception/networkexception.h \
     api/exception/interruptedexception.h \
     api/reader.h \
-    api/data.h \
     api/data/station.h \
     api/data/vehicle.h \
     api/data/departure.h \

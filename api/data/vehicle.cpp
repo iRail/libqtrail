@@ -64,9 +64,8 @@ void Vehicle::setLocation(const Location& iLocation)
 
 bool iRail::operator==(const Vehicle& lhs, const Vehicle& rhs)
 {
-    return  (lhs.id() == rhs.departure() &&
-             lhs.locatable() == rhs.arrival() &&
-             lhs.location() == rhs.terminus());
+    return  (*lhs.id() == *rhs.id() &&
+             *lhs.location() == *rhs.location());
 }
 
 Vehicle& Vehicle::operator=(const Vehicle& other)
@@ -82,7 +81,7 @@ Vehicle& Vehicle::operator=(const Vehicle& other)
 
 inline unsigned int qHash(const Vehicle::Id& iVehicleId)
 {
-    return qHash(iVehicleId);
+    return qHash(iVehicleId.guid);
 }
 
 bool iRail::operator==(const Vehicle::Id& lhs, const Vehicle::Id& rhs)

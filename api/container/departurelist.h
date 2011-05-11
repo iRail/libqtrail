@@ -20,7 +20,7 @@
 
 namespace iRail
 {
-    class DepartureList : public Container
+    class DepartureList : public Container<Departure>
     {
     Q_OBJECT
     private:

@@ -13,8 +13,8 @@ using namespace iRail;
 // Construction and destruction
 //
 
-
-Container::Container(QObject *iParent) : QAbstractListModel(iParent)
+template <class Data>
+Container<Data>::Container(QObject *iParent) : QAbstractListModel(iParent)
 {
     setRoleNames(roleNames());
 }
@@ -24,13 +24,15 @@ Container::Container(QObject *iParent) : QAbstractListModel(iParent)
 // Model interface
 //
 
-int Container::rowCount(const QModelIndex& iParent) const
+template <class Data>
+int Container<Data>::rowCount(const QModelIndex& iParent) const
 {
     Q_UNUSED(iParent);
     return mData.size();
 }
 
-QVariant Container::data(const QModelIndex& iIndex, int iRole) const
+template <class Data>
+QVariant Container<Data>::data(const QModelIndex& iIndex, int iRole) const
 {
     if (!iIndex.isValid())
         return QVariant();
@@ -42,7 +44,8 @@ QVariant Container::data(const QModelIndex& iIndex, int iRole) const
     return data(tData, iRole);
 }
 
-QModelIndex Container::indexFromItem(const Data* iData) const
+template <class Data>
+QModelIndex Container<Data>::indexFromItem(const Data* iData) const
 {
     Q_ASSERT(iData);
     for(int tRow = 0; tRow < mData.size(); ++tRow)
@@ -59,7 +62,8 @@ QModelIndex Container::indexFromItem(const Data* iData) const
 // Data handling
 //
 
-void Container::replaceData(QList<Data*> iData)
+template <class Data>
+void Container<Data>::replaceData(QList<Data*> iData)
 {
     // Remove existing items
     beginRemoveRows(QModelIndex(), 0, mData.size()-1);

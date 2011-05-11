@@ -10,7 +10,6 @@
 #include <QObject>
 #include <QAbstractListModel>
 #include <QList>
-#include "data/station.h"
 
 namespace iRail
 {

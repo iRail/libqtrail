@@ -11,14 +11,13 @@
 #include <QMetaType>
 #include <QString>
 #include <QVariant>
-#include "api/data.h"
 #include <QDateTime>
 #include "station.h"
 #include "auxiliary/location.h"
 
 namespace iRail
 {
-    class Vehicle : public Data
+    class Vehicle
     {
     Q_OBJECT
     Q_PROPERTY(Location location READ location WRITE setLocation)

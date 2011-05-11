@@ -20,7 +20,7 @@
 
 namespace iRail
 {
-    class StopList : public Container
+    class StopList : public Container<Stop>
     {
     Q_OBJECT
     private:

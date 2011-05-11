@@ -27,33 +27,3 @@ StationList::StationList(QObject* iParent) : Container(iParent)
 StationList::~StationList()
 {
 }
-
-
-
-//
-// Operators
-//
-
-QDataStream& iRail::operator<<(QDataStream& iStream, const StationList& iStationList)
-{
-    iStream << iStationList.mStations.size();
-    foreach (Station* tStation, iStationList.mStations)
-        iStream << *tStation;
-
-    return iStream;
-}
-
-QDataStream& iRail::operator>>(QDataStream& iStream, StationList& iStationList)
-{
-    int tStationCount;
-    iStream >> tStationCount;
-    Q_ASSERT(iStationList.mStations.size() == 0);
-    for (int i = 0; i < tStationCount; i++)
-    {
-        Station* tStation;
-        iStream >> *tStation;
-        iStationList.mStations.insert(tStation->id(), tStation);
-    }
-
-    return iStream;
-}
