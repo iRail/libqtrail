@@ -97,12 +97,13 @@ void DepartureList::process()
     try
     {
         tReader.read(mRequestHelper.networkReply());
+        QList<Departure*> tDepartures = tReader.departures();
+        replaceData(tDepartures);
     }
     catch (ParserException& iException)
     {
-            emit failure(iException);
+        emit failure(iException);
     }
-    QHash<Data::VirtualId, Departure*> tDeparturesNew = tReader.departures();
 
     // TODO
 

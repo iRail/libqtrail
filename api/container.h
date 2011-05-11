@@ -10,13 +10,13 @@
 #include <QObject>
 #include <QAbstractListModel>
 #include <QList>
-#include "api/data.h"
 #include "data/station.h"
 
 namespace iRail
 {
     class ContainerCache;
 
+    template <class Data>
     class Container : public QAbstractListModel
     {
     Q_OBJECT
@@ -38,6 +38,10 @@ namespace iRail
         virtual QHash<int, QByteArray> roleNames() const = 0;
         virtual QVariant data(Data* iData, int iRole = Qt::DisplayRole) const;
         virtual Data* cast(Data* iData) const;
+
+        // Data handling
+        //mergeData(QList<Data*> iData);
+        void replaceData(QList<Data*> iData);
 
     private:
         // Member data

@@ -52,3 +52,23 @@ QModelIndex Container::indexFromItem(const Data* iData) const
     }
     return QModelIndex();
 }
+
+
+
+//
+// Data handling
+//
+
+void Container::replaceData(QList<Data*> iData)
+{
+    // Remove existing items
+    beginRemoveRows(QModelIndex(), 0, mData.size()-1);
+    qDeleteAll(mData);
+    mData.clear();
+    endRemoveRows();
+
+    // Insert new data
+    beginInsertRows(QModelIndex(), 0, iData.size()-1);
+    mData = iData;
+    endInsertRows();
+}
