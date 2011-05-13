@@ -21,7 +21,7 @@ namespace iRail
     class VehicleList : public Container<Vehicle>
     {
     Q_OBJECT
-    private:
+    public:
         // Construction and destruction
         VehicleList(QObject* iParent = 0);
         ~VehicleList();

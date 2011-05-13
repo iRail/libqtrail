@@ -22,7 +22,7 @@ namespace iRail
     class StationList : public Container<Station>
     {
     Q_OBJECT
-    private:
+    public:
         // Construction and destruction
         StationList(QObject* iParent = 0);
         ~StationList();

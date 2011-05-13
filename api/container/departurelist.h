@@ -23,7 +23,7 @@ namespace iRail
     class DepartureList : public Container<Departure>
     {
     Q_OBJECT
-    private:
+    public:
         // Construction and destruction
         DepartureList(const Station::Id& iStationId, QObject* iParent = 0);
         ~DepartureList();

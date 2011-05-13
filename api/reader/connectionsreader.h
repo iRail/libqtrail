@@ -38,17 +38,36 @@ namespace iRail
         QDateTime mTimestamp;
         QList<Journey*> mJourneys;
 
+        // Temporary data
+        struct ConnectionData
+        {
+            ConnectionData()
+            {
+                delay = 0;
+                finished = false;
+            }
+
+            Stop const* origin;
+            Stop const* destination;
+            Station const* terminus;
+            Vehicle const* vehicle;
+            uint delay;
+            bool finished;
+        };
+
         // Tag readers
         void allocate();
         QList<Journey*> readConnections();
         Journey* readConnection();
-        Stop* readStop(Vehicle*& iVehicle, Station*& iDirection);
+        void readStopFields(uint& oDelay, Station*& oStation, QDateTime& oDatetime, Vehicle*& oVehicle, uint& oPlatform, Station*& oTerminus);
+        void readConnectionOrigin(QList<ConnectionData>& iConnectionData);
+        void readConnectionDestination(QList<ConnectionData>& iConnectionData);
+        void readVias(QList<ConnectionData>& iConnectionData);
+        void readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Station*& oTerminus, Vehicle*& oVehicle);
         Vehicle* readVehicle();
         int readPlatform();
         QDateTime readDatetime();
         Station* readStation();
-        QList<Connection*> readVias(QList<Vehicle*>& iVehicles, QList<Station*>& iDirections);
-        Connection* readVia(Vehicle*& iVehicle, Station*& iDirection);
     };
 }
 

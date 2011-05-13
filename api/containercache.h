@@ -26,9 +26,9 @@ namespace iRail
         // Construction and destruction
     private:
         ContainerCache(QObject* iParent = 0);
+        ~ContainerCache();
     public:
         static ContainerCache& instance();
-        ~ContainerCache();
 
         // Container request methods
         StationList* stationList();

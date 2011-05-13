@@ -21,7 +21,7 @@ namespace iRail
     class JourneyList : public Container<Journey>
     {
     Q_OBJECT
-    private:
+    public:
         // Construction and destruction
         JourneyList(const Station::Id& iOrigin, const Station::Id& iDestination, QObject* iParent = 0);
         ~JourneyList();

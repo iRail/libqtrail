@@ -16,7 +16,7 @@
 
 namespace iRail
 {
-    class Departure
+    class Departure : public QObject
     {
     Q_OBJECT
     Q_PROPERTY(uint delay READ delay WRITE setDelay)

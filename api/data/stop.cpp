@@ -84,7 +84,7 @@ Stop& Stop::operator=(const Stop& other)
 
 inline unsigned int qHash(const Stop::Id& iStopId)
 {
-    return qHash(*iStopId.station->id()) ^ qHash(iStopId.datetime);
+    return qHash(*iStopId.station->id()) ^ qHash(iStopId.datetime.currentMSecsSinceEpoch());
 }
 
 bool iRail::operator==(const Stop::Id& lhs, const Stop::Id& rhs)

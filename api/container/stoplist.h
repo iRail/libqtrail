@@ -23,7 +23,7 @@ namespace iRail
     class StopList : public Container<Stop>
     {
     Q_OBJECT
-    private:
+    public:
         // Construction and destruction
         StopList(QObject* iParent = 0);
         StopList(const Vehicle::Id& iVehicleId, QObject* iParent = 0);

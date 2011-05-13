@@ -120,22 +120,6 @@ QList<Journey*> ConnectionsReader::readConnections()
     return oJourneys;
 }
 
-struct ConnectionData
-{
-    ConnectionData()
-    {
-        delay = 0;
-        finished = false;
-    }
-
-    Stop const* origin;
-    Stop const* destination;
-    Station const* terminus;
-    Vehicle const* vehicle;
-    uint delay;
-    bool finished;
-};
-
 Journey* ConnectionsReader::readConnection()
 {
     // Process the attributes
@@ -177,8 +161,8 @@ Journey* ConnectionsReader::readConnection()
 
     // Construct the object
     Journey::Id tJourneyId;
-    tJourneyId.origin = tOrigin;
-    tJourneyId.destination = tDestination;
+    tJourneyId.origin = tConnectionData.first().origin;
+    tJourneyId.destination = tConnectionData.last().destination;
     Journey* oJourney = new Journey(tJourneyId);
     // TODO oJourney->setLines(tLines);
     return oJourney;
@@ -229,10 +213,10 @@ void ConnectionsReader::readStopFields(uint& oDelay, Station*& oStation, QDateTi
 void ConnectionsReader::readConnectionOrigin(QList<ConnectionData>& iConnectionData)
 {
     // Read fields
-    uint& tDelay;
+    uint tDelay;
     Station* tStation;
-    DateTime tDatetime;
-    ehicle* tVehicle;
+    QDateTime tDatetime;
+    Vehicle* tVehicle;
     uint tPlatform;
     Station* tTerminus;
     readStopFields(tDelay, tStation, tDatetime, tVehicle, tPlatform, tTerminus);
@@ -258,10 +242,10 @@ void ConnectionsReader::readConnectionOrigin(QList<ConnectionData>& iConnectionD
 void ConnectionsReader::readConnectionDestination(QList<ConnectionData>& iConnectionData)
 {
     // Read fields
-    uint& tDelay;
+    uint tDelay;
     Station* tStation;
-    DateTime tDatetime;
-    ehicle* tVehicle;
+    QDateTime tDatetime;
+    Vehicle* tVehicle;
     uint tPlatform;
     Station* tTerminus;
     readStopFields(tDelay, tStation, tDatetime, tVehicle, tPlatform, tTerminus);
@@ -311,7 +295,7 @@ void ConnectionsReader::readVias(QList<ConnectionData>& iConnectionData)
         {
             if (mReader.name() == "via")
             {
-                Stop* tViArrival, tViaDeparture;
+                Stop *tViArrival, *tViaDeparture;
                 Station* tTerminus;
                 Vehicle* tVehicle;
                 readVia(tViArrival, tViaDeparture, tTerminus, tVehicle);
@@ -323,8 +307,8 @@ void ConnectionsReader::readVias(QList<ConnectionData>& iConnectionData)
                 Q_ASSERT(i < iConnectionData.size()-1);
 
                 // Update it with the via origin
-                iConnectionData.at(i).destination = tViArrival;
-                iConnectionData.at(i).finished = true;
+                iConnectionData[i].destination = tViArrival;
+                iConnectionData[i].finished = true;
 
                 // Insert the via destination
                 ConnectionData tConnectionData;
@@ -343,15 +327,15 @@ void ConnectionsReader::readVias(QList<ConnectionData>& iConnectionData)
     }
 
     // Merge the two last ConnectionData entries
-    iConnectionData.last().origin = iConnectionData.at(iConnectionData.size()-2);
-    iConnectionData.pop_front();
+    iConnectionData.last().origin = iConnectionData.at(iConnectionData.size()-2).origin;
     iConnectionData.last().finished = true;
+    iConnectionData.removeAt(iConnectionData.size()-2);
 
     if (iConnectionData.size() != tNumber+1)
         mReader.raiseError("advertised nubmer of vias did not match the actual amount");
 }
 
-void ConnectionsReader::readVia(Stop::Id*& oViaArrival, Stop::Id*& oViaDeparture, Station*& oTerminus, Vehicle*& oVehicle)
+void ConnectionsReader::readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Station*& oTerminus, Vehicle*& oVehicle)
 {
     // Process the attributes
     unsigned int tId;   // TODO: do something with this
@@ -381,7 +365,7 @@ void ConnectionsReader::readVia(Stop::Id*& oViaArrival, Stop::Id*& oViaDeparture
         {
             if (mReader.name() == "departure")
             {
-                uint& tDummyDelay;
+                uint tDummyDelay;
                 Station* tDummyStation;
                 Vehicle* tDummyVehicle;
                 Station* tDummyTerminus;
@@ -389,7 +373,7 @@ void ConnectionsReader::readVia(Stop::Id*& oViaArrival, Stop::Id*& oViaDeparture
             }
             else if (mReader.name() == "arrival")
             {
-                uint& tDummyDelay;
+                uint tDummyDelay;
                 Station* tDummyStation;
                 Vehicle* tDummyVehicle;
                 Station* tDummyTerminus;

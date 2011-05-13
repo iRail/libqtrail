@@ -17,7 +17,7 @@
 
 namespace iRail
 {
-    class Vehicle
+    class Vehicle : public QObject
     {
     Q_OBJECT
     Q_PROPERTY(Location location READ location WRITE setLocation)

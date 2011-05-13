@@ -17,7 +17,7 @@
 
 namespace iRail
 {
-    class Connection
+    class Connection : public QObject
     {
     Q_OBJECT
     Q_PROPERTY(Station terminus READ terminus)

@@ -18,12 +18,10 @@ namespace iRail
     template <class Data>
     class Container : public QAbstractListModel
     {
-    Q_OBJECT
     protected:
         // Construction and destruction
         Container(QObject* iParent = 0);
         virtual ~Container();
-        friend class ContainerCache;
 
     public:
         // Basic I/O
@@ -32,11 +30,6 @@ namespace iRail
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
         QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const;
         QModelIndex indexFromItem(const Data* iData) const;
-
-        // Container interface
-        virtual QHash<int, QByteArray> roleNames() const = 0;
-        virtual QVariant data(Data* iData, int iRole = Qt::DisplayRole) const;
-        virtual Data* cast(Data* iData) const;
 
         // Data handling
         //mergeData(QList<Data*> iData);

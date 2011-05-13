@@ -16,7 +16,7 @@
 
 namespace iRail
 {
-    class Stop
+    class Stop : public QObject
     {
     Q_OBJECT
     Q_PROPERTY(uint platform READ platform WRITE setPlatform)
