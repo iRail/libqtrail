@@ -94,11 +94,6 @@ Station& Station::operator=(const Station& other)
     return *this;
 }
 
-inline unsigned int qHash(const Station::Id& iStationId)
-{
-    return qHash(iStationId.guid);
-}
-
 bool iRail::operator==(const Station::Id& lhs, const Station::Id& rhs)
 {
     return  (lhs.guid == rhs.guid);

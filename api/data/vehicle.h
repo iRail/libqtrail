@@ -57,7 +57,10 @@ namespace iRail
     };
 
     bool operator==(const Vehicle& lhs, const Vehicle& rhs);
-    inline unsigned int qHash(const Vehicle::Id& tVehicleId);
+    inline unsigned int qHash(const Vehicle::Id& iVehicleId)
+    {
+        return qHash(iVehicleId.guid);
+    }
     bool operator==(const Vehicle::Id& lhs, const Vehicle::Id& rhs);
 }
 

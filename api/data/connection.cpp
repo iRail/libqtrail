@@ -107,11 +107,6 @@ Connection& Connection::operator=(const Connection& other)
     return *this;
 }
 
-inline unsigned int qHash(const Connection::Id& iConnection)
-{
-    return (3*qHash(*iConnection.origin->id())) ^ (5*qHash(*iConnection.destination->id()));
-}
-
 bool iRail::operator==(const Connection::Id& lhs, const Connection::Id& rhs)
 {
     return  (*lhs.origin->id() == *rhs.origin->id() &&

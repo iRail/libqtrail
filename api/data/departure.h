@@ -57,7 +57,10 @@ namespace iRail
     };
 
     bool operator==(const Departure& lhs, const Departure& rhs);
-    inline unsigned int qHash(const Departure::Id& iDepartureId);
+    inline unsigned int qHash(const Departure::Id& iDepartureId)
+    {
+        return qHash(*iDepartureId.origin->id()) ^ qHash(*iDepartureId.vehicle->id());
+    }
     bool operator==(const Departure::Id& lhs, const Departure::Id& rhs);
 }
 

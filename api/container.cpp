@@ -83,19 +83,19 @@ void Container<Data>::replaceData(QList<Data*> iData)
 //
 
 #include "data/station.h"
-template class Container<Station>;
+template class iRail::Container<Station>;
 
 #include "data/vehicle.h"
-template class Container<Vehicle>;
+template class iRail::Container<Vehicle>;
 
 #include "data/stop.h"
-template class Container<Stop>;
+template class iRail::Container<Stop>;
 
 #include "data/journey.h"
-template class Container<Journey>;
+template class iRail::Container<Journey>;
 
 #include "data/connection.h"
-template class Container<Connection>;
+template class iRail::Container<Connection>;
 
 #include "data/departure.h"
-template class Container<Departure>;
+template class iRail::Container<Departure>;

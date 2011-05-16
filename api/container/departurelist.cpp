@@ -15,7 +15,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-DepartureList::DepartureList(const Station::Id& iStationId, QObject* iParent) : mStationId(iStationId), Container(iParent)
+DepartureList::DepartureList(const Station::Id& iStationId, QObject* iParent) : Container(iParent), mStationId(iStationId)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Departure::VehicleRole] = "vehicle";

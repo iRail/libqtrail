@@ -20,20 +20,6 @@ namespace iRail
     public:
         ProgressIndicator& instance();
 
-        // Signals
-    signals:
-        void transferStarted();
-        void transferStopped();
-        void requestStarted();
-        void requestStopped();
-
-        // Slots
-    public slots:
-        void startTransfer();
-        void stopTransfer();
-        void startRequest();
-        void stopRequest();
-
         // Member data
     private:
     };

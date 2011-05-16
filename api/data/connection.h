@@ -68,7 +68,10 @@ namespace iRail
     };
 
     bool operator==(const Connection& lhs, const Connection& rhs);
-    inline unsigned int qHash(const Connection::Id& iConnection);
+    inline unsigned int qHash(const Connection::Id& iConnection)
+    {
+        return (3*qHash(*iConnection.origin->id())) ^ (5*qHash(*iConnection.destination->id()));
+    }
     bool operator==(const Connection::Id& lhs, const Connection::Id& rhs);
 }
 

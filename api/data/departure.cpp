@@ -77,11 +77,6 @@ Departure& Departure::operator=(const Departure& other)
     return *this;
 }
 
-inline unsigned int qHash(const Departure::Id& iDepartureId)
-{
-    return qHash(*iDepartureId.origin->id()) ^ qHash(*iDepartureId.vehicle->id());
-}
-
 bool iRail::operator==(const Departure::Id& lhs, const Departure::Id& rhs)
 {
     return  (*lhs.vehicle->id() == *rhs.vehicle->id() &&

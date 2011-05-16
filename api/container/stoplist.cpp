@@ -27,7 +27,7 @@ StopList::StopList(QObject *iParent) : Container(iParent)
     setRoleNames(tRoleNames);
 }
 
-StopList::StopList(const Vehicle::Id& iVehicleId, QObject* iParent) : mVehicleId(iVehicleId), Container(iParent)
+StopList::StopList(const Vehicle::Id& iVehicleId, QObject* iParent) : Container(iParent), mVehicleId(iVehicleId)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Stop::StationRole] = "station";

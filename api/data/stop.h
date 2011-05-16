@@ -58,7 +58,10 @@ namespace iRail
     };
 
     bool operator==(const Stop& lhs, const Stop& rhs);
-    inline unsigned int qHash(const Stop::Id& iStopId);
+    inline unsigned int qHash(const Stop::Id& iStopId)
+    {
+        return qHash(*iStopId.station->id()) ^ ::qHash(iStopId.datetime.currentMSecsSinceEpoch());
+    }
     bool operator==(const Stop::Id& lhs, const Stop::Id& rhs);
 }
 

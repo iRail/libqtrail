@@ -64,7 +64,10 @@ namespace iRail
     };
 
     bool operator==(const Station& lhs, const Station& rhs);
-    inline unsigned int qHash(const Station::Id& iStationId);
+    inline unsigned int qHash(const Station::Id& iStationId)
+    {
+        return qHash(iStationId.guid);
+    }
     bool operator==(const Station::Id& lhs, const Station::Id& rhs);
     QDataStream& operator<<(QDataStream& iStream, const Station& iStation);
     QDataStream& operator>>(QDataStream& iStream, Station& iStation);

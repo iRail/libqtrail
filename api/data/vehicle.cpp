@@ -79,11 +79,6 @@ Vehicle& Vehicle::operator=(const Vehicle& other)
     return *this;
 }
 
-inline unsigned int qHash(const Vehicle::Id& iVehicleId)
-{
-    return qHash(iVehicleId.guid);
-}
-
 bool iRail::operator==(const Vehicle::Id& lhs, const Vehicle::Id& rhs)
 {
     return  (lhs.guid == rhs.guid);
