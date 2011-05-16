@@ -12,6 +12,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QHash>
+#include <QAbstractListModel>
 #include "api/exception.h"
 #include "api/data/vehicle.h"
 #include "api/data/connection.h"
@@ -20,7 +21,7 @@
 
 namespace iRail
 {
-    class StopList : public Container<Stop>
+    class StopList : public QAbstractListModel
     {
     Q_OBJECT
     public:
@@ -28,6 +29,14 @@ namespace iRail
         StopList(QObject* iParent = 0);
         StopList(const Vehicle::Id& iVehicleId, QObject* iParent = 0);
         ~StopList();
+
+        // Model interface pass-through
+        int rowCount(const QModelIndex& iParent = QModelIndex()) const
+        { return mContainer.rowCount(iParent); }
+        QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const
+        { return mContainer.data(iIndex, iRole); }
+        QModelIndex indexFromItem(const Stop* iData) const
+        { return mContainer.indexFromItem(iData); }
 
         // Basic I/O
     public:
@@ -41,6 +50,7 @@ namespace iRail
 
     private:
         // Member data
+        Container<Stop> mContainer;
         Vehicle::Id mVehicleId;
     };
 }

@@ -12,6 +12,7 @@
 #include <QString>
 #include <QDateTime>
 #include <QHash>
+#include <QAbstractListModel>
 #include "api/requesthelper.h"
 #include "api/exception.h"
 #include "api/data/station.h"
@@ -19,13 +20,21 @@
 
 namespace iRail
 {
-    class StationList : public Container<Station>
+    class StationList : public QAbstractListModel
     {
     Q_OBJECT
     public:
         // Construction and destruction
         StationList(QObject* iParent = 0);
         ~StationList();
+
+        // Model interface pass-through
+        int rowCount(const QModelIndex& iParent = QModelIndex()) const
+        { return mContainer.rowCount(iParent); }
+        QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const
+        { return mContainer.data(iIndex, iRole); }
+        QModelIndex indexFromItem(const Station* iData) const
+        { return mContainer.indexFromItem(iData); }
 
     public:
         // Basic I/O
@@ -40,6 +49,7 @@ namespace iRail
 
     private:
         // Member data
+        Container<Station> mContainer;
         QDateTime mTimestamp;
     };
 }

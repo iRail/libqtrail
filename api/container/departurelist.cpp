@@ -15,7 +15,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-DepartureList::DepartureList(const Station::Id& iStationId, QObject* iParent) : mStationId(iStationId), Container(iParent)
+DepartureList::DepartureList(const Station::Id& iStationId, QObject* iParent) : mStationId(iStationId), QAbstractListModel(iParent), mContainer(this)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Departure::VehicleRole] = "vehicle";
@@ -98,7 +98,7 @@ void DepartureList::process()
     {
         tReader.read(mRequestHelper.networkReply());
         QList<Departure*> tDepartures = tReader.departures();
-        replaceData(tDepartures);
+        mContainer.replaceData(tDepartures);
     }
     catch (ParserException& iException)
     {
