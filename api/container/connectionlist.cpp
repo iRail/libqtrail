@@ -14,7 +14,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-ConnectionList::ConnectionList(const Journey::Id& iJourneyId, QObject* iParent) : mJourneyId(iJourneyId), QAbstractListModel(iParent), mContainer(this)
+ConnectionList::ConnectionList(const Journey::Id& iJourneyId, QObject* iParent) : mJourneyId(iJourneyId), Container(iParent)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Connection::OriginRole] = "origin";

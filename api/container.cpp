@@ -14,8 +14,9 @@ using namespace iRail;
 //
 
 template <class Data>
-Container<Data>::Container(QAbstractListModel* iModel, QObject *iParent) : mModel(iModel)
+Container<Data>::Container(QObject *iParent) : QAbstractListModel(iParent)
 {
+    setRoleNames(roleNames());
 }
 
 
@@ -50,7 +51,7 @@ QModelIndex Container<Data>::indexFromItem(const Data* iData) const
     for(int tRow = 0; tRow < mData.size(); ++tRow)
     {
       if(*mData.at(tRow)->id() == *iData->id())
-          return mModel->index(tRow);
+          return index(tRow);
     }
     return QModelIndex();
 }
@@ -68,12 +69,12 @@ void Container<Data>::replaceData(QList<Data*> iData)
     beginRemoveRows(QModelIndex(), 0, mData.size()-1);
     qDeleteAll(mData);
     mData.clear();
-    mModel->endRemoveRows();
+    endRemoveRows();
 
     // Insert new data
     beginInsertRows(QModelIndex(), 0, iData.size()-1);
     mData = iData;
-    mModel->endInsertRows();
+    endInsertRows();
 }
 
 

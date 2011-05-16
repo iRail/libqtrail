@@ -12,28 +12,19 @@
 #include <QString>
 #include <QDateTime>
 #include <QHash>
-#include <QAbstractListModel>
 #include "api/exception.h"
 #include "api/data/journey.h"
 #include "api/container.h"
 
 namespace iRail
 {
-    class JourneyList : public QAbstractListModel
+    class JourneyList : public Container<Journey>
     {
     Q_OBJECT
     public:
         // Construction and destruction
         JourneyList(const Station::Id& iOrigin, const Station::Id& iDestination, QObject* iParent = 0);
         ~JourneyList();
-
-        // Model interface pass-through
-        int rowCount(const QModelIndex& iParent = QModelIndex()) const
-        { return mContainer.rowCount(iParent); }
-        QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const
-        { return mContainer.data(iIndex, iRole); }
-        QModelIndex indexFromItem(const Journey* iData) const
-        { return mContainer.indexFromItem(iData); }
 
         // Basic I/O
     public:
@@ -48,7 +39,6 @@ namespace iRail
 
     private:
         // Member data
-        Container<Journey> mContainer;
         QDateTime mTimestamp;
         Station::Id mOrigin, mDestination;
     };

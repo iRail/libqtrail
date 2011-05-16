@@ -15,7 +15,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-StopList::StopList(QObject *iParent) : QAbstractListModel(iParent), mContainer(this)
+StopList::StopList(QObject *iParent) : Container(iParent)
 {
     mVehicleId.guid = "anonymous";
 
@@ -27,7 +27,7 @@ StopList::StopList(QObject *iParent) : QAbstractListModel(iParent), mContainer(t
     setRoleNames(tRoleNames);
 }
 
-StopList::StopList(const Vehicle::Id& iVehicleId, QObject* iParent) : mVehicleId(iVehicleId), mContainer(this)
+StopList::StopList(const Vehicle::Id& iVehicleId, QObject* iParent) : mVehicleId(iVehicleId), Container(iParent)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Stop::StationRole] = "station";

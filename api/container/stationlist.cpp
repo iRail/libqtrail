@@ -15,7 +15,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-StationList::StationList(QObject* iParent) : QAbstractListModel(iParent), mContainer(this)
+StationList::StationList(QObject* iParent) : Container(iParent)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Station::GUIDRole] = "guid";

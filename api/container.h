@@ -8,19 +8,19 @@
 
 // Includes
 #include <QObject>
-#include <QList>
 #include <QAbstractListModel>
+#include <QList>
 
 namespace iRail
 {
     class ContainerCache;
 
     template <class Data>
-    class Container
+    class Container : public QAbstractListModel
     {
-    public:
+    protected:
         // Construction and destruction
-        Container(QAbstractListModel* iModel, QObject* iParent = 0);
+        Container(QObject* iParent = 0);
 
     public:
         // Basic I/O
@@ -36,7 +36,6 @@ namespace iRail
 
     private:
         // Member data
-        QAbstractListModel* mModel;
         QList<Data*> mData;
     };
 }
