@@ -21,7 +21,6 @@ namespace iRail
     public:
         // Construction and destruction
         Container(QAbstractListModel* iModel, QObject* iParent = 0);
-        virtual ~Container();
 
     public:
         // Basic I/O

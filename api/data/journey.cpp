@@ -77,7 +77,7 @@ Journey& Journey::operator=(const Journey& other)
     return *this;
 }
 
-unsigned int qHash(const Journey::Id& iJourneyId)
+unsigned int iRail::qHash(const Journey::Id& iJourneyId)
 {
     return (3*qHash(*iJourneyId.origin->id())) ^ (5*qHash(*iJourneyId.destination->id()));
 }

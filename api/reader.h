@@ -39,7 +39,6 @@ namespace iRail
           WARNING: this allocated data is not deallocated, that
           is up to the user!
           */
-        virtual void allocate() = 0;
         void readError();
         void skipUnknownElement();
     };

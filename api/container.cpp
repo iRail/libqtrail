@@ -40,7 +40,7 @@ QVariant Container<Data>::data(const QModelIndex& iIndex, int iRole) const
 
     Data* tData = mData.at(iIndex.row());
 
-    return data(tData, iRole);
+    return tData->field(iRole);
 }
 
 template <class Data>
@@ -75,3 +75,26 @@ void Container<Data>::replaceData(QList<Data*> iData)
     mData = iData;
     mModel->endInsertRows();
 }
+
+
+//
+// Template instantiations
+//
+
+#include "data/station.h"
+template class Container<Station>;
+
+#include "data/vehicle.h"
+template class Container<Vehicle>;
+
+#include "data/stop.h"
+template class Container<Stop>;
+
+#include "data/journey.h"
+template class Container<Journey>;
+
+#include "data/connection.h"
+template class Container<Connection>;
+
+#include "data/departure.h"
+template class Container<Departure>;
