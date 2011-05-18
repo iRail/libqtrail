@@ -270,11 +270,3 @@ int LiveboardReader::readPlatform()
     return oPlatform;
 }
 
-
-//
-// Auxiliary
-//
-
-void LiveboardReader::allocate()
-{
-}

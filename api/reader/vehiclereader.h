@@ -38,7 +38,6 @@ namespace iRail
         QList<Stop*> mStops;
 
         // Tag readers
-        void allocate();
         void readVehicleInformation();
         Vehicle* readVehicle();
         QList<Stop*> readStops();

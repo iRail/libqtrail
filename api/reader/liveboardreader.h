@@ -38,7 +38,6 @@ namespace iRail
         QList<Departure*> mDepartures;
 
         // Tag readers
-        void allocate();
         void readLiveboard();
         Station* readStation();
         QList<Departure*> readDepartures();

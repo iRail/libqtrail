@@ -28,8 +28,8 @@ namespace iRail
         DepartureList(const Station::Id& iStationId, QObject* iParent = 0);
         ~DepartureList();
 
-        // Basic I/O
     public:
+        // Basic I/O
         Station::Id const* stationId() const;
 
         // Data request methods

@@ -105,8 +105,6 @@ void DepartureList::process()
         emit failure(iException);
     }
 
-    // TODO
-
     // Clean up
     networkCleanup();
     emit success();

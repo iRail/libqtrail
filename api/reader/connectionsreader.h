@@ -56,7 +56,6 @@ namespace iRail
         };
 
         // Tag readers
-        void allocate();
         QList<Journey*> readConnections();
         Journey* readConnection();
         void readStopFields(uint& oDelay, Station*& oStation, QDateTime& oDatetime, Vehicle*& oVehicle, uint& oPlatform, Station*& oTerminus);

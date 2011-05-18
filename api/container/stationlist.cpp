@@ -27,3 +27,50 @@ StationList::StationList(QObject* iParent) : Container(iParent)
 StationList::~StationList()
 {
 }
+
+
+//
+// Data request methods
+//
+
+void StationList::fetch()
+{
+    // Construct URL
+    QUrl tURL = createBaseURL();
+    tURL.setPath("stations/");
+
+    // Create a request
+    try
+    {
+        networkRequest(getRequest(tURL), this, SLOT(process()));
+    }
+    catch (NetworkException& iException)
+    {
+        emit failure(iException);
+    }
+}
+
+
+//
+// Data processing methods
+//
+
+void StationList::process()
+{
+    // Parse the data
+    StationsReader tReader;
+    try
+    {
+        tReader.read(networkReply());
+        QList<Station*> tStations = tReader.stations();
+        replaceData(tStations);
+    }
+    catch (ParserException& iException)
+    {
+        emit failure(iException);
+    }
+
+    // Clean up
+    networkCleanup();
+    emit success();
+}

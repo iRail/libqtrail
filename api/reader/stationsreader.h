@@ -35,7 +35,6 @@ namespace iRail
         QList<Station*> mStations;
 
         // Tag readers
-        void allocate();
         QList<Station*> readStations();
         Station* readStation();
     };
