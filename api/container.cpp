@@ -19,6 +19,12 @@ Container<Data>::Container(QObject *iParent) : QAbstractListModel(iParent)
     setRoleNames(roleNames());
 }
 
+template <class Data>
+Container<Data>::~Container()
+{
+
+}
+
 
 //
 // Model interface

@@ -20,7 +20,7 @@
 
 namespace iRail
 {
-    class DepartureList : public Container<Departure>
+    class DepartureList : public Container<Departure>, private RequestHelper
     {
     Q_OBJECT
     public:
@@ -47,7 +47,6 @@ namespace iRail
 
     private:
         // Member data
-        RequestHelper mRequestHelper;
         QDateTime mTimestamp;
         Station::Id mStationId;
     };

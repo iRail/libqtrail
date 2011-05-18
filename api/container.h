@@ -21,6 +21,7 @@ namespace iRail
     protected:
         // Construction and destruction
         Container(QObject* iParent = 0);
+        virtual ~Container();
 
     public:
         // Basic I/O

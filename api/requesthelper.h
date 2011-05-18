@@ -15,17 +15,15 @@
 
 namespace iRail
 {
-    class RequestHelper : public QObject
+    class RequestHelper
     {
-    Q_OBJECT
     public:
         // Construction and destruction
         RequestHelper();
 
         // Network helpers
-    public slots:
+    public:
         void networkRequest(QNetworkRequest iRequest, QObject* iObject, const char* iSlot) throw(NetworkException);
-        void networkProgress(qint64 iProgress, qint64 totalSteps);
         QNetworkReply* networkReply();
         void networkCleanup();
 

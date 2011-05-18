@@ -46,7 +46,7 @@ Station::Id const* DepartureList::stationId() const
 void DepartureList::fetch()
 {
     // Construct URL
-    QUrl tURL = mRequestHelper.createBaseURL();
+    QUrl tURL = createBaseURL();
     tURL.setPath("liveboard/");
 
     // Set the parameters
@@ -55,7 +55,7 @@ void DepartureList::fetch()
     // Create a request
     try
     {
-        mRequestHelper.networkRequest(mRequestHelper.getRequest(tURL), this, SLOT(process()));
+        networkRequest(getRequest(tURL), this, SLOT(process()));
     }
     catch (NetworkException& iException)
     {
@@ -66,7 +66,7 @@ void DepartureList::fetch()
 void DepartureList::fetch(const QDateTime& iDatetime)
 {
     // Construct URL
-    QUrl tURL = mRequestHelper.createBaseURL();
+    QUrl tURL = createBaseURL();
     tURL.setPath("liveboard/");
 
     // Set the parameters
@@ -77,7 +77,7 @@ void DepartureList::fetch(const QDateTime& iDatetime)
     // Create a request
     try
     {
-        mRequestHelper.networkRequest(mRequestHelper.getRequest(tURL), this, SLOT(process()));
+        networkRequest(getRequest(tURL), this, SLOT(process()));
     }
     catch (NetworkException& iException)
     {
@@ -96,7 +96,7 @@ void DepartureList::process()
     LiveboardReader tReader;
     try
     {
-        tReader.read(mRequestHelper.networkReply());
+        tReader.read(networkReply());
         QList<Departure*> tDepartures = tReader.departures();
         replaceData(tDepartures);
     }
@@ -108,6 +108,6 @@ void DepartureList::process()
     // TODO
 
     // Clean up
-    mRequestHelper.networkCleanup();
+    networkCleanup();
     emit success();
 }

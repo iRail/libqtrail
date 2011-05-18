@@ -66,20 +66,7 @@ void RequestHelper::networkRequest(QNetworkRequest iRequest, QObject* iObject, c
         throw NetworkException(mNetworkReply->errorString());
     }
 
-    connect(mNetworkReply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(networkProgress(qint64,qint64)));
-    connect(mNetworkReply, SIGNAL(finished()), iObject, iSlot);
-}
-
-void RequestHelper::networkProgress(qint64 iProgress, qint64 totalSteps)
-{
-    if (iProgress >= totalSteps && totalSteps > 0)
-    {
-        /*
-        int subprogress = iProgress/totalSteps * 100;
-        mProgressHandler.setProgress(subprogress);
-        emit mProgressHandler.progress();
-        */
-    }
+    QObject::connect(mNetworkReply, SIGNAL(finished()), iObject, iSlot);
 }
 
 QNetworkReply* RequestHelper::networkReply()
