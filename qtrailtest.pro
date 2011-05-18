@@ -1,6 +1,13 @@
 include(libqtrail.pri)
 
-CONFIG  += qtestlib
+CONFIG  += gui
 
-SOURCES += t/compile.cpp
+SOURCES += \
+    mainwindow.cpp \
+    main.cpp
 
+HEADERS += \
+    mainwindow.h
+
+FORMS += \
+    mainwindow.ui
