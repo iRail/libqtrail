@@ -26,7 +26,7 @@ namespace iRail
     public:
         // Construction and destruction
         StopList(QObject* iParent = 0);
-        StopList(const Vehicle::Id& iVehicleId, QObject* iParent = 0);
+        StopList(Vehicle::Id const* iVehicleId, QObject* iParent = 0);
         ~StopList();
 
         // Basic I/O
@@ -41,7 +41,7 @@ namespace iRail
 
     private:
         // Member data
-        Vehicle::Id mVehicleId;
+        Vehicle::Id const* mVehicleId;
     };
 }
 

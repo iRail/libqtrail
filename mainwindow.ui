@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>libqtrail testing application</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="sizePolicy">
@@ -35,18 +35,18 @@
          <widget class="QListView" name="lstStations"/>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="lytStationButtons">
+         <layout class="QHBoxLayout" name="lytStationsButtons">
           <item>
-           <widget class="QPushButton" name="btnClear">
+           <widget class="QPushButton" name="btnStationsFetch">
             <property name="text">
-             <string>Clear</string>
+             <string>Fetch all</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="btnFetch">
+           <widget class="QPushButton" name="btnStationsClear">
             <property name="text">
-             <string>Fetch</string>
+             <string>Clear</string>
             </property>
            </widget>
           </item>
@@ -58,6 +58,75 @@
        <attribute name="title">
         <string>Departures</string>
        </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QListView" name="lstDepartures"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="btnDeparturesFetch">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Fetch</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnDeparturesClear">
+            <property name="text">
+             <string>Clear</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabLog">
+       <attribute name="title">
+        <string>Debug log</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QPlainTextEdit" name="plainTextEdit">
+          <property name="font">
+           <font>
+            <family>Bitstream Vera Sans Mono</family>
+           </font>
+          </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOn</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
+          </property>
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="lytLogButtons">
+          <item>
+           <widget class="QPushButton" name="btnLogSave">
+            <property name="text">
+             <string>Save as...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnLogClear">
+            <property name="text">
+             <string>Clear</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

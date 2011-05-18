@@ -23,7 +23,7 @@ namespace iRail
     Q_OBJECT
     public:
         // Construction and destruction
-        JourneyList(const Station::Id& iOrigin, const Station::Id& iDestination, QObject* iParent = 0);
+        JourneyList(Station::Id const* iOrigin, Station::Id const* iDestination, QObject* iParent = 0);
         ~JourneyList();
 
         // Basic I/O
@@ -40,7 +40,7 @@ namespace iRail
     private:
         // Member data
         QDateTime mTimestamp;
-        Station::Id mOrigin, mDestination;
+        Station::Id const *mOrigin, *mDestination;
     };
 }
 

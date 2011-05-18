@@ -110,7 +110,7 @@ QList<Station*> StationsReader::readStations()
         if (mReader.isStartElement())
         {
             if (mReader.name() == "station")
-                mStations << readStation();
+                oStations << readStation();
             else
                 skipUnknownElement();
         }

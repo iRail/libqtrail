@@ -74,7 +74,7 @@ StopList* ContainerCache::stopList(Vehicle::Id const* iVehicleId)
         return mStopLists[*iVehicleId];
     else
     {
-        StopList* oStopList = new StopList(*iVehicleId);
+        StopList* oStopList = new StopList(iVehicleId);
         mStopLists.insert(*iVehicleId, oStopList);
         return oStopList;
     }
@@ -86,7 +86,7 @@ DepartureList* ContainerCache::departureList(Station::Id const* iStationId)
         return mDepartureLists[*iStationId];
     else
     {
-        DepartureList* oDepartureList = new DepartureList(*iStationId);
+        DepartureList* oDepartureList = new DepartureList(iStationId);
         mDepartureLists.insert(*iStationId, oDepartureList);
         return oDepartureList;
     }
@@ -99,7 +99,7 @@ JourneyList* ContainerCache::journeyList(Station::Id const* iOrigin, Station::Id
         return mJourneyLists[iIdPair];
     else
     {
-        JourneyList* oJourneyList = new JourneyList(*iOrigin, *iDestination);
+        JourneyList* oJourneyList = new JourneyList(iOrigin, iDestination);
         mJourneyLists.insert(iIdPair, oJourneyList);
         return oJourneyList;
     }
@@ -111,7 +111,7 @@ ConnectionList* ContainerCache::connectionList(Journey::Id const* iJourneyId)
         return mConnectionLists[*iJourneyId];
     else
     {
-        ConnectionList* oConnectionList(new ConnectionList(*iJourneyId));
+        ConnectionList* oConnectionList(new ConnectionList(iJourneyId));
         mConnectionLists.insert(*iJourneyId, oConnectionList);
         return oConnectionList;
     }

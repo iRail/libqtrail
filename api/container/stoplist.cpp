@@ -17,7 +17,8 @@ using namespace iRail;
 
 StopList::StopList(QObject *iParent) : Container(iParent)
 {
-    mVehicleId.guid = "anonymous";
+    //mVehicleId->guid = new QString("anonymous");
+    // TODO: this cannot happen... Do we need an "anonymous" stoplist?
 
     // TODO: remove duplicate code
     QHash<int, QByteArray> tRoleNames;
@@ -27,7 +28,7 @@ StopList::StopList(QObject *iParent) : Container(iParent)
     setRoleNames(tRoleNames);
 }
 
-StopList::StopList(const Vehicle::Id& iVehicleId, QObject* iParent) : Container(iParent), mVehicleId(iVehicleId)
+StopList::StopList(Vehicle::Id const* iVehicleId, QObject* iParent) : Container(iParent), mVehicleId(iVehicleId)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Stop::StationRole] = "station";
@@ -47,5 +48,5 @@ StopList::~StopList()
 
 Vehicle::Id const* StopList::vehicleId() const
 {
-    return &mVehicleId;
+    return mVehicleId;
 }

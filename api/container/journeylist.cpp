@@ -15,7 +15,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-JourneyList::JourneyList(const Station::Id& iOrigin, const Station::Id& iDestination, QObject* iParent) : Container(iParent), mOrigin(iOrigin), mDestination(iDestination)
+JourneyList::JourneyList(Station::Id const* iOrigin, Station::Id const* iDestination, QObject* iParent) : Container(iParent), mOrigin(iOrigin), mDestination(iDestination)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Journey::OriginRole] = "origin";
@@ -36,10 +36,10 @@ JourneyList::~JourneyList()
 
 Station::Id const* JourneyList::origin() const
 {
-    return &mOrigin;
+    return mOrigin;
 }
 
 Station::Id const* JourneyList::destination() const
 {
-    return &mDestination;
+    return mDestination;
 }

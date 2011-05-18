@@ -6,6 +6,7 @@
 #include "stationlist.h"
 #include "api/reader/stationsreader.h"
 #include <QString>
+#include <QDebug>
 
 // Namespaces
 using namespace iRail;
@@ -58,12 +59,14 @@ void StationList::fetch()
 void StationList::process()
 {
     // Parse the data
+    bool tSuccess = false;
     StationsReader tReader;
     try
     {
         tReader.read(networkReply());
         QList<Station*> tStations = tReader.stations();
         replaceData(tStations);
+        tSuccess = true;
     }
     catch (ParserException& iException)
     {
@@ -72,5 +75,6 @@ void StationList::process()
 
     // Clean up
     networkCleanup();
-    emit success();
+    if (tSuccess)
+        emit success();
 }

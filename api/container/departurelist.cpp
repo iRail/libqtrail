@@ -15,7 +15,7 @@ using namespace iRail;
 // Construction and destruction
 //
 
-DepartureList::DepartureList(const Station::Id& iStationId, QObject* iParent) : Container(iParent), mStationId(iStationId)
+DepartureList::DepartureList(Station::Id const* iStationId, QObject* iParent) : Container(iParent), mStationId(iStationId)
 {
     QHash<int, QByteArray> tRoleNames;
     tRoleNames[Departure::VehicleRole] = "vehicle";
@@ -35,7 +35,7 @@ DepartureList::~DepartureList()
 
 Station::Id const* DepartureList::stationId() const
 {
-    return &mStationId;
+    return mStationId;
 }
 
 
@@ -93,12 +93,14 @@ void DepartureList::fetch(const QDateTime& iDatetime)
 void DepartureList::process()
 {
     // Parse the data
+    bool tSuccess = false;
     LiveboardReader tReader;
     try
     {
         tReader.read(networkReply());
         QList<Departure*> tDepartures = tReader.departures();
         replaceData(tDepartures);
+        tSuccess = true;
     }
     catch (ParserException& iException)
     {
@@ -107,5 +109,6 @@ void DepartureList::process()
 
     // Clean up
     networkCleanup();
-    emit success();
+    if (tSuccess)
+        emit success();
 }

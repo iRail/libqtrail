@@ -24,14 +24,14 @@ namespace iRail
         virtual ~Container();
 
     public:
-        // Basic I/O
-
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
+        Data* object(const QModelIndex& iIndex) const;
         QVariant data(const QModelIndex& iIndex, int iRole = Qt::DisplayRole) const;
         QModelIndex indexFromItem(const Data* iData) const;
 
         // Data handling
+        void clear();
         //mergeData(QList<Data*> iData);
         void replaceData(QList<Data*> iData);
 

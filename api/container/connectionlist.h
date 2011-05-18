@@ -24,7 +24,7 @@ namespace iRail
     Q_OBJECT
     public:
         // Construction and destruction
-        ConnectionList(const Journey::Id& iJourney, QObject* iParent = 0);
+        ConnectionList(Journey::Id const* iJourney, QObject* iParent = 0);
         ~ConnectionList();
 
         // Basic I/O
@@ -34,7 +34,7 @@ namespace iRail
     private:
         // Member data
         QDateTime mTimestamp;
-        Journey::Id mJourneyId;
+        Journey::Id const* mJourneyId;
     };
 }
 

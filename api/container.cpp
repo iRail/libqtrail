@@ -38,6 +38,17 @@ int Container<Data>::rowCount(const QModelIndex& iParent) const
 }
 
 template <class Data>
+Data* Container<Data>::object(const QModelIndex& iIndex) const
+{
+    if (!iIndex.isValid())
+        return 0;
+    if (iIndex.row() > (mData.size()-1) )
+        return 0;
+
+    return mData.at(iIndex.row());
+}
+
+template <class Data>
 QVariant Container<Data>::data(const QModelIndex& iIndex, int iRole) const
 {
     if (!iIndex.isValid())
@@ -69,13 +80,20 @@ QModelIndex Container<Data>::indexFromItem(const Data* iData) const
 //
 
 template <class Data>
-void Container<Data>::replaceData(QList<Data*> iData)
+void Container<Data>::clear()
 {
     // Remove existing items
     beginRemoveRows(QModelIndex(), 0, mData.size()-1);
     qDeleteAll(mData);
     mData.clear();
     endRemoveRows();
+}
+
+template <class Data>
+void Container<Data>::replaceData(QList<Data*> iData)
+{
+    // Clear current data
+    clear();
 
     // Insert new data
     beginInsertRows(QModelIndex(), 0, iData.size()-1);

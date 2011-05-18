@@ -25,7 +25,7 @@ namespace iRail
     Q_OBJECT
     public:
         // Construction and destruction
-        DepartureList(const Station::Id& iStationId, QObject* iParent = 0);
+        DepartureList(Station::Id const* iStationId, QObject* iParent = 0);
         ~DepartureList();
 
     public:
@@ -48,7 +48,7 @@ namespace iRail
     private:
         // Member data
         QDateTime mTimestamp;
-        Station::Id mStationId;
+        Station::Id const* mStationId;
     };
 }
 

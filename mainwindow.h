@@ -8,6 +8,10 @@
 
 // Includes
 #include <QMainWindow>
+#include "api/data/station.h"
+#include "api/data/departure.h"
+#include "api/container/stationlist.h"
+#include "api/container/departurelist.h"
 
 // UI handling
 namespace Ui
@@ -27,18 +31,32 @@ namespace iRail
         ~MainWindow();
 
         // UI slots
-
     private slots:
-        void on_btnClear_clicked();
+        void on_btnStationsClear_clicked();
+        void on_btnStationsFetch_clicked();
+        void on_btnDeparturesClear_clicked();
+        void on_lstStations_activated(const QModelIndex &index);
 
-        void on_btnFetch_clicked();
+        // Functionality
+    private:
+        void loadStations();
+        void loadDepartures(Station* iStation);
+
+        // Model slots
+    private slots:
+        void success();
+        void failure(const Exception& iException);
 
     private:
         // UI members
         Ui::MainWindow *mUi;
 
         // List data
+        StationList* mStations;
+        DepartureList* mDepartures;
 
+        // Other
+        QSettings* mSettings;
     };
 }
 

@@ -29,6 +29,7 @@ QVariant Departure::field(int iRole) const
     switch (iRole)
     {
     case Qt::DisplayRole:
+        return QVariant::fromValue(id()->origin->id()->datetime);
     case Departure::VehicleRole:
         return QVariant::fromValue(id()->vehicle);
     case Departure::OriginRole:
