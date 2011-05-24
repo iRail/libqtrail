@@ -4,6 +4,7 @@
 
 // Includes
 #include "liveboardreader.h"
+#include "api/containercache.h"
 #include <QStringRef>
 
 // Namespaces
@@ -136,8 +137,10 @@ Station* LiveboardReader::readStation()
     // Construct the object
     Station::Id tStationId;
     tStationId.guid = tStationGuid;
-    return new Station(tStationId);
-    // TODO: load from cache? do request? hmm
+    Station* tStation = ContainerCache::instance().stationList()->get(tStationId);
+    if (tStation == 0)
+        tStation = new Station(tStationId);
+    return tStation;
 }
 
 QList<Departure*> LiveboardReader::readDepartures()

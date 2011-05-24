@@ -4,6 +4,7 @@
 
 // Includes
 #include "vehiclereader.h"
+#include "api/containercache.h"
 #include <QStringRef>
 
 // Namespaces
@@ -249,7 +250,10 @@ Station* VehicleReader::readStation()
     // Construct the object
     Station::Id tStationId;
     tStationId.guid = tStationGuid;
-    return new Station(tStationId); // TODO: lookup
+    Station* tStation = ContainerCache::instance().stationList()->get(tStationId);
+    if (tStation == 0)
+        tStation = new Station(tStationId);
+    return tStation;
 }
 
 QDateTime VehicleReader::readDatetime()
