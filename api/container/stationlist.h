@@ -12,8 +12,8 @@
 #include <QString>
 #include <QDateTime>
 #include <QHash>
-#include "api/requesthelper.h"
 #include "api/exception.h"
+#include "api/requesthelper.h"
 #include "api/data/station.h"
 #include "api/container.h"
 

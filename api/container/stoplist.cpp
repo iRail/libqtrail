@@ -17,8 +17,7 @@ using namespace iRail;
 
 StopList::StopList(QObject *iParent) : Container(iParent)
 {
-    //mVehicleId->guid = new QString("anonymous");
-    // TODO: this cannot happen... Do we need an "anonymous" stoplist?
+    mVehicleId = 0;
 
     // TODO: remove duplicate code
     QHash<int, QByteArray> tRoleNames;
@@ -49,4 +48,57 @@ StopList::~StopList()
 Vehicle::Id const* StopList::vehicleId() const
 {
     return mVehicleId;
+}
+
+
+//
+// Data request methods
+//
+
+void StopList::fetch()
+{
+    // Construct URL
+    QUrl tURL = createBaseURL();
+    tURL.setPath("vehicle/");
+
+    // Set the parameters
+    tURL.addQueryItem("id", vehicleId()->guid);
+
+    // Create a request
+    try
+    {
+        networkRequest(getRequest(tURL), this, SLOT(process()));
+    }
+    catch (NetworkException& iException)
+    {
+        emit failure(iException);
+    }
+}
+
+
+//
+// Data processing methods
+//
+
+void StopList::process()
+{
+    // Parse the data
+    bool tSuccess = false;
+    VehicleReader tReader;
+    try
+    {
+        tReader.read(networkReply());
+        QList<Stop*> tStops = tReader.stops();
+        replaceData(tStops);
+        tSuccess = true;
+    }
+    catch (ParserException& iException)
+    {
+        emit failure(iException);
+    }
+
+    // Clean up
+    networkCleanup();
+    if (tSuccess)
+        emit success();
 }

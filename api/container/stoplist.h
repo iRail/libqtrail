@@ -13,6 +13,7 @@
 #include <QDateTime>
 #include <QHash>
 #include "api/exception.h"
+#include "api/requesthelper.h"
 #include "api/data/vehicle.h"
 #include "api/data/connection.h"
 #include "api/data/stop.h"
@@ -20,7 +21,7 @@
 
 namespace iRail
 {
-    class StopList : public Container<Stop>
+    class StopList : public Container<Stop>, private RequestHelper
     {
     Q_OBJECT
     public:
@@ -33,11 +34,18 @@ namespace iRail
     public:
         Vehicle::Id const* vehicleId() const;
 
+    public:
+        // Data request methods
+        void fetch();
+
     signals:
         // Data reply signals
+        void success();
+        void failure(const Exception& iException);
 
         // Data processing methods
     private slots:
+        void process();
 
     private:
         // Member data
