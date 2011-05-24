@@ -139,7 +139,10 @@ Station* LiveboardReader::readStation()
     tStationId.guid = tStationGuid;
     Station* tStation = ContainerCache::instance().stationList()->get(tStationId);
     if (tStation == 0)
+    {
         tStation = new Station(tStationId);
+        ContainerCache::instance().stationList()->append(tStation);
+    }
     return tStation;
 }
 
@@ -192,7 +195,7 @@ Departure* LiveboardReader::readDeparture()
     Station* tStation = 0;
     Vehicle* tVehicle = 0;
     QDateTime tDateTime;
-    int tPlatform = 0;
+    QString tPlatform;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -262,14 +265,27 @@ QDateTime LiveboardReader::readDatetime()
     return QDateTime::fromTime_t(tUnixtime.toUInt());
 }
 
-int LiveboardReader::readPlatform()
+QString LiveboardReader::readPlatform()
 {
+    // Process the attributes
+    bool *tNormal = 0;
+    if (mReader.attributes().hasAttribute("normal"))
+    {
+        QStringRef tNormalString = mReader.attributes().value("normal");
+
+        tNormal = new bool(tNormalString == "1");
+    }
+
     // Process the contents
-    QString tPlatformString = mReader.readElementText();
-    unsigned int oPlatform = tPlatformString.toInt();
+    QString oPlatform = mReader.readElementText();
     if (mReader.isEndElement())
         mReader.readNext();
 
+    if (*tNormal)
+    {
+        // TODO: do something with this
+        delete tNormal;
+    }
     return oPlatform;
 }
 

@@ -252,7 +252,10 @@ Station* VehicleReader::readStation()
     tStationId.guid = tStationGuid;
     Station* tStation = ContainerCache::instance().stationList()->get(tStationId);
     if (tStation == 0)
+    {
         tStation = new Station(tStationId);
+        ContainerCache::instance().stationList()->append(tStation);
+    }
     return tStation;
 }
 

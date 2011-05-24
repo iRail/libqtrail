@@ -16,7 +16,6 @@ using namespace iRail;
 
 Stop::Stop(Id iId) : mId(iId)
 {
-    mPlatform = 0;
 }
 
 
@@ -50,12 +49,12 @@ Stop::Id const* Stop::id() const
     return &mId;
 }
 
-unsigned int Stop::platform() const
+const QString& Stop::platform() const
 {
     return mPlatform;
 }
 
-void Stop::setPlatform(unsigned int iPlatform)
+void Stop::setPlatform(const QString& iPlatform)
 {
     mPlatform = iPlatform;
 }

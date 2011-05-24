@@ -169,7 +169,7 @@ Journey* ConnectionsReader::readConnection()
     return oJourney;
 }
 
-void ConnectionsReader::readStopFields(uint& oDelay, Station*& oStation, QDateTime& oDatetime, Vehicle*& oVehicle, uint& oPlatform, Station*& oTerminus)
+void ConnectionsReader::readStopFields(uint& oDelay, Station*& oStation, QDateTime& oDatetime, Vehicle*& oVehicle, QString& oPlatform, Station*& oTerminus)
 {
     // Process the attributes
     oDelay = 0;
@@ -218,7 +218,7 @@ void ConnectionsReader::readConnectionOrigin(QList<ConnectionData>& iConnectionD
     Station* tStation;
     QDateTime tDatetime;
     Vehicle* tVehicle;
-    uint tPlatform;
+    QString tPlatform;
     Station* tTerminus;
     readStopFields(tDelay, tStation, tDatetime, tVehicle, tPlatform, tTerminus);
 
@@ -247,7 +247,7 @@ void ConnectionsReader::readConnectionDestination(QList<ConnectionData>& iConnec
     Station* tStation;
     QDateTime tDatetime;
     Vehicle* tVehicle;
-    uint tPlatform;
+    QString tPlatform;
     Station* tTerminus;
     readStopFields(tDelay, tStation, tDatetime, tVehicle, tPlatform, tTerminus);
 
@@ -352,7 +352,7 @@ void ConnectionsReader::readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Statio
     // Process the tags
     Station* tStation;
     QDateTime tDatetimeDeparture, tDatetimeArrival;
-    uint tPlatformDeparture, tPlatformArrival;
+    QString tPlatformDeparture, tPlatformArrival;
     mReader.readNext();
     while (!mReader.atEnd())
     {
@@ -421,7 +421,7 @@ Vehicle* ConnectionsReader::readVehicle()
     return new Vehicle(tVehicleId);   // TODO: look up
 }
 
-int ConnectionsReader::readPlatform()
+QString ConnectionsReader::readPlatform()
 {
     // Process the attributes
     bool *tNormal = 0;
@@ -433,12 +433,11 @@ int ConnectionsReader::readPlatform()
     }
 
     // Process the contents
-    QString tPlatformString = mReader.readElementText();
-    int oPlatform = tPlatformString.toInt();
+    QString oPlatform = mReader.readElementText();
     if (mReader.isEndElement())
         mReader.readNext();
 
-    if (tNormal)
+    if (*tNormal)
     {
         // TODO: do something with this
         delete tNormal;
@@ -477,6 +476,9 @@ Station* ConnectionsReader::readStation()
     tStationId.guid = tStationGuid;
     Station* tStation = ContainerCache::instance().stationList()->get(tStationId);
     if (tStation == 0)
+    {
         tStation = new Station(tStationId);
+        ContainerCache::instance().stationList()->append(tStation);
+    }
     return tStation;
 }

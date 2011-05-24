@@ -45,7 +45,7 @@ namespace iRail
         Vehicle* readVehicle();
         QDateTime readDatetime();
         double readDelay();
-        int readPlatform();
+        QString readPlatform();
     };
 }
 

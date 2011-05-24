@@ -58,13 +58,13 @@ namespace iRail
         // Tag readers
         QList<Journey*> readConnections();
         Journey* readConnection();
-        void readStopFields(uint& oDelay, Station*& oStation, QDateTime& oDatetime, Vehicle*& oVehicle, uint& oPlatform, Station*& oTerminus);
+        void readStopFields(uint& oDelay, Station*& oStation, QDateTime& oDatetime, Vehicle*& oVehicle, QString& oPlatform, Station*& oTerminus);
         void readConnectionOrigin(QList<ConnectionData>& iConnectionData);
         void readConnectionDestination(QList<ConnectionData>& iConnectionData);
         void readVias(QList<ConnectionData>& iConnectionData);
         void readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Station*& oTerminus, Vehicle*& oVehicle);
         Vehicle* readVehicle();
-        int readPlatform();
+        QString readPlatform();
         QDateTime readDatetime();
         Station* readStation();
     };

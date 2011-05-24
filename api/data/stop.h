@@ -19,7 +19,7 @@ namespace iRail
     class Stop : public QObject
     {
     Q_OBJECT
-    Q_PROPERTY(uint platform READ platform WRITE setPlatform)
+    Q_PROPERTY(QString platform READ platform WRITE setPlatform)
     public:
         // Auxiliary structures
         struct Id
@@ -45,8 +45,8 @@ namespace iRail
         // Basic I/O
         QVariant field(int iRole) const;
         Id const* id() const;
-        unsigned int platform() const;
-        void setPlatform(unsigned int iPlatform);
+        const QString& platform() const;
+        void setPlatform(const QString& iPlatform);
 
         // Operators
         friend bool operator==(const Stop& lhs, const Stop& rhs);
@@ -54,7 +54,7 @@ namespace iRail
 
     private:
         Id mId;
-        unsigned int mPlatform;
+        QString mPlatform;
     };
 
     bool operator==(const Stop& lhs, const Stop& rhs);
