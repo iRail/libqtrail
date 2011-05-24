@@ -24,6 +24,10 @@ namespace iRail
         virtual ~Container();
 
     public:
+        // Basic I/O
+        void append(Data* iData);
+
+    public:
         // Model interface
         int rowCount(const QModelIndex& iParent = QModelIndex()) const;
         Data* object(const QModelIndex& iIndex) const;
@@ -35,7 +39,7 @@ namespace iRail
         //mergeData(QList<Data*> iData);
         void replaceData(QList<Data*> iData);
 
-    private:
+    protected:
         // Member data
         QList<Data*> mData;
     };

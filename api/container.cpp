@@ -27,6 +27,17 @@ Container<Data>::~Container()
 
 
 //
+// Basic I/O
+//
+
+template <class Data>
+void Container<Data>::append(Data* iData)
+{
+    mData.append(iData);
+}
+
+
+//
 // Model interface
 //
 

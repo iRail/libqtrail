@@ -31,6 +31,21 @@ StationList::~StationList()
 
 
 //
+// Basic I/O
+//
+
+Station* StationList::get(const Station::Id& iId)
+{
+    foreach (Station* tStation, mData)
+    {
+        if (*tStation->id() == iId)
+            return tStation;
+    }
+    return 0;
+}
+
+
+//
 // Data request methods
 //
 

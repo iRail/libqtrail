@@ -13,12 +13,13 @@
 #include <QDateTime>
 #include <QHash>
 #include "api/exception.h"
+#include "api/requesthelper.h"
 #include "api/data/journey.h"
 #include "api/container.h"
 
 namespace iRail
 {
-    class JourneyList : public Container<Journey>
+    class JourneyList : public Container<Journey>,  private RequestHelper
     {
     Q_OBJECT
     public:
@@ -39,7 +40,7 @@ namespace iRail
 
         // Data request methods
         void fetch();
-        void fetch(const QDateTime& iDatetime);
+        void fetch(const QDateTime& iDatetime, JourneyList::Type iType);
 
     signals:
         // Data reply signals

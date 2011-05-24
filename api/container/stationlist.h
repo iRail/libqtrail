@@ -28,6 +28,10 @@ namespace iRail
         ~StationList();
 
     public:
+        // Basic I/O
+        Station* get(const Station::Id& iId);
+
+    public:
         // Data request methods
         void fetch();
 
@@ -39,9 +43,6 @@ namespace iRail
         // Data processing methods
     private slots:
         void process();
-
-        // Data processing methods
-    private slots:
 
     private:
         // Member data
