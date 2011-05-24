@@ -169,7 +169,7 @@ Journey* ConnectionsReader::readConnection()
     return oJourney;
 }
 
-void ConnectionsReader::readStopFields(uint& oDelay, Station*& oStation, QDateTime& oDatetime, Vehicle*& oVehicle, QString& oPlatform, Station*& oTerminus)
+void ConnectionsReader::readStopFields(uint& oDelay, Station const*& oStation, QDateTime& oDatetime, Vehicle const*& oVehicle, QString& oPlatform, Station const*& oTerminus)
 {
     // Process the attributes
     oDelay = 0;
@@ -215,11 +215,11 @@ void ConnectionsReader::readConnectionOrigin(QList<ConnectionData>& iConnectionD
 {
     // Read fields
     uint tDelay;
-    Station* tStation;
+    Station const* tStation;
     QDateTime tDatetime;
-    Vehicle* tVehicle;
+    Vehicle const* tVehicle;
     QString tPlatform;
-    Station* tTerminus;
+    Station const* tTerminus;
     readStopFields(tDelay, tStation, tDatetime, tVehicle, tPlatform, tTerminus);
 
     // Construct the stop
@@ -244,11 +244,11 @@ void ConnectionsReader::readConnectionDestination(QList<ConnectionData>& iConnec
 {
     // Read fields
     uint tDelay;
-    Station* tStation;
+    Station const* tStation;
     QDateTime tDatetime;
-    Vehicle* tVehicle;
+    Vehicle const* tVehicle;
     QString tPlatform;
-    Station* tTerminus;
+    Station const* tTerminus;
     readStopFields(tDelay, tStation, tDatetime, tVehicle, tPlatform, tTerminus);
 
     // Construct the stop
@@ -297,8 +297,8 @@ void ConnectionsReader::readVias(QList<ConnectionData>& iConnectionData)
             if (mReader.name() == "via")
             {
                 Stop *tViArrival, *tViaDeparture;
-                Station* tTerminus;
-                Vehicle* tVehicle;
+                Station const* tTerminus;
+                Vehicle const* tVehicle;
                 readVia(tViArrival, tViaDeparture, tTerminus, tVehicle);
 
                 // Look for the first unfinished item
@@ -336,7 +336,7 @@ void ConnectionsReader::readVias(QList<ConnectionData>& iConnectionData)
         mReader.raiseError("advertised nubmer of vias did not match the actual amount");
 }
 
-void ConnectionsReader::readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Station*& oTerminus, Vehicle*& oVehicle)
+void ConnectionsReader::readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Station const*& oTerminus, Vehicle const*& oVehicle)
 {
     // Process the attributes
     unsigned int tId;   // TODO: do something with this
@@ -350,7 +350,7 @@ void ConnectionsReader::readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Statio
         mReader.raiseError("could not find via id attribute");
 
     // Process the tags
-    Station* tStation;
+    Station const* tStation;
     QDateTime tDatetimeDeparture, tDatetimeArrival;
     QString tPlatformDeparture, tPlatformArrival;
     mReader.readNext();
@@ -367,17 +367,17 @@ void ConnectionsReader::readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Statio
             if (mReader.name() == "departure")
             {
                 uint tDummyDelay;
-                Station* tDummyStation;
-                Vehicle* tDummyVehicle;
-                Station* tDummyTerminus;
+                Station const* tDummyStation;
+                Vehicle const* tDummyVehicle;
+                Station const* tDummyTerminus;
                 readStopFields(tDummyDelay, tDummyStation, tDatetimeDeparture, tDummyVehicle, tPlatformDeparture, tDummyTerminus);
             }
             else if (mReader.name() == "arrival")
             {
                 uint tDummyDelay;
-                Station* tDummyStation;
-                Vehicle* tDummyVehicle;
-                Station* tDummyTerminus;
+                Station const* tDummyStation;
+                Vehicle const* tDummyVehicle;
+                Station const* tDummyTerminus;
                 readStopFields(tDummyDelay, tDummyStation, tDatetimeArrival, tDummyVehicle, tPlatformArrival, tDummyTerminus);
             }
             else if (mReader.name() == "vehicle")
@@ -408,7 +408,7 @@ void ConnectionsReader::readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Statio
     oViaDeparture->setPlatform(tPlatformDeparture);
 }
 
-Vehicle* ConnectionsReader::readVehicle()
+Vehicle const* ConnectionsReader::readVehicle()
 {
     // Process the contents
     QString tVehicleGuid = mReader.readElementText();
@@ -418,7 +418,14 @@ Vehicle* ConnectionsReader::readVehicle()
     // Construct the object
     Vehicle::Id tVehicleId;
     tVehicleId.guid = tVehicleGuid;
-    return new Vehicle(tVehicleId);   // TODO: look up
+    Vehicle const* oVehicle = ContainerCache::instance().vehicleList()->get(tVehicleId);
+    if (oVehicle == 0)
+    {
+        Vehicle* tVehicle = new Vehicle(tVehicleId);
+        ContainerCache::instance().vehicleList()->append(tVehicle);
+        oVehicle = tVehicle;
+    }
+    return oVehicle;
 }
 
 QString ConnectionsReader::readPlatform()
@@ -455,7 +462,7 @@ QDateTime ConnectionsReader::readDatetime()
     return QDateTime::fromTime_t(tUnixtime.toUInt());
 }
 
-Station* ConnectionsReader::readStation()
+Station const* ConnectionsReader::readStation()
 {
     // Process the attributes
     QString tStationGuid;
@@ -474,11 +481,12 @@ Station* ConnectionsReader::readStation()
     // Construct the object
     Station::Id tStationId;
     tStationId.guid = tStationGuid;
-    Station* tStation = ContainerCache::instance().stationList()->get(tStationId);
-    if (tStation == 0)
+    Station const* oStation = ContainerCache::instance().stationList()->get(tStationId);
+    if (oStation == 0)
     {
-        tStation = new Station(tStationId);
+        Station* tStation = new Station(tStationId);
         ContainerCache::instance().stationList()->append(tStation);
+        oStation = tStation;
     }
-    return tStation;
+    return oStation;
 }

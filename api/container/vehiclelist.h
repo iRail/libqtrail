@@ -28,6 +28,7 @@ namespace iRail
 
     public:
         // Basic I/O
+        Vehicle const* get(const Vehicle::Id& iId);
 
     private:
         // Member data

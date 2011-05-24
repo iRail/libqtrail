@@ -29,7 +29,7 @@ namespace iRail
 
     public:
         // Basic I/O
-        Station* get(const Station::Id& iId);
+        Station const* get(const Station::Id& iId);
 
     public:
         // Data request methods

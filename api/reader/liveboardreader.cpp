@@ -59,7 +59,7 @@ QDateTime LiveboardReader::timestamp() const
     return mTimestamp;
 }
 
-Station* LiveboardReader::station() const
+Station const* LiveboardReader::station() const
 {
     return mStation;
 }
@@ -118,7 +118,7 @@ void LiveboardReader::readLiveboard()
     }
 }
 
-Station* LiveboardReader::readStation()
+Station const* LiveboardReader::readStation()
 {
     // Process the attributes
     QString tStationGuid;
@@ -137,13 +137,14 @@ Station* LiveboardReader::readStation()
     // Construct the object
     Station::Id tStationId;
     tStationId.guid = tStationGuid;
-    Station* tStation = ContainerCache::instance().stationList()->get(tStationId);
-    if (tStation == 0)
+    Station const* oStation = ContainerCache::instance().stationList()->get(tStationId);
+    if (oStation == 0)
     {
-        tStation = new Station(tStationId);
+        Station* tStation = new Station(tStationId);
         ContainerCache::instance().stationList()->append(tStation);
+        oStation = tStation;
     }
-    return tStation;
+    return oStation;
 }
 
 QList<Departure*> LiveboardReader::readDepartures()
@@ -192,8 +193,8 @@ Departure* LiveboardReader::readDeparture()
     }
 
     // Process the tags
-    Station* tStation = 0;
-    Vehicle* tVehicle = 0;
+    Station const* tStation = 0;
+    Vehicle const* tVehicle = 0;
     QDateTime tDateTime;
     QString tPlatform;
     mReader.readNext();
@@ -240,18 +241,23 @@ Departure* LiveboardReader::readDeparture()
     return oDeparture;
 }
 
-Vehicle* LiveboardReader::readVehicle()
+Vehicle const* LiveboardReader::readVehicle()
 {
     // Process the contents
-    QString tVehicleGUID = mReader.readElementText();
+    QString tVehicleGuid = mReader.readElementText();
     if (mReader.isEndElement())
         mReader.readNext();
 
-    // Construct object
+    // Construct the object
     Vehicle::Id tVehicleId;
-    tVehicleId.guid = tVehicleGUID;
-    Vehicle* oVehicle = new Vehicle(tVehicleId);
-
+    tVehicleId.guid = tVehicleGuid;
+    Vehicle const* oVehicle = ContainerCache::instance().vehicleList()->get(tVehicleId);
+    if (oVehicle == 0)
+    {
+        Vehicle* tVehicle = new Vehicle(tVehicleId);
+        ContainerCache::instance().vehicleList()->append(tVehicle);
+        oVehicle = tVehicle;
+    }
     return oVehicle;
 }
 

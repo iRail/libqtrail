@@ -34,7 +34,7 @@ StationList::~StationList()
 // Basic I/O
 //
 
-Station* StationList::get(const Station::Id& iId)
+Station const* StationList::get(const Station::Id& iId)
 {
     foreach (Station* tStation, mData)
     {

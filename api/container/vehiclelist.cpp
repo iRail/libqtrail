@@ -25,3 +25,18 @@ VehicleList::VehicleList(QObject* iParent) : Container(iParent)
 VehicleList::~VehicleList()
 {
 }
+
+
+//
+// Basic I/O
+//
+
+Vehicle const* VehicleList::get(const Vehicle::Id& iId)
+{
+    foreach (Vehicle* tVehicle, mData)
+    {
+        if (*tVehicle->id() == iId)
+            return tVehicle;
+    }
+    return 0;
+}

@@ -59,7 +59,7 @@ QDateTime VehicleReader::timestamp() const
     return mTimestamp;
 }
 
-Vehicle* VehicleReader::vehicle() const
+Vehicle const* VehicleReader::vehicle() const
 {
     return mVehicle;
 }
@@ -118,7 +118,7 @@ void VehicleReader::readVehicleInformation()
     }
 }
 
-Vehicle* VehicleReader::readVehicle()
+Vehicle const* VehicleReader::readVehicle()
 {
     // Process the attributes
     Location tLocation;
@@ -200,7 +200,7 @@ Stop* VehicleReader::readStop()
         mReader.raiseError("stop without delay attribute");
 
     // Process the tags
-    Station* tStation;
+    Station const* tStation;
     QDateTime tDatetime;
     mReader.readNext();
     while (!mReader.atEnd())
@@ -231,7 +231,7 @@ Stop* VehicleReader::readStop()
     return new Stop(tStopId);
 }
 
-Station* VehicleReader::readStation()
+Station const* VehicleReader::readStation()
 {
     // Process the attributes
     QString tStationGuid;
@@ -250,13 +250,14 @@ Station* VehicleReader::readStation()
     // Construct the object
     Station::Id tStationId;
     tStationId.guid = tStationGuid;
-    Station* tStation = ContainerCache::instance().stationList()->get(tStationId);
-    if (tStation == 0)
+    Station const* oStation = ContainerCache::instance().stationList()->get(tStationId);
+    if (oStation == 0)
     {
-        tStation = new Station(tStationId);
+        Station* tStation = new Station(tStationId);
         ContainerCache::instance().stationList()->append(tStation);
+        oStation = tStation;
     }
-    return tStation;
+    return oStation;
 }
 
 QDateTime VehicleReader::readDatetime()
