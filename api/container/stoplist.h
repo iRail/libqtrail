@@ -33,6 +33,7 @@ namespace iRail
         // Basic I/O
     public:
         Vehicle::Id const* vehicleId() const;
+        Stop const* get(const Stop::Id& iId);
 
     public:
         // Data request methods

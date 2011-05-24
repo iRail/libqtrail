@@ -296,10 +296,10 @@ void ConnectionsReader::readVias(QList<ConnectionData>& iConnectionData)
         {
             if (mReader.name() == "via")
             {
-                Stop *tViArrival, *tViaDeparture;
+                Stop const* tStopArrival, *tStopDeparture;
                 Station const* tTerminus;
                 Vehicle const* tVehicle;
-                readVia(tViArrival, tViaDeparture, tTerminus, tVehicle);
+                readVia(tStopArrival, tStopDeparture, tTerminus, tVehicle);
 
                 // Look for the first unfinished item
                 int i = 0;
@@ -308,7 +308,7 @@ void ConnectionsReader::readVias(QList<ConnectionData>& iConnectionData)
                 Q_ASSERT(i < iConnectionData.size()-1);
 
                 // Update it with the via origin
-                iConnectionData[i].destination = tViArrival;
+                iConnectionData[i].destination = tStopArrival;
                 iConnectionData[i].finished = true;
 
                 // Insert the via destination
@@ -316,7 +316,7 @@ void ConnectionsReader::readVias(QList<ConnectionData>& iConnectionData)
                 tConnectionData.delay = 0;
                 tConnectionData.terminus = tTerminus;
                 tConnectionData.vehicle = tVehicle;
-                tConnectionData.origin = tViaDeparture;
+                tConnectionData.origin = tStopDeparture;
                 tConnectionData.finished = false;    // destination not yet filled in
                 iConnectionData.insert(i+1, tConnectionData);
             }
@@ -336,7 +336,7 @@ void ConnectionsReader::readVias(QList<ConnectionData>& iConnectionData)
         mReader.raiseError("advertised nubmer of vias did not match the actual amount");
 }
 
-void ConnectionsReader::readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Station const*& oTerminus, Vehicle const*& oVehicle)
+void ConnectionsReader::readVia(Stop const*& oStopArrival, Stop const*& oStopDeparture, Station const*& oTerminus, Vehicle const*& oVehicle)
 {
     // Process the attributes
     unsigned int tId;   // TODO: do something with this
@@ -397,15 +397,27 @@ void ConnectionsReader::readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Statio
     Stop::Id tStopArrivalId;
     tStopArrivalId.datetime = tDatetimeArrival;
     tStopArrivalId.station = tStation;
-    oViaArrival = new Stop(tStopArrivalId);
-    oViaArrival->setPlatform(tPlatformArrival);
+    oStopArrival = ContainerCache::instance().stopList()->get(tStopArrivalId);
+    if (oStopArrival == 0)
+    {
+        Stop *tStopArrival = new Stop(tStopArrivalId);
+        tStopArrival->setPlatform(tPlatformArrival);
+        ContainerCache::instance().stopList()->append(tStopArrival);
+        oStopArrival = tStopArrival;
+    }
 
     // Construct the departure stop
     Stop::Id tStopDepartureId;
     tStopDepartureId.datetime = tDatetimeDeparture;
     tStopDepartureId.station = tStation;
-    oViaDeparture = new Stop(tStopDepartureId);
-    oViaDeparture->setPlatform(tPlatformDeparture);
+    oStopDeparture = ContainerCache::instance().stopList()->get(tStopDepartureId);
+    if (oStopDeparture == 0)
+    {
+        Stop *tStopArrival = new Stop(tStopDepartureId);
+        tStopArrival->setPlatform(tPlatformArrival);
+        ContainerCache::instance().stopList()->append(tStopArrival);
+        oStopDeparture = tStopArrival;
+    }
 }
 
 Vehicle const* ConnectionsReader::readVehicle()

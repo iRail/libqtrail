@@ -50,6 +50,17 @@ Vehicle::Id const* StopList::vehicleId() const
     return mVehicleId;
 }
 
+Stop const* StopList::get(const Stop::Id& iId)
+{
+    foreach (Stop* tStop, mData)
+    {
+        if (*tStop->id() == iId)
+            return tStop;
+    }
+    return 0;
+
+}
+
 
 //
 // Data request methods

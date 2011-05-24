@@ -62,7 +62,7 @@ namespace iRail
         void readConnectionOrigin(QList<ConnectionData>& iConnectionData);
         void readConnectionDestination(QList<ConnectionData>& iConnectionData);
         void readVias(QList<ConnectionData>& iConnectionData);
-        void readVia(Stop*& oViaArrival, Stop*& oViaDeparture, Station const*& oTerminus, Vehicle const*& oVehicle);
+        void readVia(Stop const*& oStopArrival, Stop const*& oStopDeparture, Station const*& oTerminus, Vehicle const*& oVehicle);
         Vehicle const* readVehicle();
         QString readPlatform();
         QDateTime readDatetime();
